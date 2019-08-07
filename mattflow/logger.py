@@ -5,7 +5,7 @@
 
 Handles the logging precess.
 
-mattFlow is free software; you may redistribute it and/or modify it under the
+MattFlow is free software; you may redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version. You should have received a copy of the GNU General Public License
@@ -14,14 +14,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
 
-from mattFlow import config as conf
+from mattflow import config as conf
 from datetime import datetime
 import os
 
 
 file_name = str(datetime.now())[:19]
 file_name = file_name[:10] + '_' + file_name[11:] + '.log'
-welcome_msg = 'Welcome to mattFlow!'
+welcome_msg = 'Welcome to MattFlow!'
 author_msg = 'Author: Thanasis Mattas, 2019'
 license_msg = 'GNU General Public License | Version 3'
 

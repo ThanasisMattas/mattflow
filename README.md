@@ -1,6 +1,6 @@
-# mattFlow
+# MattFlow
 
-mattFlow is a CFD python package for the shallow water equations.  
+MattFlow is a CFD python package for the shallow water equations.  
 It simulates drops or stones falling on the surface of the water.
 ___
 
@@ -13,29 +13,31 @@ ___
 | ffmpeg (optional) |           |
 
 
-## How to run mattFlow
+## How to run MattFlow
 
-The required steps to run a simulation are gathered in the script ```mattFlow.py```
+The required steps to run a simulation are gathered in the script ```mattflow.py```
 
 
 1. simple download
 
 ```bash
-$ mkdir <dir_name>
-$ cd <dir_name>
-clone/downlad the mattFlow repository
-$ python mattFlow.py
+$ mkdir <mattflow>
+$ cd <mattflow>
+$ git clone https://github.com/ThanasisMattas/mattflow.git
+$ python mattflow.py
 ```
 
-2. anaconda environment
+2. anaconda environment  
+   (this is prefered, because anaconda handles low level libs required from
+   matplotib animation)
 
 ```bash
-$ conda create --name mattFlow numpy matplotlib
-$ conda activate mattFlow
-$ mkdir <dir_name>
-$ cd <dir_name>
-clone/downlad the mattFlow repository
-$ python mattFlow.py
+$ conda create --name mattflow numpy matplotlib
+$ conda activate mattflow
+$ mkdir <mattflow>
+$ cd <mattflow>
+$ git clone https://github.com/ThanasisMattas/mattflow.git
+$ python mattflow.py
 ```
 
 
@@ -60,7 +62,7 @@ _ρ_ : density
 _g_ : gravity acceleration
 
 
-## mattFlow structure
+## MattFlow structure
 
 0. configuration of the simulation via a config file
 1. pre-process  
@@ -93,7 +95,7 @@ Currently, you can configure the simulation at the config file
 
 ## TODO
 
-1. mattFlow exceptions
+1. mattflow_exceptions
 2. tests
 3. Simple API to configure the simulation
 4. Implementation of higher order schemes

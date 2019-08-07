@@ -29,5 +29,7 @@
 *.mpeg
 *.mpg
 
+*.png
+
 .vscode*
 **/__pycache__/*

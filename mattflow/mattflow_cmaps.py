@@ -1,11 +1,11 @@
 '''
 =============================================================================
-@file   mattFlow_cmaps.py
+@file   mattflow_cmaps.py
 @author Thanasis Mattas
 
 Creates some color maps (currently unused).
 
-mattFlow is free software; you may redistribute it and/or modify it under the
+MattFlow is free software; you may redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version. You should have received a copy of the GNU General Public License

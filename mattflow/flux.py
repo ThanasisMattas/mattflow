@@ -5,7 +5,7 @@
 
 Evaluates the total flux entering or leaving a cell.
 
-mattFlow is free software; you may redistribute it and/or modify it under the
+MattFlow is free software; you may redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version. You should have received a copy of the GNU General Public License
@@ -14,7 +14,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
 
-from mattFlow import config
+from mattflow import config
 import numpy as np
 
 
@@ -48,7 +48,6 @@ def flux(U, dx, dy):
     Ng = config.Ng
     total_flux = np.zeros(((3, Ny + 2 * Ng, Nx + 2 * Ng)))
 
-
     # Vertical interfaces - Horizontal flux {
     #
     # Max horizontal speed between left and right cells for every interface
@@ -59,9 +58,7 @@ def flux(U, dx, dy):
 
         # x dim slicing of right values : Ng: Nx + Ng
         np.abs(U[1, Ng: -Ng, Ng: Nx + Ng + 1] / U[0, Ng: -Ng, Ng: Nx + Ng + 1])
-        + np.sqrt(g * np.abs(U[0, Ng: -Ng, Ng: Nx + Ng + 1]))
-    )
-
+        + np.sqrt(g * np.abs(U[0, Ng: -Ng, Ng: Nx + Ng + 1])))
 
     # Lax-Friedrichs scheme
     # flux = 0.5 * (F_left + F_right) - 0.5 * maxSpeed * (U_right - U_left)
@@ -79,8 +76,6 @@ def flux(U, dx, dy):
     # }
 
 
-
-
     # Horizontal interfaces - Vertical flux {
     #
     # Max vertical speed between top and bottom cells for every interface
@@ -91,8 +86,7 @@ def flux(U, dx, dy):
 
         # y dim slicing of bottom values: Ng: Nx + Ng + 1
         np.abs(U[1, Ng: Ny + Ng + 1, Ng: -Ng] / U[0, Ng: Ny + Ng + 1, Ng: -Ng])
-        + np.sqrt(g * np.abs(U[0, Ng: Ny + Ng + 1, Ng: -Ng]))
-    )
+        + np.sqrt(g * np.abs(U[0, Ng: Ny + Ng + 1, Ng: -Ng])))
 
     # Lax-Friedrichs scheme
     # flux = 0.5 * (F_top + F_bottom) - 0.5 * maxSpeed * (U_bottom - U_top)

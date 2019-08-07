@@ -1,11 +1,11 @@
 '''
 =============================================================================
-@file   mattFlow_post.py
+@file   mattflow_post.py
 @author Thanasis Mattas
 
 Handles the post-processing of the simulation.
 
-mattFlow is free software; you may redistribute it and/or modify it under the
+MattFlow is free software; you may redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version. You should have received a copy of the GNU General Public License
@@ -14,9 +14,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
 
-
-from mattFlow import config as conf
-from mattFlow import logger
+from mattflow import config as conf
+from mattflow import logger
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -206,7 +205,7 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
     fig.gca().set_zlim([-0.5, 4])
     plt.axis('off')
     sub.title.set_position([0.51, 0.83])
-    plt.rcParams.update({'font.size': 8})
+    plt.rcParams.update({'font.size': 20})
 
     # initialization plot {
     if conf.PLOTTING_STYLE == 'water':

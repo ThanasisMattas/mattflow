@@ -1,11 +1,11 @@
 '''
 =============================================================================
-@file   mattFlow.py
+@file   mattflow.py
 @author Thanasis Mattas
 
 Script that executes all the required processes for the simulation.
 
-mattFlow is free software; you may redistribute it and/or modify it under the
+MattFlow is free software; you may redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version. You should have received a copy of the GNU General Public License
@@ -14,16 +14,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
 
-# Welcome to mattFlow!
+# Welcome to MattFlow!
 
 
-from mattFlow import config as conf
-from mattFlow import utilities as util
-from mattFlow import logger
-from mattFlow import initializer
-from mattFlow import boundaryConditionsManager
-from mattFlow import mattFlow_solver
-from mattFlow import mattFlow_post
+from mattflow import config as conf
+from mattflow import utilities as util
+from mattflow import logger
+from mattflow import initializer
+from mattflow import boundaryConditionsManager
+from mattflow import mattflow_solver
+from mattflow import mattflow_post
 import numpy as np
 from timeit import default_timer as timer
 
@@ -66,7 +66,7 @@ update_time_array = lambda t : np.hstack((time_array_for_ani, [t * 10]))
 for iter in range(1, conf.MAX_ITERS):     # conf.MAX_ITERS
 
     # Time discretization step
-    delta_t = mattFlow_solver.dt(U, dx, dy)
+    delta_t = mattflow_solver.dt(U, dx, dy)
 
     # Update current time
     time += delta_t
@@ -78,7 +78,7 @@ for iter in range(1, conf.MAX_ITERS):     # conf.MAX_ITERS
     U = boundaryConditionsManager.updateGhostCells(U)
 
     # Numerical iterative scheme
-    U = mattFlow_solver.solve(U, dx, cx, dy, cy, delta_t, iter, drops)
+    U = mattflow_solver.solve(U, dx, cx, dy, cy, delta_t, iter, drops)
 
     # Append current frame to the list, to be animated at the post-processing
     U_stepwise_for_animation = np.append(U_stepwise_for_animation,
@@ -94,7 +94,7 @@ logger.log('solution duration' + 11 * '-'
            + util.secs_to_time(solution_end - start))
 
 # Post-processing
-mattFlow_post.createAnimation(U_stepwise_for_animation, cx, cy, time_array_for_ani)
+mattflow_post.createAnimation(U_stepwise_for_animation, cx, cy, time_array_for_ani)
 
 # Post-processing duration
 end = timer()
