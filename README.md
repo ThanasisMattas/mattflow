@@ -82,7 +82,7 @@ structured/cartesian mesh
    - [Lax-Friedrichs] Reiman
    &nbsp;&nbsp;                | O(Δt, Δx<sup>2</sup>, Δy<sup>2</sup>)  
    - 2-stage [Rugne-Kutta]
-   &nbsp; &nbsp; &nbsp;&nbsp;  | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
+   &nbsp; &nbsp; &nbsp;        | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
    &ensp;| default  
    - [MacCormack]
    &emsp; &emsp; &emsp; &emsp; | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)

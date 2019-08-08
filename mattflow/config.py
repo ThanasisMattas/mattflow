@@ -42,10 +42,10 @@ Ny = 100
 Ng = 1
 
 # Domain (basin) limits
-MIN_X = -1.4
-MAX_X = 1.4
-MIN_Y = -1.4
-MAX_Y = 1.4
+MIN_X = -1.5
+MAX_X = 1.5
+MIN_Y = -1.5
+MAX_Y = 1.5
 #
 # }
 
@@ -57,7 +57,7 @@ STOPPING_TIME = 3
 MAX_ITERS = 800
 
 # Courant number
-COURANT = 0.8
+COURANT = 0.6
 
 # Surface level
 SURFACE_LEVEL = 1
@@ -74,7 +74,7 @@ MODE = 'drops'
 N_DROPS = 6
 
 # Number of iterations between drops
-ITERS_FOR_NEXT_DROP = 80
+ITERS_FOR_NEXT_DROP = 100
 
 # Boundary conditions
 # -------------------
