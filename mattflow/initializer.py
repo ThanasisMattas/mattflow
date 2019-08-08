@@ -86,12 +86,12 @@ def drop(hights_list, cx, cy):
     radiousSquared = (CX - DROP_CENTER_X)**2 + (CY - DROP_CENTER_Y)**2
 
     # gaussian distribution formula
-    # multiply with     2 for a small stone droping
+    # multiply with 3 / 2 for a small stone droping
     #          with 2 / 3 for a water drop with a considerable momentum build
-    #          with 1 / 7 for a soft water drop
+    #          with 1 / 4 for a soft water drop
     if conf.MODE == 'single drop' or conf.MODE == 'drops':
         variance = 0.03**2
-        hights_list += 2 / np.sqrt(2 * np.pi * variance) \
+        hights_list += 3 / 2 / np.sqrt(2 * np.pi * variance) \
                        * np.exp(- radiousSquared / 2 / variance)
     elif conf.MODE == 'rain':
         variance = 0.01**2

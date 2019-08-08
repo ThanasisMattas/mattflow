@@ -34,18 +34,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # Pre-processing configuration {
 #
 # Number of cells on x and y axis
-Nx = 100
-Ny = 100
+Nx = 105
+Ny = 105
 
 # Number of ghost cells (used for applying Boundary Conditions)
 # Depends on the used numerical scheme
 Ng = 1
 
 # Domain (basin) limits
-MIN_X = -1.5
-MAX_X = 1.5
-MIN_Y = -1.5
-MAX_Y = 1.5
+MIN_X = -1.2
+MAX_X = 1.2
+MIN_Y = -1.2
+MAX_Y = 1.2
 #
 # }
 
