@@ -15,29 +15,39 @@ ___
 
 ## How to run MattFlow
 
-The required steps to run a simulation are gathered in the script ```mattflow.py```
-
-
-1. simple download
+1. pip
 
 ```bash
-$ mkdir <mattflow>
-$ cd <mattflow>
-$ git clone https://github.com/ThanasisMattas/mattflow.git
-$ python mattflow.py
+$ mkdir mattflow
+$ cd mattflow
+$ pip install numpy matplotlib
+$ pip install mattflow
+$ mattflow
 ```
 
-2. anaconda environment  
+2. venv (python>=3.3)
+
+```bash
+$ mkdir mattflow
+$ cd mattflow
+$ python3 -m venv mattflow_env
+$ source mattflow_env/bin/activate
+$ pip install numpy matplotlib
+$ pip install mattflow
+$ mattflow
+```
+
+3. anaconda environment  
    (this is prefered, because anaconda handles low level libs required from
    matplotib animation)
 
 ```bash
-$ conda create --name mattflow numpy matplotlib
+$ conda create --name mattflow pip numpy matplotlib
 $ conda activate mattflow
-$ mkdir <mattflow>
-$ cd <mattflow>
-$ git clone https://github.com/ThanasisMattas/mattflow.git
-$ python mattflow.py
+$ mkdir mattflow
+$ cd mattflow
+$ pip install mattflow
+$ mattflow
 ```
 
 
@@ -70,12 +80,13 @@ structured/cartesian mesh
 2. solution  
    supported solvers:  
    - [Lax-Friedrichs] Reiman
-   &ensp;                     | O(Δt, Δx<sup>2</sup>, Δy<sup>2</sup>)  
+   &nbsp;&nbsp;                | O(Δt, Δx<sup>2</sup>, Δy<sup>2</sup>)  
    - 2-stage [Rugne-Kutta]
-   &emsp;&nbsp;               | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
+   &nbsp; &nbsp; &nbsp;&nbsp;  | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
    &ensp;| default  
    - [MacCormack]
-   &emsp; &emsp; &emsp; &emsp;| O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)  
+   &emsp; &emsp; &emsp; &emsp; | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
+   &ensp;| experimental
 3. post-processing  
    matplotlib animation
 
