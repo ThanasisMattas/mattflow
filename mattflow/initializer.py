@@ -76,29 +76,40 @@ def drop(hights_list, cx, cy):
     @param cy             : centers of the cells along the y axis  
     returns hights_list   : drop is added to the input hights_list
     """
-    # grid of the cell centers
-    CX, CY = np.meshgrid(cx, cy)
 
-    # random pick of drop center dimentions (mean or expectation of the gaussian
-    # distribution)
-    DROP_CENTER_X = random.uniform(conf.MIN_X, conf.MAX_X)
-    DROP_CENTER_Y = random.uniform(conf.MIN_Y, conf.MAX_Y)
-
-    # squared distance of each cell from the mean value of the distribution
-    radiousSquared = (CX - DROP_CENTER_X)**2 + (CY - DROP_CENTER_Y)**2
-
-    # gaussian distribution formula
     # multiply with 3 / 2 for a small stone droping
-    #          with 2 / 3 for a water drop with a considerable momentum build
-    #          with 1 / 4 for a soft water drop
+    #          with 1 / 5 for a water drop with a considerable momentum build
+    #          with 1 / 8 for a soft water drop
     if conf.MODE == 'single drop' or conf.MODE == 'drops':
         variance = 0.03**2
-        hights_list += 3 / 2 / np.sqrt(2 * np.pi * variance) \
-                       * np.exp(- radiousSquared / 2 / variance)
+        hights_list += 3 / 2 * gaussian(variance, cx, cy)
     elif conf.MODE == 'rain':
         variance = 0.01**2
-        hights_list += 1 / 4 / np.sqrt(2 * np.pi * variance) \
-                       * np.exp(- radiousSquared / 2 / variance)
+        hights_list += 1 / 8 * gaussian(variance, cx, cy)
     else:
         print("Configure MODE | options: 'single drop', 'drops', 'rain'")
     return hights_list
+
+
+def gaussian(variance, cx, cy):
+    '''
+    produces a bivariate gaussian distribution of a certain variance  
+    ----------------------------------------------------------------
+    formula: amplitude * np.exp(-exponent)
+
+    @param variance       : target variance of the distribution  
+    @param cx             : centers of the cells along the x axis  
+    @param cy             : centers of the cells along the y axis
+    '''
+    # random pick of drop center coordinates (mean or expectation of the
+    # gaussian distribution)
+    DROP_CENTER_X = random.uniform(conf.MIN_X, conf.MAX_X)
+    DROP_CENTER_Y = random.uniform(conf.MIN_Y, conf.MAX_Y)
+
+    # grid of the cell centers
+    CX, CY = np.meshgrid(cx, cy)
+
+    amplitude = 1 / np.sqrt(2 * np.pi * variance)
+    exponent = ((CX - DROP_CENTER_X)**2 + (CY - DROP_CENTER_Y)**2)/ 2 / variance
+
+    return amplitude * np.exp(-exponent)
