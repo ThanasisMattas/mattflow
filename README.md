@@ -20,7 +20,6 @@ ___
 ```bash
 $ mkdir mattflow
 $ cd mattflow
-$ pip install numpy matplotlib
 $ pip install mattflow
 $ mattflow
 ```
@@ -42,7 +41,7 @@ $ mattflow
    matplotib animation)
 
 ```bash
-$ conda create --name mattflow pip numpy matplotlib
+$ conda create --name mattflow pip
 $ conda activate mattflow
 $ mkdir mattflow
 $ cd mattflow
@@ -108,7 +107,7 @@ Currently, you can configure the simulation at the config file
 
 1. mattflow_exceptions
 2. tests
-3. pylint
+3. linting support
 4. Simple API to configure the simulation
 5. Implementation of higher order schemes
 6. Addition of source terms
