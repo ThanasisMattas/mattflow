@@ -36,10 +36,12 @@ import random
 
 def initialize(cx, cy):
     """
-    creates and initializes a state-variables-3D-matrix, U
+    creates and initializes the state-variables-3D-matrix, U
     ------------------------------------------------------
-    1st dimention is the state varables [h, hu, hv], populating the x,y grid
-    2nd and 3rd dimentions consist the x,y grid
+    U[0]:  state varables [h, hu, hv], populating the x,y grid  
+    U[1]:  y dimention (rows)  
+    U[2]:  x dimention (columns)  
+
     @param cx    : centers of the cells along the x axis  
     @param cy    : centers of the cells along the y axis  
     returns U    : state-variables-3D-matrix

@@ -108,13 +108,14 @@ Currently, you can configure the simulation at the config file
 
 1. mattflow_exceptions
 2. tests
-3. Simple API to configure the simulation
-4. Implementation of higher order schemes
-5. Addition of source terms
-6. Addition of viscous models
-7. Support moving objects inside the domain
-8. Unstructured mesh
-9. Extent to 3D CFD
+3. pylint
+4. Simple API to configure the simulation
+5. Implementation of higher order schemes
+6. Addition of source terms
+7. Addition of viscous models
+8. Support moving objects inside the domain
+9. Unstructured mesh
+10. Extent to 3D CFD
 
 
 ***Start the flow!***

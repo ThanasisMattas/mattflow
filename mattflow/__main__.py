@@ -16,11 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 '''
     Welcome to MattFlow!
-
-    to execute:
-    $ pip install mattlfow
-    $ mattflow
-'''
+                        '''
 
 
 from mattflow import config as conf
@@ -99,7 +95,7 @@ def main():
 
     # Duration of the solution
     solution_end = timer()
-    logger.log('solution duration' + 11 * '-'
+    logger.log('Solution duration' + 11 * '-'
             + util.secs_to_time(solution_end - start))
 
     # Post-processing
