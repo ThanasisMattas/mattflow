@@ -100,16 +100,13 @@ SOLVER_TYPE = '2-stage Runge-Kutta'
 PLOTTING_STYLE = 'wireframe'
 
 # Render the basin that contains the fluid
-# Options: 'ON', 'OF'
-SHOW_BASIN = 'OF'
+SHOW_BASIN = False
 
 # Show the animation
-# Options: 'ON', 'OF'
-SHOW_ANIMATION = 'ON'
+SHOW_ANIMATION = True
 
 # Saving the animation
-# Options: 'ON', 'OF'
-SAVE_ANIMATION = 'OF'
+SAVE_ANIMATION = False
 
 # Directory where ffmpeg is installed
 PATH_TO_FFMPEG = '/usr/bin/ffmpeg'
@@ -124,7 +121,6 @@ VID_FORMAT = 'mp4'
 # Writing dat files mode
 # ----------------------
 # Select whether dat files are generated or not
-# Options: 'ON', 'OF'
-DAT_WRITING_MODE = 'OF'
+DAT_WRITING_MODE = False
 #
 # }

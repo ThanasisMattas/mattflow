@@ -83,7 +83,7 @@ structured/cartesian mesh
    &nbsp; &nbsp; &nbsp;        | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
    &ensp;| default  
    - [MacCormack]
-   &emsp; &emsp; &emsp; &emsp; | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
+   &emsp; &emsp; &emsp;&emsp; | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
    &ensp;| experimental
 3. post-processing  
    matplotlib animation

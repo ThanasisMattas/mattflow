@@ -52,16 +52,16 @@ def initialize(cx, cy):
     # 1st drop
     U[0, :, :] = conf.SURFACE_LEVEL + drop(U[0, :, :], cx, cy)
 
-    # write dat | default: 'OF'
-    if conf.DAT_WRITING_MODE == 'OF':
+    # write dat | default: False
+    if conf.DAT_WRITING_MODE == False:
         pass
-    elif conf.DAT_WRITING_MODE == 'ON':
+    elif conf.DAT_WRITING_MODE == True:
         dat_writer.writeDat(U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng], cx, cy,
                             time=0, iter=0)
         from mattflow import mattFlow_post
         mattFlow_post.plotFromDat(time=0, iter=0)
     else:
-        print("Configure DAT_WRITING_MODE | Options: 'ON', 'OF'")
+        print("Configure DAT_WRITING_MODE | Options: True, False")
     return U
 
 

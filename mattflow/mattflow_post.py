@@ -91,7 +91,7 @@ def plotFromDat(time, iter):
     sub.view_init(50, 45)
 
     # render the basin that contains the fluid
-    if conf.SHOW_BASIN == 'ON':
+    if conf.SHOW_BASIN == True:
         # make basin a bit wider, because water appears to be out of the basin
         # because of the perspective mode
         X_bas,Y_bas = np.meshgrid(cx[conf.Ng - 1: conf.Nx + 2],
@@ -106,10 +106,10 @@ def plotFromDat(time, iter):
         BASIN[conf.Ny + 2 * conf.Ng - 1, :] = 2.4
         sub.plot_surface(X_bas, Y_bas, BASIN, rstride=2, cstride=2, linewidth=0,
                          color=(0.4, 0.4, 0.5, 0.1))
-    elif conf.SHOW_BASIN == 'OF':
+    elif conf.SHOW_BASIN == False:
         pass
     else:
-        logger.log("Configure SHOW_BASIN. Options: 'ON', 'OF'")
+        logger.log("Configure SHOW_BASIN. Options: True, False")
 
     # save
     zeros_left = (4 - len(str(iter))) * '0'
@@ -223,7 +223,7 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
     # }
 
     # render the basin that contains the fluid
-    if conf.SHOW_BASIN == 'ON':
+    if conf.SHOW_BASIN == True:
         # make basin a bit wider, because water appears to be out of the basin
         # because of the perspective mode
         X_bas,Y_bas = np.meshgrid(cx[conf.Ng - 1: conf.Nx + 2],
@@ -238,10 +238,10 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
         BASIN[conf.Ny + 2 * conf.Ng - 1, :] = 2.4
         sub.plot_surface(X_bas, Y_bas, BASIN, rstride=2, cstride=2, linewidth=0,
                          color=(0.4, 0.4, 0.5, 0.1))
-    elif conf.SHOW_BASIN == 'OF':
+    elif conf.SHOW_BASIN == False:
         pass
     else:
-        logger.log("Configure SHOW_BASIN | Options: 'ON', 'OF'")
+        logger.log("Configure SHOW_BASIN. Options: True, False")
 
     # generate the animation
     ani = animation.FuncAnimation(fig, update_plot, frames,
@@ -249,7 +249,7 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
         interval=1000 / fps, repeat=True)
 
     # save the animation
-    if conf.SAVE_ANIMATION == 'ON':
+    if conf.SAVE_ANIMATION == True:
         try:
             # file name
             date_n_time = str(datetime.now())[:19]
@@ -280,16 +280,16 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
         except FileNotFoundError:
             logger.log('FileNotFoundError: No such file or directory:'
                        + file_name + '.' + conf.VID_FORMAT)
-    elif conf.SAVE_ANIMATION == 'OF':
+    elif conf.SAVE_ANIMATION == False:
         pass
     else:
-        logger.log("Configure SAVE_ANIMATION | Options: 'ON', 'OF'")
+        logger.log("Configure SAVE_ANIMATION | Options: True, False")
 
     # Play the animation
-    if conf.SHOW_ANIMATION == 'ON':
+    if conf.SHOW_ANIMATION == True:
         logger.log('Playing animation...')
         plt.show()
-    elif conf.SHOW_ANIMATION == 'OF':
+    elif conf.SHOW_ANIMATION == False:
         pass
     else:
-        logger.log("Configure SHOW_ANIMATION | Options: 'ON', 'OF'")
+        logger.log("Configure SHOW_ANIMATION | Options: True, False")

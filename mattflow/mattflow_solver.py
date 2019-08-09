@@ -103,15 +103,15 @@ def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
                 - flux.G(U_pred[:, Ng - 1: Ny + Ng - 1, Ng: -Ng]))
     '''
 
-    # write dat
-    if conf.DAT_WRITING_MODE == 'OF':
+    # write dat | default: False
+    if conf.DAT_WRITING_MODE == False:
         pass
-    elif conf.DAT_WRITING_MODE == 'ON':
+    elif conf.DAT_WRITING_MODE == True:
         time = iter * delta_t
         dat_writer.writeDat(U[0, Ng: Ny + Ng, Ng: Nx + Ng], cx, cy, time, iter)
         # mattFlow_post.plotFromDat(time=0, iter=0)
     else:
-        print("Configure DAT_WRITING_MODE | Options: 'ON', 'OF'")
+        print("Configure DAT_WRITING_MODE | Options: True, False")
 
 
 def dt(U, dx, dy):
