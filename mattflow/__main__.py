@@ -89,7 +89,9 @@ def main():
         U_stepwise_for_animation = np.append(U_stepwise_for_animation,
             [U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]], 0)
 
-        logger.log('iter: ' + str(iter))
+        spaces = 6 - len(str(iter))     # for vertical printing alignment
+        logger.log('iter:' + spaces * ' ' + str(iter) + '    time: '
+                   + str('{:0.3f}'.format(time)))
     #
     # }
 

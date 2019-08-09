@@ -31,13 +31,12 @@ $ mkdir mattflow
 $ cd mattflow
 $ python3 -m venv mattflow_env
 $ source mattflow_env/bin/activate
-$ pip install numpy matplotlib
 $ pip install mattflow
 $ mattflow
 ```
 
 3. anaconda environment  
-   (this is prefered, because anaconda handles low level libs required from
+   (this is prefered, because anaconda handles low level libs required from  
    matplotib animation)
 
 ```bash
