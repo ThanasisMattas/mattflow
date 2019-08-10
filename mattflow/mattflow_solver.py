@@ -136,7 +136,7 @@ def dt(U, dx, dy):
     current iteration.
 
     The velocity field is step-wisely changing and, thus, the calculation of dt
-    is repeated at each iteration, preserving consistency with the CFD condition.
+    is repeated at each iteration, preserving consistency with the CFL condition.
 
     @param U          : 3D matrix of the state variables, populating a x,y grid  
     @param dx         : spatial discretization step on x axis  

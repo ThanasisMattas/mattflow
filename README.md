@@ -69,8 +69,8 @@ _g_ : gravity acceleration
 
 ## MattFlow structure <span style="font-size:small;">[jupyter notebook]</span>
 
-1. configuration of the simulation via a config file
-2. pre-process  
+0. configuration of the simulation via a config file
+1. pre-process  
 structured/cartesian mesh
 2. solution  
    supported solvers:  
@@ -80,11 +80,10 @@ structured/cartesian mesh
    &nbsp; &nbsp; &nbsp;        | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
    &ensp;| default  
    - [MacCormack]
-   &emsp; &emsp; &emsp;&emsp; | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
+   &emsp; &emsp; &emsp; &emsp; | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
    &ensp;| experimental
 3. post-processing  
    matplotlib animation
-
 
 ## Additional configurations
 
@@ -100,17 +99,17 @@ Currently, you can configure the simulation at the _config_ module
 
 ## TODO
 
-1. mattflow_exceptions
-2. tests
-3. linting support
+1. exceptions
+2. pytest
+3. linting
 4. Simple API to configure the simulation
 5. Implementation of higher order schemes
 6. Addition of source terms
 7. Addition of viscous models
-8. Support moving objects inside the domain
-9. Unstructured mesh
-10. Extent to 3D CFD
-
+8. Moving core to C++, Cython or Numba
+9. Support moving objects inside the domain
+10. Unstructured mesh
+11. Extent to 3D CFD
 
 ***Start the flow!***
 

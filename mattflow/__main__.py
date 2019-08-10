@@ -70,7 +70,7 @@ def main():
 
     for iter in range(1, conf.MAX_ITERS):     # conf.MAX_ITERS
 
-        # Time discretization step
+        # Time discretization step (CFL condition)
         delta_t = mattflow_solver.dt(U, dx, dy)
 
         # Update current time
