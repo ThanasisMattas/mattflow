@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 import os
 
 
-REQUIRED = ['numpy>=1.17.0',
+REQUIRED = ['numpy>=1.16.4',
             'matplotlib>=3.1.1']
 
 EXTRAS = {'write video': ['ffmpeg'],}
