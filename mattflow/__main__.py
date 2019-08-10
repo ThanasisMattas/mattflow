@@ -1,6 +1,6 @@
 '''
 =============================================================================
-@file   __main__.py
+@file   __main__.py  
 @author Thanasis Mattas
 
 Script that executes all the required processes for the simulation.
@@ -9,7 +9,7 @@ MattFlow is free software; you may redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version. You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+along with this program. If not, see <https://www.gnu.org/licenses/>.
 =============================================================================
 '''
 
@@ -79,7 +79,7 @@ def main():
             break
         time_array_for_ani = update_time_array(time)
 
-        # Apply boundary conditions
+        # Apply boundary conditions (reflective)
         U = boundaryConditionsManager.updateGhostCells(U)
 
         # Numerical iterative scheme

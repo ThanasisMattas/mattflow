@@ -1,6 +1,6 @@
 '''
 =============================================================================
-@file   mattflow_post.py
+@file   mattflow_post.py  
 @author Thanasis Mattas
 
 Handles the post-processing of the simulation.
@@ -9,7 +9,7 @@ MattFlow is free software; you may redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version. You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+along with this program. If not, see <https://www.gnu.org/licenses/>.
 =============================================================================
 '''
 
@@ -221,6 +221,7 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
                    "'wireframe'")
     plt.title('time: {0:.3f}'.format(time_array[0]))
     # }
+    
 
     # render the basin that contains the fluid
     if conf.SHOW_BASIN == True:
@@ -288,7 +289,13 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
     # Play the animation
     if conf.SHOW_ANIMATION == True:
         logger.log('Playing animation...')
-        plt.show()
+        try:
+            # In case of jupyter notebook, don't run plt.show(), to prevent
+            # displaying a static figure. Instead, return the ani object.
+            get_ipython()
+            return ani
+        except NameError:
+            plt.show()
     elif conf.SHOW_ANIMATION == False:
         pass
     else:

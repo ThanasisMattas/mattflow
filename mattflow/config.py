@@ -1,6 +1,6 @@
 '''
 =============================================================================
-@file   config.py
+@file   config.py  
 @author Thanasis Mattas
 
 Configuration of the simulation
@@ -9,7 +9,7 @@ MattFlow is free software; you may redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version. You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+along with this program. If not, see <https://www.gnu.org/licenses/>.
 =============================================================================
 '''
 
