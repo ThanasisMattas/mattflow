@@ -73,7 +73,7 @@ def plotFromDat(time, iter):
 
     if conf.PLOTTING_STYLE == 'water':
         sub.plot_surface(X, Y, Z[0], rstride=1, cstride=1, linewidth=0,
-            color=(0.251, 0.643, 0.875, 0.85), antialiased=False)
+            color=(0.251, 0.643, 0.875, 0.9), antialiased=False)
     elif conf.PLOTTING_STYLE == 'contour':
         sub.contour3D(X, Y, Z[0], 140, cmap='plasma',
             vmin=0.6, vmax=1.4)
@@ -91,32 +91,12 @@ def plotFromDat(time, iter):
     sub.view_init(50, 45)
 
     # render the basin that contains the fluid
-    if conf.SHOW_BASIN == True:
-        # make basin a bit wider, because water appears to be out of the basin
-        # because of the perspective mode
-        X_bas,Y_bas = np.meshgrid(cx[conf.Ng - 1: conf.Nx + 2],
-                                  cy[conf.Ng - 1: conf.Ny + 2])
-        # BASIN
-        BASIN = np.zeros((conf.Ny + 2 * conf.Ng, conf.Nx + 2 * conf.Ng))
-        # left-right walls
-        BASIN[:, 0] = 2.4
-        BASIN[:, conf.Nx + 2 * conf.Ng - 1] = 2.4
-        # top-bottom walls
-        BASIN[0, :] = 2.4
-        BASIN[conf.Ny + 2 * conf.Ng - 1, :] = 2.4
-        sub.plot_surface(X_bas, Y_bas, BASIN, rstride=2, cstride=2, linewidth=0,
-                         color=(0.4, 0.4, 0.5, 0.1))
-    elif conf.SHOW_BASIN == False:
-        pass
-    else:
-        logger.log("Configure SHOW_BASIN. Options: True, False")
+    plotBasin()
 
     # save
     zeros_left = (4 - len(str(iter))) * '0'
     # fig.tight_layout()
-    plt.savefig('session/iter_' + zeros_left + str(iter) + '.png')  # , bbox_inches='tight'
-    # plt.pause(0.02)
-    # plt.draw()
+    plt.savefig('session/iter_' + zeros_left + str(iter) + '.png')
     plt.close()
     #
     # }
@@ -158,8 +138,8 @@ def update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
                                 vmin=0.5, vmax=1.5)
     elif conf.PLOTTING_STYLE == 'wireframe':
         plot[0].remove()
-        plot[0] = sub.plot_wireframe(X, Y, Z[frame_number], rstride=2,
-            cstride=2, linewidth=1)
+        plot[0] = sub.plot_wireframe(X, Y, Z[frame_number], rstride=2, cstride=2,
+                                     linewidth=1)
 
     # frame title
     plt.title('time: {0:.3f}'.format(time_array[frame_number]))
@@ -179,15 +159,14 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
     fps = 30
     # dots per inch
     dpi = 30
-    # figure size at inches
+    # figure size in inches
     # golden ratio: 1.618
     figsize = (12.944, 8)
 
     # resolution = figsize * dpi
     # --------------------------
     # example:
-    # figsize = (9.6, 5.4)
-    # dpi=200
+    # figsize = (9.6, 5.4), dpi=200
     # resolution: 1920x1080 (1920/200=9.6)
 
     # total frames
@@ -210,7 +189,7 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
     # initialization plot {
     if conf.PLOTTING_STYLE == 'water':
         plot = [sub.plot_surface(X, Y, Z[0], rstride=1, cstride=1, linewidth=0,
-            color=(0.251, 0.643, 0.875, 0.95), shade=True, antialiased=False)]
+            color=(0.251, 0.643, 0.875, 0.9), shade=True, antialiased=False)]
     elif conf.PLOTTING_STYLE == 'contour':
         plot = [sub.contour3D(X, Y, Z[0], 150, cmap='ocean', vmin=0.5, vmax=1.5)]
     elif conf.PLOTTING_STYLE == 'wireframe':
@@ -224,25 +203,7 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
     
 
     # render the basin that contains the fluid
-    if conf.SHOW_BASIN == True:
-        # make basin a bit wider, because water appears to be out of the basin
-        # because of the perspective mode
-        X_bas,Y_bas = np.meshgrid(cx[conf.Ng - 1: conf.Nx + 2],
-                                  cy[conf.Ng - 1: conf.Ny + 2])
-        # BASIN
-        BASIN = np.zeros((conf.Ny + 2 * conf.Ng, conf.Nx + 2 * conf.Ng))
-        # left-right walls
-        BASIN[:, 0] = 2.4
-        BASIN[:, conf.Nx + 2 * conf.Ng - 1] = 2.4
-        # top-bottom walls
-        BASIN[0, :] = 2.4
-        BASIN[conf.Ny + 2 * conf.Ng - 1, :] = 2.4
-        sub.plot_surface(X_bas, Y_bas, BASIN, rstride=2, cstride=2, linewidth=0,
-                         color=(0.4, 0.4, 0.5, 0.1))
-    elif conf.SHOW_BASIN == False:
-        pass
-    else:
-        logger.log("Configure SHOW_BASIN. Options: True, False")
+    plotBasin()
 
     # generate the animation
     ani = animation.FuncAnimation(fig, update_plot, frames,
@@ -300,3 +261,28 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
         pass
     else:
         logger.log("Configure SHOW_ANIMATION | Options: True, False")
+
+
+def plotBasin():
+    """
+    plots the basin that contains the fluid
+    """
+    if conf.SHOW_BASIN == True:
+        # make basin a bit wider, because water appears to be out of the basin
+        # because of the perspective mode
+        X_bas,Y_bas = np.meshgrid(cx[conf.Ng - 1: conf.Nx + 2],
+                                  cy[conf.Ng - 1: conf.Ny + 2])
+        # BASIN
+        BASIN = np.zeros((conf.Ny + 2 * conf.Ng, conf.Nx + 2 * conf.Ng))
+        # left-right walls
+        BASIN[:, 0] = 2.4
+        BASIN[:, conf.Nx + 2 * conf.Ng - 1] = 2.4
+        # top-bottom walls
+        BASIN[0, :] = 2.4
+        BASIN[conf.Ny + 2 * conf.Ng - 1, :] = 2.4
+        sub.plot_surface(X_bas, Y_bas, BASIN, rstride=2, cstride=2, linewidth=0,
+                         color=(0.4, 0.4, 0.5, 0.1))
+    elif conf.SHOW_BASIN == False:
+        pass
+    else:
+        logger.log("Configure SHOW_BASIN. Options: True, False")
