@@ -156,9 +156,9 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
     @time_array                        : holds the iter-wise times
     """
     # frames per sec
-    fps = 30
+    fps = 40
     # dots per inch
-    dpi = 30
+    dpi = 50
     # figure size in inches
     # golden ratio: 1.618
     figsize = (12.944, 8)

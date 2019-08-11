@@ -34,18 +34,18 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 # Pre-processing configuration {
 #
 # Number of cells on x and y axis
-Nx = 105
-Ny = 105
+Nx = 110
+Ny = 110
 
 # Number of ghost cells (used for applying Boundary Conditions)
 # Depends on the used numerical scheme
 Ng = 1
 
 # Domain (basin) limits
-MIN_X = -1.2
-MAX_X = 1.2
-MIN_Y = -1.2
-MAX_Y = 1.2
+MIN_X = -1.4
+MAX_X = 1.4
+MIN_Y = -1.4
+MAX_Y = 1.4
 #
 # }
 
@@ -54,7 +54,7 @@ MAX_Y = 1.2
 #
 # Ending conditions of the simulation
 STOPPING_TIME = 3
-MAX_ITERS = 800
+MAX_ITERS = 650
 
 # Courant number
 COURANT = 0.6
@@ -71,10 +71,10 @@ SURFACE_LEVEL = 1
 MODE = 'drops'
 
 # Number of drops
-N_DROPS = 6
+N_DROPS = 5
 
 # Number of iterations between drops
-ITERS_FOR_NEXT_DROP = 100
+ITERS_FOR_NEXT_DROP = 110
 
 # Boundary conditions
 # -------------------
