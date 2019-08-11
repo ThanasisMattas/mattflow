@@ -3,8 +3,10 @@
 A CFD python package for the shallow water equations.
 
 MattFlow simulates the surface of the water after any initial conditions, such as drops or stones falling on.
-___
 
+<img src="https://media.giphy.com/media/jpVKPxzBiGoSvNYUrY/giphy.gif" width="265" height="150" /> <img src="https://media.giphy.com/media/VJNqBY7uKP3r0AvCcp/giphy.gif" width="265" height="150" /> <img src="https://media.giphy.com/media/QxYpANpE5snKSrdLJ5/giphy.gif" width="265" height="150" />
+
+___
 
 | requirements      | os        |
 | ----------------  | --------- |
@@ -12,7 +14,6 @@ ___
 | numpy 1.16.4      | Windows   |
 | matplotlib 3.1.1  |           |
 | ffmpeg (optional) |           |
-
 
 ## How to install & run MattFlow
 
