@@ -1,5 +1,4 @@
 '''
-=============================================================================
 @file   logger.py  
 @author Thanasis Mattas
 
@@ -10,7 +9,6 @@ terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version. You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
-=============================================================================
 '''
 
 
@@ -33,9 +31,9 @@ def log(state):
     --------------------
     @param state    : the string to be logged
     """
-
     # Check if a log file is already created (update the 1st encountered)
-    files_list = [f for f in os.listdir('.') if f.endswith(".log")]
+    here = os.path.abspath(os.path.dirname(__file__))
+    files_list = [f for f in os.listdir(here) if f.endswith(".log")]
     if files_list:
         # Append the state
         with open(files_list[0], 'a') as fa:
