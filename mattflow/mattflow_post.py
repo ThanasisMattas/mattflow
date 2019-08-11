@@ -224,7 +224,7 @@ def plotBasin(cx, cy, sub):
     @param cy        : y axis cell centers  
     @param sub       : Axes3D subplot object  
     """
-    if conf.SHOW_BASIN == True:
+    if conf.SHOW_BASIN is True:
         # make basin a bit wider, because water appears to be out of the basin
         # because of the perspective mode
         X_bas,Y_bas = np.meshgrid(cx[conf.Ng - 1: conf.Nx + 2],
@@ -239,7 +239,7 @@ def plotBasin(cx, cy, sub):
         BASIN[conf.Ny + 2 * conf.Ng - 1, :] = 2.4
         sub.plot_surface(X_bas, Y_bas, BASIN, rstride=2, cstride=2, linewidth=0,
                          color=(0.4, 0.4, 0.5, 0.1))
-    elif conf.SHOW_BASIN == False:
+    elif conf.SHOW_BASIN is False:
         pass
     else:
         logger.log("Configure SHOW_BASIN. Options: True, False")
@@ -253,7 +253,7 @@ def saveAni(ani, fps, dpi):
     @param fps             : frames per second  
     @param dpi             : dots per inch
     """
-    if conf.SAVE_ANIMATION == True:
+    if conf.SAVE_ANIMATION is True:
 
         # file name
         date_n_time = str(datetime.now())[:19]
@@ -284,7 +284,7 @@ def saveAni(ani, fps, dpi):
                     + ' | fps: ' + str(fps))
         except FileNotFoundError:
             logger.log('Configure PATH_TO_FFMPEG')
-    elif conf.SAVE_ANIMATION == False:
+    elif conf.SAVE_ANIMATION is False:
         pass
     else:
         logger.log("Configure SAVE_ANIMATION | Options: True, False")
@@ -297,7 +297,7 @@ def playAni(ani):
     @param ani              : animation.FuncAnimation() object  
     returns ani             : in case of jupyter notebook
     """
-    if conf.SHOW_ANIMATION == True:
+    if conf.SHOW_ANIMATION is True:
         logger.log('Playing animation...')
         try:
             # In case of jupyter notebook, don't run plt.show(), to prevent
@@ -306,7 +306,7 @@ def playAni(ani):
             return ani
         except NameError:
             plt.show()
-    elif conf.SHOW_ANIMATION == False:
+    elif conf.SHOW_ANIMATION is False:
         pass
     else:
         logger.log("Configure SHOW_ANIMATION | Options: True, False")

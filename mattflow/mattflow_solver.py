@@ -104,9 +104,9 @@ def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
     '''
 
     # write dat | default: False
-    if conf.DAT_WRITING_MODE == False:
+    if conf.DAT_WRITING_MODE is False:
         pass
-    elif conf.DAT_WRITING_MODE == True:
+    elif conf.DAT_WRITING_MODE is True:
         time = iter * delta_t
         dat_writer.writeDat(U[0, Ng: Ny + Ng, Ng: Nx + Ng], cx, cy, time, iter)
         # mattFlow_post.plotFromDat(time=0, iter=0)

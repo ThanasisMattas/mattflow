@@ -53,9 +53,9 @@ def initialize(cx, cy):
     U[0, :, :] = conf.SURFACE_LEVEL + drop(U[0, :, :], cx, cy)
 
     # write dat | default: False
-    if conf.DAT_WRITING_MODE == False:
+    if conf.DAT_WRITING_MODE is False:
         pass
-    elif conf.DAT_WRITING_MODE == True:
+    elif conf.DAT_WRITING_MODE is True:
         dat_writer.writeDat(U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng], cx, cy,
                             time=0, iter=0)
         from mattflow import mattFlow_post
