@@ -26,9 +26,9 @@ license_msg = 'GNU General Public License | Version 3'
 
 def log(state):
     """
-    creates a log file, if one does not exist, and appends a string at a new \
-    line of the log file
-    --------------------
+    appends a state-message at a new line of the log file
+    -----------------------------------------------------
+    If a log file does not exist, it creates one, printing the simulation info.  
     @param state    : the string to be logged
     """
     # Check if a log file is already created (update the 1st encountered)
