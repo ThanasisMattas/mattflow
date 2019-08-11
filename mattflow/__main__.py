@@ -83,7 +83,7 @@ def main():
         U = boundaryConditionsManager.updateGhostCells(U)
 
         # Numerical iterative scheme
-        U = mattflow_solver.solve(U, dx, cx, dy, cy, delta_t, iter, drops)
+        U, drops = mattflow_solver.solve(U, dx, cx, dy, cy, delta_t, iter, drops)
 
         # Append current frame to the list, to be animated at post-processing
         U_stepwise_for_animation = np.append(U_stepwise_for_animation,

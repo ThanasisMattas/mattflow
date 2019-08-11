@@ -35,7 +35,7 @@ def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
     @param dx         : spatial discretization step on x axis  
     @param dy         : spatial discretization step on y axis  
     @param delta_t    : time discretization step  
-    returns U
+    returns U, drops
     """
     # Simulation mode
     # ---------------
@@ -77,7 +77,7 @@ def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
     else:
         print("Configure SOLVER_TYPE | Options: 'Lax-Friedrichs Riemann', ",
               "'2-stage Runge-Kutta'")
-    return U
+    return U, drops
 
 
     '''
