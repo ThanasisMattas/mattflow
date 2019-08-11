@@ -32,8 +32,8 @@ def log(state):
     @param state    : the string to be logged
     """
     # Check if a log file is already created (update the 1st encountered)
-    here = os.path.abspath(os.path.dirname(__file__))
-    files_list = [f for f in os.listdir(here) if f.endswith(".log")]
+    working_dir = os.getcwd()
+    files_list = [f for f in os.listdir(working_dir) if f.endswith(".log")]
     if files_list:
         # Append the state
         with open(files_list[0], 'a') as fa:
