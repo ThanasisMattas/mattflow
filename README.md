@@ -68,7 +68,8 @@ _ρ_ : density
 _g_ : gravity acceleration
 
 
-## MattFlow structure <span style="font-size:small;">[jupyter notebook]</span>
+## MattFlow structure
+&emsp;**More details at this [jupyter notebook]**
 
 0. configuration of the simulation via a config file
 1. pre-process  
