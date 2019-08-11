@@ -28,8 +28,8 @@ def plotFromDat(time, iter):
     """
     creates and saves a frame as png, reading data from a dat file  
     --------------------------------------------------------------  
-    @param time    current time  
-    @param iter    current iter
+    @param time        : current time  
+    @param iter        : current iter
     """
     # Create ./session directory for saving the results
     try:
@@ -91,7 +91,7 @@ def plotFromDat(time, iter):
     sub.view_init(50, 45)
 
     # render the basin that contains the fluid
-    plotBasin()
+    plotBasin(cx, cy, sub)
 
     # save
     zeros_left = (4 - len(str(iter))) * '0'
@@ -108,12 +108,12 @@ def update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
     -------------------------------------------------------------------  
     used from FuncAnimation to iteratively create a timelapse animation  
 
-    @param frame_number    current frame  
-    @param X, Y, Z         meshgrid and values  
-    @param plot            list holding current plot  
-    @param fig             activated plt.figure  
-    @param sub             subplot  
-    @time_array            holds the iter-wise times
+    @param frame_number    : current frame  
+    @param X, Y, Z         : meshgrid and values  
+    @param plot            : list holding current plot  
+    @param fig             : activated plt.figure  
+    @param sub             : Axes3D subplot object  
+    @time_array            : holds the iter-wise times
     """
     if conf.PLOTTING_STYLE == 'water':
         plot[0].remove()
@@ -203,7 +203,7 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
     
 
     # render the basin that contains the fluid
-    plotBasin()
+    plotBasin(cx, cy, sub)
 
     # generate the animation
     ani = animation.FuncAnimation(fig, update_plot, frames,
@@ -211,6 +211,49 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
         interval=1000 / fps, repeat=True)
 
     # save the animation
+    saveAni(ani, fps, dpi)
+    
+    # Play the animation
+    playAni(ani)
+
+
+def plotBasin(cx, cy, sub):
+    """
+    plots the basin that contains the fluid
+    ---------------------------------------
+    @param cx        : x axis cell centers  
+    @param cy        : y axis cell centers  
+    @param sub       : Axes3D subplot object  
+    """
+    if conf.SHOW_BASIN == True:
+        # make basin a bit wider, because water appears to be out of the basin
+        # because of the perspective mode
+        X_bas,Y_bas = np.meshgrid(cx[conf.Ng - 1: conf.Nx + 2],
+                                  cy[conf.Ng - 1: conf.Ny + 2])
+        # BASIN
+        BASIN = np.zeros((conf.Ny + 2 * conf.Ng, conf.Nx + 2 * conf.Ng))
+        # left-right walls
+        BASIN[:, 0] = 2.4
+        BASIN[:, conf.Nx + 2 * conf.Ng - 1] = 2.4
+        # top-bottom walls
+        BASIN[0, :] = 2.4
+        BASIN[conf.Ny + 2 * conf.Ng - 1, :] = 2.4
+        sub.plot_surface(X_bas, Y_bas, BASIN, rstride=2, cstride=2, linewidth=0,
+                         color=(0.4, 0.4, 0.5, 0.1))
+    elif conf.SHOW_BASIN == False:
+        pass
+    else:
+        logger.log("Configure SHOW_BASIN. Options: True, False")
+
+
+def saveAni(ani, fps, dpi):
+    """
+    saves the animation
+    -------------------
+    @param ani             : animation.FuncAnimation() object  
+    @param fps             : frames per second  
+    @param dpi             : dots per inch
+    """
     if conf.SAVE_ANIMATION == True:
         try:
             # file name
@@ -247,41 +290,13 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
     else:
         logger.log("Configure SAVE_ANIMATION | Options: True, False")
 
-    # Play the animation
-    playAni(ani)
-
-
-def plotBasin():
-    """
-    plots the basin that contains the fluid
-    """
-    if conf.SHOW_BASIN == True:
-        # make basin a bit wider, because water appears to be out of the basin
-        # because of the perspective mode
-        X_bas,Y_bas = np.meshgrid(cx[conf.Ng - 1: conf.Nx + 2],
-                                  cy[conf.Ng - 1: conf.Ny + 2])
-        # BASIN
-        BASIN = np.zeros((conf.Ny + 2 * conf.Ng, conf.Nx + 2 * conf.Ng))
-        # left-right walls
-        BASIN[:, 0] = 2.4
-        BASIN[:, conf.Nx + 2 * conf.Ng - 1] = 2.4
-        # top-bottom walls
-        BASIN[0, :] = 2.4
-        BASIN[conf.Ny + 2 * conf.Ng - 1, :] = 2.4
-        sub.plot_surface(X_bas, Y_bas, BASIN, rstride=2, cstride=2, linewidth=0,
-                         color=(0.4, 0.4, 0.5, 0.1))
-    elif conf.SHOW_BASIN == False:
-        pass
-    else:
-        logger.log("Configure SHOW_BASIN. Options: True, False")
-
 
 def playAni(ani):
     """
     displays the animation
     ----------------------
-    @param ani: animation.FuncAnimation() object  
-    returns ani: in case of jupyter notebook
+    @param ani              : animation.FuncAnimation() object  
+    returns ani             : in case of jupyter notebook
     """
     if conf.SHOW_ANIMATION == True:
         logger.log('Playing animation...')
