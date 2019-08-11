@@ -80,6 +80,8 @@ def plotFromDat(time, iter, cx, cy):
 
 
 def dataFromDat():
+    """pulls solution data from a dat file
+    """
     zeros_left = (4 - len(str(iter))) * '0'
     file_name = 'solution' + zeros_left + str(iter) + '.dat'
 
@@ -103,7 +105,7 @@ def dataFromDat():
 
 def update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
     """
-    plots a single frame    
+    plots a single frame
     -------------------------------------------------------------------  
     used from FuncAnimation to iteratively create a timelapse animation  
 
@@ -215,7 +217,19 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
     saveAni(ani, fps, dpi)
 
     # Play the animation
-    playAni(ani)
+    if conf.SHOW_ANIMATION is True:
+        logger.log('Playing animation...')
+        try:
+            # In case of jupyter notebook, don't run plt.show(), to prevent
+            # displaying a static figure. Instead, return the ani object.
+            get_ipython()
+            return ani
+        except NameError:
+            plt.show()
+    elif conf.SHOW_ANIMATION is False:
+        pass
+    else:
+        logger.log("Configure SHOW_ANIMATION | Options: True, False")
 
 
 def plotBasin(cx, cy, sub):
@@ -234,11 +248,11 @@ def plotBasin(cx, cy, sub):
         # BASIN
         BASIN = np.zeros((conf.Ny + 2 * conf.Ng, conf.Nx + 2 * conf.Ng))
         # left-right walls
-        BASIN[:, 0] = 2.4
-        BASIN[:, conf.Nx + 2 * conf.Ng - 1] = 2.4
+        BASIN[:, 0] = 2.5
+        BASIN[:, conf.Nx + 2 * conf.Ng - 1] = 2.5
         # top-bottom walls
-        BASIN[0, :] = 2.4
-        BASIN[conf.Ny + 2 * conf.Ng - 1, :] = 2.4
+        BASIN[0, :] = 2.5
+        BASIN[conf.Ny + 2 * conf.Ng - 1, :] = 2.5
         sub.plot_surface(X_bas, Y_bas, BASIN, rstride=2, cstride=2, linewidth=0,
                          color=(0.4, 0.4, 0.5, 0.1))
     elif conf.SHOW_BASIN is False:
@@ -256,7 +270,6 @@ def saveAni(ani, fps, dpi):
     @param dpi             : dots per inch
     """
     if conf.SAVE_ANIMATION is True:
-
         # file name
         date_n_time = str(datetime.now())[:19]
         date_n_time = date_n_time[:10] + '_' + date_n_time[11:-3]
@@ -290,25 +303,3 @@ def saveAni(ani, fps, dpi):
         pass
     else:
         logger.log("Configure SAVE_ANIMATION | Options: True, False")
-
-
-def playAni(ani):
-    """
-    displays the animation
-    ----------------------
-    @param ani              : animation.FuncAnimation() object  
-    returns ani             : in case of jupyter notebook
-    """
-    if conf.SHOW_ANIMATION is True:
-        logger.log('Playing animation...')
-        try:
-            # In case of jupyter notebook, don't run plt.show(), to prevent
-            # displaying a static figure. Instead, return the ani object.
-            get_ipython()
-            return ani
-        except NameError:
-            plt.show()
-    elif conf.SHOW_ANIMATION is False:
-        pass
-    else:
-        logger.log("Configure SHOW_ANIMATION | Options: True, False")
