@@ -156,9 +156,9 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
     @time_array                        : holds the iter-wise times
     """
     # frames per sec
-    fps = 40
+    fps = 50
     # dots per inch
-    dpi = 50
+    dpi = 45
     # figure size in inches
     # golden ratio: 1.618
     figsize = (12.944, 8)
@@ -200,7 +200,6 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
                    "'wireframe'")
     plt.title('time: {0:.3f}'.format(time_array[0]))
     # }
-    
 
     # render the basin that contains the fluid
     plotBasin(cx, cy, sub)
@@ -212,7 +211,7 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
 
     # save the animation
     saveAni(ani, fps, dpi)
-    
+
     # Play the animation
     playAni(ani)
 
@@ -255,23 +254,25 @@ def saveAni(ani, fps, dpi):
     @param dpi             : dots per inch
     """
     if conf.SAVE_ANIMATION == True:
-        try:
-            # file name
-            date_n_time = str(datetime.now())[:19]
-            date_n_time = date_n_time[:10] + '_' + date_n_time[11:-3]
-            file_name = conf.MODE + '_animation_' + date_n_time
 
-            # configure the writer
-            plt.rcParams['animation.ffmpeg_path'] = conf.PATH_TO_FFMPEG
-            FFwriter = animation.FFMpegWriter(fps=fps, bitrate=-1,
-                extra_args=['-r', str(fps), '-pix_fmt', 'yuv420p', '-vcodec',
-                            'libx264', '-qscale:v', '1'])
-            # save
+        # file name
+        date_n_time = str(datetime.now())[:19]
+        date_n_time = date_n_time[:10] + '_' + date_n_time[11:-3]
+        file_name = conf.MODE + '_animation_' + date_n_time
+
+        # configure the writer
+        plt.rcParams['animation.ffmpeg_path'] = conf.PATH_TO_FFMPEG
+        FFwriter = animation.FFMpegWriter(fps=fps, bitrate=-1,
+            extra_args=['-r', str(fps), '-pix_fmt', 'yuv420p', '-vcodec',
+                        'libx264', '-qscale:v', '1'])
+
+        # save
+        try:
             ani.save(file_name + '.' + conf.VID_FORMAT,
-                     writer=FFwriter, dpi=dpi)
+                    writer=FFwriter, dpi=dpi)
 
             logger.log('Animation saved as: ' + file_name + '.'
-                       + conf.VID_FORMAT + ' | fps: ' + str(fps))
+                    + conf.VID_FORMAT + ' | fps: ' + str(fps))
 
             # convert to a lighter gif
             cmd = 'ffmpeg -i ' + file_name + '.' + conf.VID_FORMAT + ' -vf ' \
@@ -280,11 +281,9 @@ def saveAni(ani, fps, dpi):
                 ' -hide_banner -loglevel panic -loop 0 ' + file_name + '.gif'
             os.system(cmd)
             logger.log('Animation saved as: ' + file_name + '.gif'
-                       + ' | fps: ' + str(fps))
-
+                    + ' | fps: ' + str(fps))
         except FileNotFoundError:
-            logger.log('FileNotFoundError: No such file or directory:'
-                       + file_name + '.' + conf.VID_FORMAT)
+            logger.log('Configure PATH_TO_FFMPEG')
     elif conf.SAVE_ANIMATION == False:
         pass
     else:

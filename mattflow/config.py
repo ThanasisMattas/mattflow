@@ -74,7 +74,7 @@ MODE = 'drops'
 N_DROPS = 5
 
 # Number of iterations between drops
-ITERS_FOR_NEXT_DROP = 110
+ITERS_FOR_NEXT_DROP = 105
 
 # Boundary conditions
 # -------------------
