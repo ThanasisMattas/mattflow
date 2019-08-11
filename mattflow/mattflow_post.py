@@ -22,14 +22,14 @@ from datetime import datetime
 import os
 
 
-def plotFromDat(time, iter):
+def plotFromDat(time, iter, cx, cy):
     """
-    creates and saves a frame as png, reading data from a dat file  
-    --------------------------------------------------------------  
+    creates and saves a frame as png, reading data from a dat file
+    --------------------------------------------------------------
     @param time        : current time  
     @param iter        : current iter
     """
-    # Create ./session directory for saving the results
+    # create ./session directory for saving the results
     try:
         if os.path.isdir('./session'):
             pass
@@ -38,31 +38,10 @@ def plotFromDat(time, iter):
     except OSError:
         logger.log("Unable to create data_files directory")
 
-    # Extracting data from dat {
-    #
-    zeros_left = (4 - len(str(iter))) * '0'
-    file_name = 'solution' + zeros_left + str(iter) + '.dat'
+    # extract data from dat
+    X, Y, Z, Nx, Ny = dataFromDat()
 
-    fr = open('./data_files/' + file_name, 'r')
-    Nx = int(fr.readline().split(":")[1])
-    Ny = int(fr.readline().split(":")[1])
-    # Ng = int(fr.readline().split(":")[1])
-    time = float(fr.readline().split(":")[1])
-    fr.close()
-
-    # hu and hv are not written in the dat file, to reduce the overhead
-    # x, y, h, hu, hv = np.loadtxt('./data_files/' + file_name, skiprows = 4,
-    #                              unpack = True)
-    x, y, h = np.loadtxt('./data_files/' + file_name, skiprows = 4, unpack = True)
-    # unpack the row-major vectors into matrices
-    X = x.reshape(Ny, Nx)
-    Y = y.reshape(Ny, Nx)
-    Z = h.reshape(Ny, Nx)
-    #
-    # }
-
-
-    # Plotting {
+    # plot {
     #
     fig = plt.figure(figsize=(9.6, 6.4), dpi = 112) # 1080x720
     plt.rcParams.update({'font.size': 8})
@@ -98,6 +77,28 @@ def plotFromDat(time, iter):
     plt.close()
     #
     # }
+
+
+def dataFromDat():
+    zeros_left = (4 - len(str(iter))) * '0'
+    file_name = 'solution' + zeros_left + str(iter) + '.dat'
+
+    fr = open('./data_files/' + file_name, 'r')
+    Nx = int(fr.readline().split(":")[1])
+    Ny = int(fr.readline().split(":")[1])
+    # Ng = int(fr.readline().split(":")[1])
+    time = float(fr.readline().split(":")[1])
+    fr.close()
+
+    # hu and hv are not written in the dat file, to reduce the overhead
+    # x, y, h, hu, hv = np.loadtxt('./data_files/' + file_name, skiprows = 4,
+    #                              unpack = True)
+    x, y, h = np.loadtxt('./data_files/' + file_name, skiprows = 4, unpack = True)
+    # unpack the row-major vectors into matrices
+    X = x.reshape(Ny, Nx)
+    Y = y.reshape(Ny, Nx)
+    Z = h.reshape(Ny, Nx)
+    return X, Y, Z, Nx, Ny
 
 
 def update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):

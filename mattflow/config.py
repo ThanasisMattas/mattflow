@@ -106,7 +106,7 @@ SHOW_ANIMATION = True
 # Saving the animation
 SAVE_ANIMATION = False
 
-# Directory where ffmpeg is installed
+# Path to ffmpeg
 PATH_TO_FFMPEG = '/usr/bin/ffmpeg'
 
 # Animation video format
