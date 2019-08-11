@@ -21,7 +21,7 @@ ___
 ```bash
 $ mkdir mattflow
 $ cd mattflow
-$ conda create --name mattflows python=3
+$ conda create --name mattflow python=3 matplotlib
 $ conda activate mattflow
 $ pip install mattflow
 $ mattflow
