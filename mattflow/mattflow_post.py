@@ -1,5 +1,4 @@
 '''
-=============================================================================
 @file   mattflow_post.py  
 @author Thanasis Mattas
 
@@ -10,7 +9,6 @@ terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version. You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
-=============================================================================
 '''
 
 
@@ -118,7 +116,7 @@ def update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
     if conf.PLOTTING_STYLE == 'water':
         plot[0].remove()
         # rotate the domain every 3 frames
-        horizontal_rotate = 45 + frame_number / 3
+        horizontal_rotate = 45 + frame_number / 8
         sub.view_init(55, horizontal_rotate)
         plot[0] = sub.plot_surface(X, Y, Z[frame_number], rstride=1, cstride=1,
                                    linewidth=0, color=(0.251, 0.643, 0.875, 0.95),
@@ -138,6 +136,9 @@ def update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
                                 vmin=0.5, vmax=1.5)
     elif conf.PLOTTING_STYLE == 'wireframe':
         plot[0].remove()
+        # rotate the domain every 3 frames
+        horizontal_rotate = 45 + frame_number / 8
+        sub.view_init(55, horizontal_rotate)
         plot[0] = sub.plot_wireframe(X, Y, Z[frame_number], rstride=2, cstride=2,
                                      linewidth=1)
 
@@ -156,9 +157,9 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
     @time_array                        : holds the iter-wise times
     """
     # frames per sec
-    fps = 50
+    fps = 60
     # dots per inch
-    dpi = 45
+    dpi = 50
     # figure size in inches
     # golden ratio: 1.618
     figsize = (12.944, 8)
@@ -194,7 +195,7 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
         plot = [sub.contour3D(X, Y, Z[0], 150, cmap='ocean', vmin=0.5, vmax=1.5)]
     elif conf.PLOTTING_STYLE == 'wireframe':
         plot = [sub.plot_wireframe(X, Y, Z[0], rstride=2, cstride=2,
-            linewidth=1)]
+                                   linewidth=1)]
     else:
         logger.log("Configure PLOTTING_STYLE | options: 'water', 'contour',",
                    "'wireframe'")
