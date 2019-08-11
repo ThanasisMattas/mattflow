@@ -248,19 +248,7 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
         logger.log("Configure SAVE_ANIMATION | Options: True, False")
 
     # Play the animation
-    if conf.SHOW_ANIMATION == True:
-        logger.log('Playing animation...')
-        try:
-            # In case of jupyter notebook, don't run plt.show(), to prevent
-            # displaying a static figure. Instead, return the ani object.
-            get_ipython()
-            return ani
-        except NameError:
-            plt.show()
-    elif conf.SHOW_ANIMATION == False:
-        pass
-    else:
-        logger.log("Configure SHOW_ANIMATION | Options: True, False")
+    playAni(ani)
 
 
 def plotBasin():
@@ -286,3 +274,25 @@ def plotBasin():
         pass
     else:
         logger.log("Configure SHOW_BASIN. Options: True, False")
+
+
+def playAni(ani):
+    """
+    displays the animation
+    ----------------------
+    @param ani: animation.FuncAnimation() object  
+    returns ani: in case of jupyter notebook
+    """
+    if conf.SHOW_ANIMATION == True:
+        logger.log('Playing animation...')
+        try:
+            # In case of jupyter notebook, don't run plt.show(), to prevent
+            # displaying a static figure. Instead, return the ani object.
+            get_ipython()
+            return ani
+        except NameError:
+            plt.show()
+    elif conf.SHOW_ANIMATION == False:
+        pass
+    else:
+        logger.log("Configure SHOW_ANIMATION | Options: True, False")
