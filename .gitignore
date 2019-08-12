@@ -31,12 +31,12 @@
 
 *.png
 
-.vscode*
+**/.vscode*
 **/__pycache__/*
-.ipynb_checkpoints/*
+**/.ipynb_checkpoints/*
 
-*build/*
-*dist/*
-*.egg-info/*
-*.egg
+**/build/*
+**/dist/*
+**/*.egg-info/*
+**/*.egg
 
