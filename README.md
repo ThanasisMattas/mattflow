@@ -20,8 +20,6 @@ ___
 1. anaconda environment (recommended)
 
 ```bash
-$ mkdir mattflow
-$ cd mattflow
 $ conda create --name mattflow python=3 matplotlib
 $ conda activate mattflow
 $ pip install mattflow
@@ -31,8 +29,6 @@ $ mattflow
 2. venv (python>=3.3)  
 
 ```bash
-$ mkdir mattflow
-$ cd mattflow
 $ python3 -m venv mattflow_env
 $ source mattflow_env/bin/activate
 $ pip install mattflow
@@ -42,12 +38,9 @@ $ mattflow
 3. pip
 
 ```bash
-$ mkdir mattflow
-$ cd mattflow
 $ pip install --user mattflow
 $ mattflow
 ```
-
 
 ## Swallow Water Equations
 
@@ -67,9 +60,9 @@ _υ_ : velocity along the y axis
 _ρ_ : density  
 _g_ : gravity acceleration
 
-
 ## MattFlow structure
-&emsp;**More details at this [jupyter notebook]**
+
+**More details at this [jupyter notebook]**
 
 0. configuration of the simulation via a config file
 1. pre-process  
