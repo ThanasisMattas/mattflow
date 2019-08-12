@@ -17,7 +17,7 @@ ___
 
 ## How to install & run MattFlow
 
-1. anaconda environment (recomended)
+1. anaconda environment (recommended)
 
 ```bash
 $ mkdir mattflow
