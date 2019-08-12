@@ -13,6 +13,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 
 from mattflow import config as conf
+from mattflow import logger
 from mattflow import flux
 from mattflow import initializer
 from mattflow import dat_writer
@@ -55,7 +56,7 @@ def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
             for simultaneous_drops in range(random.randrange(1, 2)):
                 U[0, :, :] = initializer.drop(U[0, :, :], cx, cy)
     else:
-        print("Configure MODE | options: 'single drop', 'drops', 'rain'")
+        logger.log("Configure MODE | options: 'single drop', 'drops', 'rain'")
 
     cellArea = dx * dy
     Nx = conf.Nx
@@ -77,14 +78,14 @@ def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
                                + U_pred[:, Ng: -Ng, Ng: -Ng]
                                + delta_t / cellArea * flux.flux(U_pred, dx, dy))
     else:
-        print("Configure SOLVER_TYPE | Options: 'Lax-Friedrichs Riemann', ",
-              "'2-stage Runge-Kutta'")
+        looger.log("Configure SOLVER_TYPE | Options: 'Lax-Friedrichs Riemann',",
+                   "' 2-stage Runge-Kutta'")
     return U, drops
 
 
     '''
     # Experimenting on the finite differences form of the MacCormack solver
-    # TODO somewhere delta_t / dx becomes the greatest eigenvalue of the jacobian
+    # TODO somewhere delta_t/dx becomes the greatest eigenvalue of the jacobian
     elif conf.SOLVER_TYPE == 'MacCormack experimental':
         # 1st step: prediction (FTFS)
         U_pred = U
@@ -114,7 +115,7 @@ def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
         dat_writer.writeDat(U[0, Ng: Ny + Ng, Ng: Nx + Ng], cx, cy, time, iter)
         # mattFlow_post.plotFromDat(time=0, iter=0)
     else:
-        print("Configure DAT_WRITING_MODE | Options: True, False")
+        logger.log("Configure DAT_WRITING_MODE | Options: True, False")
 
 
 def dt(U, dx, dy):
