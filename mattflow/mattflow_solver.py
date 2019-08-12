@@ -1,5 +1,4 @@
 '''
-=============================================================================
 @file   mattflow_solver.py  
 @author Thanasis Mattas
 
@@ -10,7 +9,6 @@ terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version. You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
-=============================================================================
 '''
 
 
@@ -33,8 +31,12 @@ def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
 
     @param U          : 3D matrix of the state variables, populating a x,y grid  
     @param dx         : spatial discretization step on x axis  
+    @param cx         : cell centers on x axis  
     @param dy         : spatial discretization step on y axis  
+    @param cy         : cell centers on y axis  
     @param delta_t    : time discretization step  
+    @param iter       : current iteration  
+    @param drops      : number of drops been generated  
     returns U, drops
     """
     # Simulation mode
@@ -82,6 +84,7 @@ def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
 
     '''
     # Experimenting on the finite differences form of the MacCormack solver
+    # TODO somewhere delta_t / dx becomes the greatest eigenvalue of the jacobian
     elif conf.SOLVER_TYPE == 'MacCormack experimental':
         # 1st step: prediction (FTFS)
         U_pred = U
@@ -117,23 +120,27 @@ def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
 def dt(U, dx, dy):
     """
     evaluates the time discretization step of the current iteration
-    ---------------------------------------------------------------------
+    ---------------------------------------------------------------
     The stability condition of the numerical simulation (Known as
-    Courant–Friedrichs–Lewy or CFL condition) is that the solution velocity
+    Courant–Friedrichs–Lewy or CFL condition) describes that the solution velocity
     (dx/dt) has to be greater than the wave velocity. Namely, the simulation has
-    to run faster than the information, in order to evaluate it. As wave velocity
-    we choose the greatest velocity of the waves that contribute to the fluid,
+    to run faster than the information, in order to evaluate it. The wave velocity
+    used is the greatest velocity of the waves that contribute to the fluid,
     which is the greatest eagenvalue of the Jacobian matrix df(U)/dU (|u| + c),
-    along the x axis and dG(U)/dU (|v| + c), along the y axis.
+    along the x axis, and dG(U)/dU (|v| + c), along the y axis.
 
-    We equate dx/dt = wave_vel --> dt = dx / wave_vel
+    We equate    
+                      dx/dt = wave_vel => dt = dx / wave_vel
+    
     and the magnitude that the solution velocity is greater than the wave velocity
-    is handled by the Courant number (<= 1). Namely, dt_final = dt * Courant.
+    is handled by the Courant number (<= 1). Namely, 
+    
+                             dt_final = dt * Courant.
 
     The velocity varies at each point of the grid, consisting the velocity field.
     So, dt is evaluated at every cell, as the mean of the dt's at x and y
-    directions, and the minimum dt is finally returned, as the time-step of the
-    current iteration.
+    directions. Finally, the minimum dt of all cells is returned, as the time-step
+    of the current iteration.
 
     The velocity field is step-wisely changing and, thus, the calculation of dt
     is repeated at each iteration, preserving consistency with the CFL condition.
@@ -141,6 +148,7 @@ def dt(U, dx, dy):
     @param U          : 3D matrix of the state variables, populating a x,y grid  
     @param dx         : spatial discretization step on x axis  
     @param dy         : spatial discretization step on y axis  
+    returns dt        : time discretization step 
     """
     # h = U[0]
     # u = U[1] / h
