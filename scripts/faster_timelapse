@@ -5,6 +5,10 @@
 #
 # You can pass 1 argument at the range of 0.0 - 1.0, selecting the duration of
 # the new video as a portion of the duration of the old video (default: 0.6).
+#
+# examples:
+# $ faster_timelapse
+# $ faster_timelapse 0.5
 
 # check if an argument is passed: portion of previous video duration (0.0 - 1.0)
 if [ $# -eq 0 ]; then
