@@ -1,5 +1,4 @@
 '''
-=============================================================================
 @file   boundaryConditionsManager.py  
 @author Thanasis Mattas
 
@@ -10,7 +9,6 @@ terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version. You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
-=============================================================================
 '''
 
 
@@ -35,7 +33,30 @@ def updateGhostCells(U):
     """
     implements boundary conditions
     ------------------------------
-    @param U    : state-variables-3D-array  
+
+    reflective boundary conditions:  
+
+    + vertical walls (x=X_MIN, x=X_max)
+        - h : dh/dx = 0 (Neumann)     h_0 = h_-1   (1 ghost cell)  
+                                      h_1 = h_-2   (2 ghost cells)  
+
+        - u : u = 0    (Dirichlet)    u_0 = -u_-1  (1 ghost cell)  
+                                      u_1 = -u_-2  (2 ghost cells)  
+    
+        - v : dv/dx = 0 (Neumann)     v_0 = v_-1   (1 ghost cell)  
+                                      v_1 = v_-2   (2 ghost cells)  
+
+    + horizontal walls (y=Y_MIN, y=Y_max)
+        - h : dh/dy = 0 (Neumann)     h_0 = h_-1   (1 ghost cell)  
+                                      h_1 = h_-2   (2 ghost cells)  
+
+        - u : du/dy = 0 (Neumann)     u_0 = u_-1   (1 ghost cell)  
+                                      u_1 = u_-2   (2 ghost cells)  
+    
+        - v : v = 0    (Dirichlet)    v_0 = -v_-1  (1 ghost cell)  
+                                      v_1 = -v_-2  (2 ghost cells)                                  
+
+    @param U    : 3D matrix of the state variables, populating a x,y grid  
     returns U
     """
     if conf.BOUNDARY_CONDITIONS == 'reflective':
@@ -52,12 +73,12 @@ def updateGhostCells(U):
         U[2, :, conf.Nx + conf.Ng: conf.Nx + 2 * conf.Ng] \
             = np.flip(U[2, :, conf.Nx: conf.Nx + conf.Ng], 1)
 
-        # left wall (0 <= y < Ng)
+        # top wall (0 <= y < Ng)
         U[0, :conf.Ng, :] = np.flip(U[0, conf.Ng: 2 * conf.Ng, :], 0)
         U[1, :conf.Ng, :] = np.flip(U[1, conf.Ng: 2 * conf.Ng, :], 0)
         U[2, :conf.Ng, :] = - np.flip(U[2, conf.Ng: 2 * conf.Ng, :], 0)
 
-        # right wall (Ny + Ng <= y < Ny + 2Ng)
+        # bottom wall (Ny + Ng <= y < Ny + 2Ng)
         U[0, conf.Ny + conf.Ng: conf.Ny + 2 * conf.Ng, :] \
             = np.flip(U[0, conf.Ny: conf.Ny + conf.Ng, :], 0)
         U[1, conf.Ny + conf.Ng: conf.Ny + 2 * conf.Ng, :] \
