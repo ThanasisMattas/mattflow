@@ -78,3 +78,22 @@ def find_log():
         return files_list[0]
     else:
         return False
+
+
+def close():
+    """
+    closes the log file, appending '_done' to the file name
+    """
+    log_file_object = find_log()
+    if log_file_object:
+        # append blank line
+        with open(log_file_object, 'a') as fa:
+            fa.write('\n')
+        # append '_done' at the file name
+        os.rename(log_file_object, file_name[:-4] + '_done' + file_name[-4:])
+    else:
+        fw = open(file_name, 'w')
+        fw.write('Trying to close a log file that does not exist...\n\n')
+        fw.close()
+        log_file_object = find_log()
+        os.rename(log_file_object, file_name[:-4] + '_errored' + file_name[-4:])

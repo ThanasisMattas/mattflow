@@ -113,6 +113,9 @@ def main():
     logger.log('Total duration' + 14 * '-'
                + util.secs_to_time(end - start))
 
+    # Close the log file
+    logger.close()
+
 
 if __name__ == "__main__":
     main()
