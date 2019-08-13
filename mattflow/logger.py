@@ -37,15 +37,16 @@ def log(state):
     # False , if ther isn't
     log_file_object = find_log()
 
-    # Check if a log file is already created
+    # check if a log file is already created or if the log file is from previous
+    # simulation
     if log_file_object:
-        # Append the state
+        # append the state
         with open(log_file_object, 'a') as fa:
             fa.write(state + '\n')
-        # Rename log to current time
+        # rename log to current time
         os.rename(log_file_object, file_name)
 
-    # If a log file isn't created yet
+    # if a log file isn't created yet
     else:
         fw = open(file_name, 'w')
         fw.write(welcome_msg + '\n' + author_msg + '\n' + license_msg + '\n'
@@ -67,13 +68,14 @@ def log(state):
 
 def find_log():
     """
-    finds the log file, if any, at the working directory (1st encountered)
-    ----------------------------------------------------------------------
-    returns the log file object, if there is one, False, if there isn't
+    finds an open log file, if any, at the working directory (1st encountered)
+    --------------------------------------------------------------------------
+    returns the log file object, if there is one or False, if there isn't
     """
     working_dir = os.getcwd()
     files_list = []
-    files_list = [f for f in os.listdir(working_dir) if f.endswith(".log")]
+    files_list = [f for f in os.listdir(working_dir)
+                  if f.endswith(".log") and is_open(f)]
     if files_list:
         return files_list[0]
     else:
@@ -97,3 +99,16 @@ def close():
         fw.close()
         log_file_object = find_log()
         os.rename(log_file_object, file_name[:-4] + '_errored' + file_name[-4:])
+
+
+def is_open(log_file_object):
+    """
+    checks whether a log file object is open or not
+    -----------------------------------------------
+    @ param log_file_object  
+    returns True if a log file is οpen, False if it is not
+    """
+    if log_file_object[-9:-4] != '_done':
+        return True
+    else:
+        return False
