@@ -13,6 +13,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 
 from mattflow import config as conf
+from mattflow import __version__, __author__, __license__
 from datetime import datetime
 import os
 
@@ -21,9 +22,9 @@ file_name = str(datetime.now())[:19]
 # replace : with - for windows file name format
 file_name = file_name[:10] + '_' + file_name[11:13] + '-' + file_name[14:16] \
             + '-' + file_name[17:19] + '.log'
-welcome_msg = 'Welcome to MattFlow!'
-author_msg = 'Author: Thanasis Mattas, 2019'
-license_msg = 'GNU General Public License | Version 3'
+version_msg = 'MattFlow v' + __version__
+author_msg = 'Author: ' + __author__ + ', 2019'
+license_msg = __license__
 
 
 def log(state):
@@ -49,7 +50,7 @@ def log(state):
     # if a log file isn't created yet
     else:
         fw = open(file_name, 'w')
-        fw.write(welcome_msg + '\n' + author_msg + '\n' + license_msg + '\n'
+        fw.write(version_msg + '\n' + author_msg + '\n' + license_msg + '\n'
             + len(license_msg) * '-' + '\n'
             + str(datetime.now())[:19] + '\n\n'
             + 'Configuration of the simulation' + '\n'
