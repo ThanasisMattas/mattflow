@@ -1,4 +1,6 @@
 #!/bin/bash
+# script: faster_timelapse
+# ------------------------
 # This script uses ffmepg to read an .mp4 timelapse (first encountered) at the
 # current directory and creates a new one, that rans faster. It also outputs a
 # light gif.
