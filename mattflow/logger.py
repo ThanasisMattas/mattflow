@@ -33,15 +33,17 @@ def log(state):
     If a log file does not exist, it creates one, printing the simulation info.  
     @param state    : the string to be logged
     """
-    # Check if a log file is already created (update the 1st encountered)
-    working_dir = os.getcwd()
-    files_list = [f for f in os.listdir(working_dir) if f.endswith(".log")]
-    if files_list:
+    # log file object, if there is one
+    # False , if ther isn't
+    log_file_object = find_log()
+
+    # Check if a log file is already created
+    if log_file_object:
         # Append the state
-        with open(files_list[0], 'a') as fa:
+        with open(log_file_object, 'a') as fa:
             fa.write(state + '\n')
         # Rename log to current time
-        os.rename(files_list[0], file_name)
+        os.rename(log_file_object, file_name)
 
     # If a log file isn't created yet
     else:
@@ -61,3 +63,18 @@ def log(state):
 
         fw.write(state + '\n')
         fw.close()
+
+
+def find_log():
+    """
+    finds the log file, if any, at the working directory (1st encountered)
+    ----------------------------------------------------------------------
+    returns the log file object, if there is one, False, if there isn't
+    """
+    working_dir = os.getcwd()
+    files_list = []
+    files_list = [f for f in os.listdir(working_dir) if f.endswith(".log")]
+    if files_list:
+        return files_list[0]
+    else:
+        return False
