@@ -49,7 +49,7 @@ def main():
     # }
 
     # Uncomment this to delete previous log, dat and png files (for debugging)
-    util.delete_logs_dats_images()
+    # util.delete_logs_dats_images()
 
     # Solution {
     #
