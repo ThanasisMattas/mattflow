@@ -96,15 +96,18 @@ Currently, you can configure the simulation at the _config_ module
 
 1. exceptions
 2. pytest
-3. linting
-4. Simple API to configure the simulation
-5. Implementation of higher order schemes
-6. Addition of source terms
-7. Addition of viscous models
-8. Moving core to C++, Cython or Numba
-9. Support moving objects inside the domain
-10. Unstructured mesh
-11. Extent to 3D CFD
+3. coverage report
+4. pylint coverage report
+5. Simple API to configure the simulation
+6. Implementation of higher order schemes
+7. Addition of source terms
+8. Addition of viscous models
+9. Algorithm that converts every computational second to a real-time second, playing with the fps  
+   at the post-processing timelapse, because each iteration uses different time-step (CFL condition)
+10. Moving core to C++, Cython or Numba
+11. Support moving objects inside the domain
+12. Unstructured mesh
+13. Extent to 3D CFD
 
 ***Start the flow!***
 
