@@ -18,7 +18,9 @@ import os
 
 
 file_name = str(datetime.now())[:19]
-file_name = file_name[:10] + '_' + file_name[11:] + '.log'
+# replace : with - for windows file name format
+file_name = file_name[:10] + '_' + file_name[11:13] + '-' + file_name[14:16] \
+            + '-' + file_name[17:19] + '.log'
 welcome_msg = 'Welcome to MattFlow!'
 author_msg = 'Author: Thanasis Mattas, 2019'
 license_msg = 'GNU General Public License | Version 3'

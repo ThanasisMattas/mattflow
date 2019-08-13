@@ -274,7 +274,9 @@ def saveAni(ani, fps, dpi):
     if conf.SAVE_ANIMATION is True:
         # file name
         date_n_time = str(datetime.now())[:19]
-        date_n_time = date_n_time[:10] + '_' + date_n_time[11:-3]
+        # replace : with - for windows file name format
+        date_n_time = date_n_time[:10] + '_' + date_n_time[11:13] + '-' \
+                      + date_n_time[14:16] + '-' + date_n_time[17:19]
         file_name = conf.MODE + '_animation_' + date_n_time
 
         # configure the writer
