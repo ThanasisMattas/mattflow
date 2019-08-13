@@ -28,6 +28,8 @@ def plotFromDat(time, iter, cx, cy):
     --------------------------------------------------------------
     @param time        : current time  
     @param iter        : current iter
+    @param cx          : cell centers at x axis
+    @param cy          : cell centers at y axis
     """
     # create ./session directory for saving the results
     try:
