@@ -10,17 +10,17 @@ EXTRAS = {'write video': ['ffmpeg'],}
 
 here = os.path.abspath(os.path.dirname(__file__))
 
+# pull info from __init__.py
+about = {}
+with open(os.path.join(here, 'mattflow', '__init__.py'), 'r') as fr:
+    exec(fr.read(), about)
+
 # assign long_description with the README.md content
 try:
     with open(os.path.join(here, 'README.md'), 'r') as fr:
         long_description = fr.read()
 except FileNotFoundError:
-    long_description = 'A CFD python package for the shallow water equations'
-
-# pull info from __init__.py
-about = {}
-with open(os.path.join(here, 'mattflow', '__init__.py'), 'r') as fr:
-    exec(fr.read(), about)
+    long_description = about['__description__']
 
 
 setup(
