@@ -71,12 +71,14 @@ def find_log():
     """
     finds an open log file, if any, at the working directory (1st encountered)
     --------------------------------------------------------------------------
-    returns the log file object, if there is one or False, if there isn't
+    it is used by logger.log(state) to identify the log file, if any, of the
+    ongoing simulation  
+    returns the log file object, if there is one, or False, if there isn't
     """
     working_dir = os.getcwd()
     files_list = []
     files_list = [f for f in os.listdir(working_dir)
-                  if f.endswith(".log") and is_open(f)]
+                  if f.endswith(".log") and is_open(f) and is_mattflow_log(f)]
     if files_list:
         return files_list[0]
     else:
@@ -87,29 +89,49 @@ def close():
     """
     closes the log file, appending '_done' to the file name
     """
-    log_file_object = find_log()
-    if log_file_object:
-        # append blank line
-        with open(log_file_object, 'a') as fa:
-            fa.write('\n')
-        # append '_done' at the file name
-        os.rename(log_file_object, file_name[:-4] + '_done' + file_name[-4:])
-    else:
+    try:
+        log_file_object = find_log()
+        if log_file_object:
+            # append blank line
+            with open(log_file_object, 'a') as fa:
+                fa.write('\n')
+            # append '_done' at the file name
+            os.rename(log_file_object, file_name[:-4] + '_done' + file_name[-4:])
+        else:
+            fw = open(file_name, 'w')
+            fw.write('Trying to close a log file that does not exist...\n\n')
+            os.rename(log_file_object, file_name[:-4] + '_errored' + file_name[-4:])
+            fw.close()
+    except TypeError:
         fw = open(file_name, 'w')
         fw.write('Trying to close a log file that does not exist...\n\n')
-        fw.close()
-        log_file_object = find_log()
         os.rename(log_file_object, file_name[:-4] + '_errored' + file_name[-4:])
+        fw.close()
 
 
 def is_open(log_file_object):
     """
     checks whether a log file object is open or not
     -----------------------------------------------
-    @ param log_file_object  
-    returns True if a log file is οpen, False if it is not
+    @param log_file_object  
+    returns boolean
     """
     if log_file_object[-9:-4] != '_done':
+        return True
+    else:
+        return False
+
+
+def is_mattflow_log(log_file_object):
+    """
+    checks whether a log file was generated from mattflow or not
+    ------------------------------------------------------------
+    @param log_file_object  
+    returns boolean
+    """
+    with open(log_file_object, 'r') as fr:
+        first_word = fr.read(8)
+    if first_word == 'MattFlow':
         return True
     else:
         return False
