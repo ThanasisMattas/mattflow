@@ -69,9 +69,9 @@ _g_ : gravity acceleration
 structured/cartesian mesh
 2. solution  
    supported solvers:  
-   - [Lax-Friedrichs] Reiman
+   - [Lax-Friedrichs] Riemann
    &nbsp;&nbsp;                | O(Δt, Δx<sup>2</sup>, Δy<sup>2</sup>)  
-   - 2-stage [Rugne-Kutta]
+   - 2-stage [Runge-Kutta]
    &nbsp; &nbsp; &nbsp;        | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
    &ensp;| default  
    - [MacCormack]
@@ -119,7 +119,7 @@ Currently, you can configure the simulation at the _config_ module
 
 [wiki]: <https://en.wikipedia.org/wiki/Shallow_water_equations>
 [Lax-Friedrichs]: <https://en.wikipedia.org/wiki/Lax%E2%80%93Friedrichs_method>
-[Rugne-Kutta]: <https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods>
+[Runge-Kutta]: <https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods>
 [Lax-Wendroff]: <https://en.wikipedia.org/wiki/Lax%E2%80%93Wendroff_method>
 [MacCormack]: <https://en.wikipedia.org/wiki/MacCormack_method>
 [jupyter notebook]: <https://colab.research.google.com/github/ThanasisMattas/mattflow/blob/master/notebooks/mattflow_notebook.ipynb#scrollTo=sqSJYpEwmJN3>
