@@ -8,12 +8,12 @@ MattFlow simulates the surface of the water after any initial conditions, such a
 
 ___
 
-| requirements      | os        |
-| ----------------  | --------- |
-| python 3          | GNU/Linux |
-| numpy 1.16.4      | Windows   |
-| matplotlib 3.1.1  |           |
-| ffmpeg (optional) |           |
+| requirements         | os        |
+| -------------------- | --------- |
+| python 3             | GNU/Linux |
+| numpy >= 1.16.4      | Windows   |
+| matplotlib >= 3.1.1  |           |
+| ffmpeg (optional)    |           |
 
 ## How to install & run MattFlow
 
@@ -47,8 +47,8 @@ $ mattflow
 SWE is a simpified CFD problem which models the surface of the water, with the assumption  
 that the horizontal length scale is much greater than the vertical length scale.  
 
-SWE is a coupled system of 3 hyperbolic partial deferential equations, that derive from  
-conservation of mass and conservation of linear momentum (Navier-Stokes) equations, in  
+SWE is a coupled system of 3 hyperbolic partial differential equations, that derive from the  
+conservation of mass and the conservation of linear momentum (Navier-Stokes) equations, in  
 case of a horizontal stream bed, with no Coriolis, frictional or viscours forces ([wiki]).
 
 <img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/9b9d481407c0c835525291740de8d1c446265ce2" class="mwe-math-fallback-image-inline" aria-hidden="true" style="vertical-align: -18ex; width:46ex; height:19ex;" alt="{\displaystyle {\begin{aligned}{\frac {\partial (\rho \eta )}{\partial t}}&amp;+{\frac {\partial (\rho \eta u)}{\partial x}}+{\frac {\partial (\rho \eta v)}{\partial y}}=0,\\[3pt]{\frac {\partial (\rho \eta u)}{\partial t}}&amp;+{\frac {\partial }{\partial x}}\left(\rho \eta u^{2}+{\frac {1}{2}}\rho g\eta ^{2}\right)+{\frac {\partial (\rho \eta uv)}{\partial y}}=0,\\[3pt]{\frac {\partial (\rho \eta v)}{\partial t}}&amp;+{\frac {\partial (\rho \eta uv)}{\partial x}}+{\frac {\partial }{\partial y}}\left(\rho \eta v^{2}+{\frac {1}{2}}\rho g\eta ^{2}\right)=0.\end{aligned}}}">
@@ -72,10 +72,10 @@ structured/cartesian mesh
    - [Lax-Friedrichs] Riemann
    &nbsp;&nbsp;                | O(Δt, Δx<sup>2</sup>, Δy<sup>2</sup>)  
    - 2-stage [Runge-Kutta]
-   &nbsp; &nbsp; &nbsp;        | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
+   &nbsp; &nbsp; &nbsp; &nbsp; | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
    &ensp;| default  
    - [MacCormack]
-   &emsp; &emsp; &emsp; &emsp; | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
+   &emsp; &emsp; &emsp; &emsp; &nbsp; | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
    &ensp;| experimental
 3. post-processing  
    matplotlib animation
@@ -99,15 +99,16 @@ Currently, you can configure the simulation at the _config_ module
 3. coverage report
 4. pylint coverage report
 5. Simple API to configure the simulation
-6. Implementation of higher order schemes
-7. Addition of source terms
-8. Addition of viscous models
-9. Algorithm that converts every computational second to a real-time second, playing with the fps  
+6. Numba
+7. Implementation of higher order schemes
+8. Addition of source terms
+9. Addition of viscous models
+10. Algorithm that converts every computational second to a real-time second, playing with the fps  
    at the post-processing timelapse, because each iteration uses different time-step (CFL condition)
-10. Moving core to C++, Cython or Numba
-11. Support moving objects inside the domain
-12. Unstructured mesh
-13. Extent to 3D CFD
+11. Moving core to C++ or Cython
+12. Support moving objects inside the domain
+13. Unstructured mesh
+14. Extent to 3D CFD
 
 ***Start the flow!***
 
