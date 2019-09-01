@@ -1,5 +1,4 @@
 '''
-=============================================================================
 @file   mattflow_cmaps.py  
 @author Thanasis Mattas
 
@@ -10,7 +9,6 @@ terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version. You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
-=============================================================================
 '''
 
 
@@ -19,7 +17,7 @@ from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
 
 # TODO add LightSource-shade
-# unfortunately, when using cmpa instead of a single coloer, shade is disabled
+# unfortunately, when using a cmap instead of a single color, shading is disabled
 
 
 def deepWater_cmap():
@@ -35,7 +33,7 @@ def deepWater_cmap():
     # make last 120 (lighter) transparent (a water drop is transparent)
     water_colors[:, 3] = np.append(np.ones(136),
                         np.ones(120) * np.linspace(0.9, 0.3, 120))  # a
-    # make last 100 (ligher) colors an interpolation between indexis 156 to 176
+    # make last 100 (ligher) colors an interpolation between indices 156 to 176
     water_colors[156:, 1] \
         = np.linspace(water_colors[156, 1], water_colors[176, 1], 100)
     mattDeepWater = ListedColormap(water_colors)
