@@ -40,7 +40,7 @@ def main():
     dx = (conf.MAX_X - conf.MIN_X) / conf.Nx
     dy = (conf.MAX_Y - conf.MIN_Y) / conf.Ny
 
-    # Cell centers on x and y dimentions
+    # Cell centers on x and y dimensions
     cx = np.arange(conf.MIN_X + (0.5 - conf.Ng) * dx,
                                  conf.MAX_X + conf.Ng * dx, dx)
     cy = np.arange(conf.MIN_Y + (0.5 - conf.Ng) * dy,
