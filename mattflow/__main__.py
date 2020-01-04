@@ -1,7 +1,6 @@
 '''
-=============================================================================
 @file   __main__.py  
-@author Thanasis Mattas
+@author Thanasis Mattas  
 
 Script that executes all the required processes for the simulation.
 
@@ -9,8 +8,7 @@ MattFlow is free software; you may redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version. You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-=============================================================================
+along with this program. If not, see <https://www.gnu.org/licenses/>.  
 '''
 
 
@@ -19,15 +17,17 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                         '''
 
 
-from mattflow import config as conf
+from timeit import default_timer as timer
+
+import numpy as np
+
+from .. import config as conf
 from mattflow import utilities as util
 from mattflow import logger
 from mattflow import initializer
 from mattflow import boundaryConditionsManager
 from mattflow import mattflow_solver
 from mattflow import mattflow_post
-import numpy as np
-from timeit import default_timer as timer
 
 
 def main():
