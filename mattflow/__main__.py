@@ -21,7 +21,7 @@ from timeit import default_timer as timer
 
 import numpy as np
 
-from .. import config as conf
+from mattflow import config as conf
 from mattflow import utilities as util
 from mattflow import logger
 from mattflow import initializer
@@ -42,9 +42,11 @@ def main():
 
     # Cell centers on x and y dimensions
     cx = np.arange(conf.MIN_X + (0.5 - conf.Ng) * dx,
-                                 conf.MAX_X + conf.Ng * dx, dx)
+                   conf.MAX_X + conf.Ng * dx,
+                   dx)
     cy = np.arange(conf.MIN_Y + (0.5 - conf.Ng) * dy,
-                                 conf.MAX_Y + conf.Ng * dy, dy)
+                   conf.MAX_Y + conf.Ng * dy,
+                   dy)
     #
     # }
 
@@ -65,8 +67,7 @@ def main():
 
     # This will hold the step-wise time for the post-processing animation.
     # time * 10 is appended, because space is scaled about x10
-    time_array_for_ani = np.array([0])
-    update_time_array = lambda t : np.hstack((time_array_for_ani, [t * 10]))
+    time_array_for_animation = np.array([0])
 
     for iter in range(1, conf.MAX_ITERS):     # conf.MAX_ITERS
 
@@ -77,20 +78,24 @@ def main():
         time += delta_t
         if time > conf.STOPPING_TIME:
             break
-        time_array_for_ani = update_time_array(time)
+        time_array_for_animation = np.hstack((time_array_for_animation,
+                                              [time * 10]))
 
         # Apply boundary conditions (reflective)
         U = boundaryConditionsManager.updateGhostCells(U)
 
         # Numerical iterative scheme
-        U, drops = mattflow_solver.solve(U, dx, cx, dy, cy, delta_t, iter, drops)
+        U, drops = mattflow_solver.solve(U, dx, cx, dy, cy,
+                                         delta_t, iter, drops)
 
         # Append current frame to the list, to be animated at post-processing
-        U_stepwise_for_animation = np.append(U_stepwise_for_animation,
-            [U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]], 0)
+        U_stepwise_for_animation = np.append(
+            U_stepwise_for_animation,
+            [U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]],
+            axis=0)
 
-        spaces = 6 - len(str(iter))     # for vertical printing alignment
-        logger.log('iter:' + spaces * ' ' + str(iter) + '    time: '
+        spaces = (6 - len(str(iter))) * ' '  # for vertical printing alignment
+        logger.log('iter:' + spaces + str(iter) + '    time: '
                    + str('{:0.3f}'.format(time)))
     #
     # }
@@ -102,7 +107,7 @@ def main():
 
     # Post-processing
     mattflow_post.createAnimation(U_stepwise_for_animation, cx, cy,
-                                  time_array_for_ani)
+                                  time_array_for_animation)
 
     # Post-processing duration
     end = timer()
