@@ -13,11 +13,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 
 import numpy as np
+
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
 
 # TODO add LightSource-shade
-# unfortunately, when using a cmap instead of a single color, shading is disabled
+# unfortunately, when using a cmap instead of a single color, shading is
+# disabled
 
 
 def deepWater_cmap():
@@ -31,8 +33,10 @@ def deepWater_cmap():
     water_colors[:, 1] = np.linspace(71, 164, 256) / 255             # g
     water_colors[:, 2] = np.linspace(114, 255, 256) / 255            # b
     # make last 120 (lighter) transparent (a water drop is transparent)
-    water_colors[:, 3] = np.append(np.ones(136),
-                        np.ones(120) * np.linspace(0.9, 0.3, 120))  # a
+    water_colors[:, 3] = np.append(
+        np.ones(136),
+        np.ones(120) * np.linspace(0.9, 0.3, 120)
+    )                                                                # a
     # make last 100 (ligher) colors an interpolation between indices 156 to 176
     water_colors[156:, 1] \
         = np.linspace(water_colors[156, 1], water_colors[176, 1], 100)
@@ -56,8 +60,10 @@ def shallowWater_cmap():
     water_colors[:, 1] = np.linspace(103, 164, 256) / 255            # g
     water_colors[:, 2] = np.linspace(165, 255, 256) / 255            # b
     # make last 120 (lighter) transparent (a water drop is transparent)
-    water_colors[:, 3] = np.append(np.ones(136),
-                        np.ones(120) * np.linspace(0.9, 0.3, 120))  # a
+    water_colors[:, 3] = np.append(
+        np.ones(136),
+        np.ones(120) * np.linspace(0.9, 0.3, 120)
+    )                                                                # a
     mattShallowWater = ListedColormap(water_colors)
     '''
     water_colors = np.array([[ 0, 119, 190, 255],

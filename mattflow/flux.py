@@ -12,10 +12,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 '''
 
 
-from mattflow import config
-import numpy as np
-
-
 #                  x
 #          0 1 2 3 4 5 6 7 8 9
 #        0 G G G G G G G G G G
@@ -28,6 +24,11 @@ import numpy as np
 #        7 G G - - - - - - G G
 #        8 G G G G G G G G G G
 #        9 G G G G G G G G G G
+
+
+import numpy as np
+
+from mattflow import config
 
 
 def flux(U, dx, dy):
@@ -56,7 +57,8 @@ def flux(U, dx, dy):
 
         # x dim slicing of right values : Ng: Nx + Ng
         np.abs(U[1, Ng: -Ng, Ng: Nx + Ng + 1] / U[0, Ng: -Ng, Ng: Nx + Ng + 1])
-        + np.sqrt(g * np.abs(U[0, Ng: -Ng, Ng: Nx + Ng + 1])))
+        + np.sqrt(g * np.abs(U[0, Ng: -Ng, Ng: Nx + Ng + 1]))
+    )
 
     # Lax-Friedrichs scheme
     # flux = 0.5 * (F_left + F_right) - 0.5 * maxSpeed * (U_right - U_left)
@@ -84,7 +86,8 @@ def flux(U, dx, dy):
 
         # y dim slicing of bottom values: Ng: Nx + Ng + 1
         np.abs(U[1, Ng: Ny + Ng + 1, Ng: -Ng] / U[0, Ng: Ny + Ng + 1, Ng: -Ng])
-        + np.sqrt(g * np.abs(U[0, Ng: Ny + Ng + 1, Ng: -Ng])))
+        + np.sqrt(g * np.abs(U[0, Ng: Ny + Ng + 1, Ng: -Ng]))
+    )
 
     # Lax-Friedrichs scheme
     # flux = 0.5 * (F_top + F_bottom) - 0.5 * maxSpeed * (U_bottom - U_top)
@@ -100,7 +103,7 @@ def flux(U, dx, dy):
     total_flux[:, Ng: Ny + Ng + 1, Ng: -Ng] += verticalFlux
     # }
 
-    # Don't need to return ghost cells --> removes 2*(Nx + Ny) operations stepwise
+    # No need to return ghost cells --> removes 2*(Nx + Ny) operations stepwise
     return total_flux[:, Ng: -Ng, Ng: -Ng]
 
 
@@ -119,7 +122,9 @@ def F(U):
     # 0.5 * g = 0.5 * 9.81 = 4.905
     return np.array([h * u, h * u**2 + 4.905 * h**2, h * u * v])
     '''
-    return np.array([U[1], U[1]**2 / U[0] + 4.905 * U[0]**2, U[1] * U[2] / U[0]])
+    return np.array([U[1],
+                     U[1]**2 / U[0] + 4.905 * U[0]**2,
+                     U[1] * U[2] / U[0]])
 
 
 def G(U):
@@ -137,4 +142,6 @@ def G(U):
     # 0.5 * g = 0.5 * 9.81 = 4.905
     return np.array([h * v, h * u * v, h * v**2 + 4.905 * h**2])
     '''
-    return np.array([U[2], U[1] * U[2] / U[0], U[2]**2 / U[0] + 4.905 * U[0]**2])
+    return np.array([U[2],
+                     U[1] * U[2] / U[0],
+                     U[2]**2 / U[0] + 4.905 * U[0]**2])

@@ -12,13 +12,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 '''
 
 
+import random
+
+import numpy as np
+
 from mattflow import config as conf
 from mattflow import logger
 from mattflow import flux
 from mattflow import initializer
 from mattflow import dat_writer
-import random
-import numpy as np
 
 
 # TODO implement high order schemes
@@ -66,22 +68,22 @@ def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
     # Numerical scheme
     # flux.flux(U) returns the total flux entering and leaving each cell
     if conf.SOLVER_TYPE == 'Lax-Friedrichs Riemann':
-        U[:, Ng: -Ng, Ng: -Ng] \
-            += delta_t / cellArea * flux.flux(U, dx, dy)
+        U[:, Ng: -Ng, Ng: -Ng] += delta_t / cellArea * flux.flux(U, dx, dy)
     elif conf.SOLVER_TYPE == '2-stage Runge-Kutta':
         # 1st stage
         U_pred = U
         U_pred[:, Ng: -Ng, Ng: -Ng] += delta_t / cellArea * flux.flux(U, dx, dy)
 
         # 2nd stage
-        U[:, Ng: -Ng, Ng: -Ng] = 0.5 * (U[:, Ng: -Ng, Ng: -Ng]
-                               + U_pred[:, Ng: -Ng, Ng: -Ng]
-                               + delta_t / cellArea * flux.flux(U_pred, dx, dy))
+        U[:, Ng: -Ng, Ng: -Ng] = \
+            0.5 * (U[:, Ng: -Ng, Ng: -Ng]
+                   + U_pred[:, Ng: -Ng, Ng: -Ng]
+                   + delta_t / cellArea * flux.flux(U_pred, dx, dy)
+                   )
     else:
-        looger.log("Configure SOLVER_TYPE | Options: 'Lax-Friedrichs Riemann',",
+        logger.log("Configure SOLVER_TYPE | Options: 'Lax-Friedrichs Riemann',",
                    "' 2-stage Runge-Kutta'")
     return U, drops
-
 
     '''
     # Experimenting on the finite differences form of the MacCormack solver

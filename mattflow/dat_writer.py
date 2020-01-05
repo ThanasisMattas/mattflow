@@ -11,10 +11,10 @@ version. You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 '''
 
-
-from mattflow import config as conf
 # from datetime import datetime
 import os
+
+from mattflow import config as conf
 
 
 # file_name = str(datetime.now())[:19]

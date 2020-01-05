@@ -12,10 +12,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 '''
 
 
-from mattflow import config as conf
-from mattflow import __version__, __author__, __license__
 from datetime import datetime
 import os
+
+from mattflow import config as conf
+from mattflow import __version__, __author__, __license__
 
 
 file_name = str(datetime.now())[:19]
@@ -31,7 +32,8 @@ def log(state):
     """
     appends a state-message at a new line of the log file
     -----------------------------------------------------
-    If a log file does not exist, it creates one, printing the simulation info.  
+    If a log file does not exist, it creates one, printing the simulation info.
+
     @param state    : the string to be logged
     """
     # log file object, if there is one
@@ -72,7 +74,8 @@ def find_log():
     finds an open log file, if any, at the working directory (1st encountered)
     --------------------------------------------------------------------------
     it is used by logger.log(state) to identify the log file, if any, of the
-    ongoing simulation  
+    ongoing simulation
+
     returns the log file object, if there is one, or False, if there isn't
     """
     working_dir = os.getcwd()
@@ -96,16 +99,19 @@ def close():
             with open(log_file_object, 'a') as fa:
                 fa.write('\n')
             # append '_done' at the file name
-            os.rename(log_file_object, file_name[:-4] + '_done' + file_name[-4:])
+            os.rename(log_file_object, file_name[:-4] + '_done'
+                      + file_name[-4:])
         else:
             fw = open(file_name, 'w')
             fw.write('Trying to close a log file that does not exist...\n\n')
-            os.rename(log_file_object, file_name[:-4] + '_errored' + file_name[-4:])
+            os.rename(log_file_object, file_name[:-4] + '_errored'
+                      + file_name[-4:])
             fw.close()
     except TypeError:
         fw = open(file_name, 'w')
         fw.write('Trying to close a log file that does not exist...\n\n')
-        os.rename(log_file_object, file_name[:-4] + '_errored' + file_name[-4:])
+        os.rename(log_file_object, file_name[:-4] + '_errored'
+                  + file_name[-4:])
         fw.close()
 
 

@@ -11,10 +11,6 @@ version. You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 '''
 
-
-from mattflow import config as conf
-import numpy as np
-
 #                  x
 #          0 1 2 3 4 5 6 7 8 9
 #        0 G G G G G G G G G G
@@ -27,6 +23,11 @@ import numpy as np
 #        7 G G - - - - - - G G
 #        8 G G G G G G G G G G
 #        9 G G G G G G G G G G
+
+
+import numpy as np
+
+from mattflow import config as conf
 
 
 def updateGhostCells(U):

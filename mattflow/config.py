@@ -83,9 +83,9 @@ BOUNDARY_CONDITIONS = 'reflective'
 # Finite Volume Numerical Methods
 # -------------------------------
 # Supported:
-# 1. 'Lax-Friedrichs Riemann'     : 1st order in time: O(Δt, Δx^2, Δy^2)
-# 2. '2-stage Runge-Kutta'        : 2nd order in time: O(Δt^2, Δx^2, Δy^2)
-# 2. 'MacCormack experimental'    : 2nd order in time: O(Δt^2, Δx^2, Δy^2)
+# 1. 'Lax-Friedrichs Riemann'   : 1st order in time: O(Δt, Δx^2, Δy^2)
+# 2. '2-stage Runge-Kutta'      : 2nd order in time: O(Δt^2, Δx^2, Δy^2)
+# 2. 'MacCormack experimental'  : 2nd order in time: O(Δt^2, Δx^2, Δy^2)
 SOLVER_TYPE = '2-stage Runge-Kutta'
 #
 # }

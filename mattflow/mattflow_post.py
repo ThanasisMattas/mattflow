@@ -12,14 +12,16 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 '''
 
 
-from mattflow import config as conf
-from mattflow import logger
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-from mpl_toolkits.mplot3d import Axes3D
 from datetime import datetime
 import os
+
+import numpy as np
+import matplotlib.animation as animation
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+from mattflow import config as conf
+from mattflow import logger
 
 
 def plotFromDat(time, iter, cx, cy):
@@ -97,7 +99,7 @@ def dataFromDat():
     # hu and hv are not written in the dat file, to reduce the overhead
     # x, y, h, hu, hv = np.loadtxt('./data_files/' + file_name, skiprows = 4,
     #                              unpack = True)
-    x, y, h = np.loadtxt('./data_files/' + file_name, skiprows = 4, unpack = True)
+    x, y, h = np.loadtxt('./data_files/' + file_name, skiprows=4, unpack=True)
     # unpack the row-major vectors into matrices
     X = x.reshape(Ny, Nx)
     Y = y.reshape(Ny, Nx)
@@ -123,8 +125,9 @@ def update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
         # rotate the domain every 3 frames
         horizontal_rotate = 45 + frame_number / 8
         sub.view_init(55, horizontal_rotate)
-        plot[0] = sub.plot_surface(X, Y, Z[frame_number], rstride=1, cstride=1,
-                                   linewidth=0, color=(0.251, 0.643, 0.875, 0.95),
+        plot[0] = sub.plot_surface(X, Y, Z[frame_number],
+                                   rstride=1, cstride=1, linewidth=0,
+                                   color=(0.251, 0.643, 0.875, 0.95),
                                    shade=True, antialiased=False)
     elif conf.PLOTTING_STYLE == 'contour':
         # Bliting with contour is not supported (because the corresponding
@@ -132,7 +135,8 @@ def update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
         # why fig is passed.
         sub.clear()
         sub.view_init(50, 45)
-        plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0, hspace=0)
+        plt.subplots_adjust(left=0, bottom=0, right=1, top=1,
+                            wspace=0, hspace=0)
         fig.gca().set_zlim([-0.5, 4])
         plt.title('time: {0:.3f}'.format(time_array[frame_number]))
         sub.title.set_position([0.51, 0.8])
@@ -144,8 +148,8 @@ def update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
         # rotate the domain every 3 frames
         horizontal_rotate = 45 + frame_number / 8
         sub.view_init(55, horizontal_rotate)
-        plot[0] = sub.plot_wireframe(X, Y, Z[frame_number], rstride=2, cstride=2,
-                                     linewidth=1)
+        plot[0] = sub.plot_wireframe(X, Y, Z[frame_number],
+                                     rstride=2, cstride=2, linewidth=1)
 
     # frame title
     plt.title('time: {0:.3f}'.format(time_array[frame_number]))
@@ -179,7 +183,7 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
     frames = len(U_stepwise_for_animation)
 
     # X, Y, Z
-    X,Y = np.meshgrid(cx[conf.Ng: -conf.Ng], cy[conf.Ng: -conf.Ng])
+    X, Y = np.meshgrid(cx[conf.Ng: -conf.Ng], cy[conf.Ng: -conf.Ng])
     Z = U_stepwise_for_animation
 
     # plot configuration
@@ -194,10 +198,13 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
 
     # initialization plot {
     if conf.PLOTTING_STYLE == 'water':
-        plot = [sub.plot_surface(X, Y, Z[0], rstride=1, cstride=1, linewidth=0,
-            color=(0.251, 0.643, 0.875, 0.9), shade=True, antialiased=False)]
+        plot = [sub.plot_surface(X, Y, Z[0],
+                rstride=1, cstride=1, linewidth=0,
+                color=(0.251, 0.643, 0.875, 0.9),
+                shade=True, antialiased=False)]
     elif conf.PLOTTING_STYLE == 'contour':
-        plot = [sub.contour3D(X, Y, Z[0], 150, cmap='ocean', vmin=0.5, vmax=1.5)]
+        plot = [sub.contour3D(X, Y, Z[0], 150, cmap='ocean',
+                vmin=0.5, vmax=1.5)]
     elif conf.PLOTTING_STYLE == 'wireframe':
         plot = [sub.plot_wireframe(X, Y, Z[0], rstride=2, cstride=2,
                                    linewidth=1)]
@@ -211,9 +218,12 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
     plotBasin(cx, cy, sub)
 
     # generate the animation
-    ani = animation.FuncAnimation(fig, update_plot, frames,
+    ani = animation.FuncAnimation(
+        fig, update_plot, frames,
         fargs=(X, Y, Z, plot, fig, sub, time_array),
-        interval=1000 / fps, repeat=True)
+        interval=1000 / fps,
+        repeat=True
+    )
 
     # save the animation
     saveAni(ani, fps, dpi)
@@ -245,8 +255,8 @@ def plotBasin(cx, cy, sub):
     if conf.SHOW_BASIN is True:
         # make basin a bit wider, because water appears to be out of the basin
         # because of the perspective mode
-        X_bas,Y_bas = np.meshgrid(cx[conf.Ng - 1: conf.Nx + 2],
-                                  cy[conf.Ng - 1: conf.Ny + 2])
+        X_bas, Y_bas = np.meshgrid(cx[conf.Ng - 1: conf.Nx + 2],
+                                   cy[conf.Ng - 1: conf.Ny + 2])
         # BASIN
         BASIN = np.zeros((conf.Ny + 2 * conf.Ng, conf.Nx + 2 * conf.Ng))
         # left-right walls
@@ -281,17 +291,19 @@ def saveAni(ani, fps, dpi):
 
         # configure the writer
         plt.rcParams['animation.ffmpeg_path'] = conf.PATH_TO_FFMPEG
-        FFwriter = animation.FFMpegWriter(fps=fps, bitrate=-1,
+        FFwriter = animation.FFMpegWriter(
+            fps=fps, bitrate=-1,
             extra_args=['-r', str(fps), '-pix_fmt', 'yuv420p', '-vcodec',
-                        'libx264', '-qscale:v', '1'])
+                        'libx264', '-qscale:v', '1']
+        )
 
         # save
         try:
             ani.save(file_name + '.' + conf.VID_FORMAT,
-                    writer=FFwriter, dpi=dpi)
+                     writer=FFwriter, dpi=dpi)
 
             logger.log('Animation saved as: ' + file_name + '.'
-                    + conf.VID_FORMAT + ' | fps: ' + str(fps))
+                       + conf.VID_FORMAT + ' | fps: ' + str(fps))
 
             # convert to a lighter gif
             cmd = 'ffmpeg -i ' + file_name + '.' + conf.VID_FORMAT + ' -vf ' \
@@ -300,7 +312,7 @@ def saveAni(ani, fps, dpi):
                 ' -hide_banner -loglevel panic -loop 0 ' + file_name + '.gif'
             os.system(cmd)
             logger.log('Animation saved as: ' + file_name + '.gif'
-                    + ' | fps: ' + str(fps))
+                       + ' | fps: ' + str(fps))
         except FileNotFoundError:
             logger.log('Configure PATH_TO_FFMPEG')
     elif conf.SAVE_ANIMATION is False:

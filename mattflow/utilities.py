@@ -13,7 +13,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 
 import os
-import math
 
 
 def delete_logs_dats_images():
@@ -36,22 +35,3 @@ def delete_logs_dats_images():
         for f in files_list:
             if f.endswith(".dat") or f.endswith(".log") or f.endswith(".png"):
                 os.remove(os.path.join('./session/', f))
-
-
-def secs_to_time(secs):
-    """
-    converts seconds to hh:mm:ss  
-    ----------------------------  
-    @param secs        : number of seconds  
-    returns time_str   : (string)
-    """
-    hours = math.floor(secs / 3600)
-    mins = math.floor((secs % 3600) / 60)
-    secs = math.floor(secs - 3600 * hours - 60 * mins)
-    h_zeros = (2 - len(str(hours))) * '0'
-    m_zeros = (2 - len(str(mins))) * '0'
-    s_zeros = (2 - len(str(secs))) * '0'
-    time_str = h_zeros + str(hours) + ':' \
-             + m_zeros + str(mins) + ':' \
-             + s_zeros + str(secs)
-    return time_str

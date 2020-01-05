@@ -12,12 +12,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 '''
 
 
-from mattflow import config as conf
-from mattflow import dat_writer
-import numpy as np
-import random
-
-
 #                  x
 #          0 1 2 3 4 5 6 7 8 9
 #        0 G G G G G G G G G G
@@ -32,10 +26,18 @@ import random
 #        9 G G G G G G G G G G
 
 
+import random
+
+import numpy as np
+
+from mattflow import config as conf
+from mattflow import dat_writer
+
+
 def initialize(cx, cy):
     """
     creates and initializes the state-variables-3D-matrix, U
-    ------------------------------------------------------
+    --------------------------------------------------------
     U[0]:  state varables [h, hu, hv], populating the x,y grid  
     U[1]:  y dimention (rows)  
     U[2]:  x dimention (columns)  
@@ -45,19 +47,21 @@ def initialize(cx, cy):
     returns U    : state-variables-3D-matrix
     """
 
-    U = np.zeros(((3, conf.Ny + 2 * conf.Ng, conf.Nx + 2 * conf.Ng)))
+    U = np.zeros(((3,
+                   conf.Ny + 2 * conf.Ng,
+                   conf.Nx + 2 * conf.Ng)))
 
     # 1st drop
     U[0, :, :] = conf.SURFACE_LEVEL + drop(U[0, :, :], cx, cy)
 
     # write dat | default: False
-    if conf.DAT_WRITING_MODE is False:
-        pass
-    elif conf.DAT_WRITING_MODE is True:
+    if conf.DAT_WRITING_MODE:
         dat_writer.writeDat(U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng], cx, cy,
                             time=0, iter=0)
         from mattflow import mattFlow_post
         mattFlow_post.plotFromDat(time=0, iter=0)
+    elif not conf.DAT_WRITING_MODE:
+        pass
     else:
         print("Configure DAT_WRITING_MODE | Options: True, False")
     return U
@@ -74,7 +78,6 @@ def drop(hights_list, cx, cy):
     @param cy             : centers of the cells along the y axis  
     returns hights_list   : drop is added to the input hights_list
     """
-
     # multiply with 3 / 2 for a small stone droping
     #          with 1 / 5 for a water drop with a considerable momentum build
     #          with 1 / 8 for a soft water drop
@@ -108,6 +111,8 @@ def gaussian(variance, cx, cy):
     CX, CY = np.meshgrid(cx, cy)
 
     amplitude = 1 / np.sqrt(2 * np.pi * variance)
-    exponent = ((CX - DROP_CENTER_X)**2 + (CY - DROP_CENTER_Y)**2)/ 2 / variance
+    exponent = \
+        ((CX - DROP_CENTER_X)**2 + (CY - DROP_CENTER_Y)**2) / (2 * variance)
 
-    return amplitude * np.exp(-exponent)
+    gaussian_distribution = amplitude * np.exp(-exponent)
+    return gaussian_distribution
