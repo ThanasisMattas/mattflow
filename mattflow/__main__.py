@@ -17,6 +17,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                         '''
 
 
+from datetime import timedelta
 from timeit import default_timer as timer
 
 import numpy as np
@@ -103,7 +104,7 @@ def main():
     # Duration of the solution
     solution_end = timer()
     logger.log('Solution duration' + 11 * '-'
-               + util.secs_to_time(solution_end - start))
+               + timedelta(seconds=solution_end - start))
 
     # Post-processing
     mattflow_post.createAnimation(U_stepwise_for_animation, cx, cy,
@@ -112,11 +113,11 @@ def main():
     # Post-processing duration
     end = timer()
     logger.log('Post-processing duration' + 4 * '-'
-               + util.secs_to_time(end - solution_end))
+               + timedelta(seconds=end - solution_end))
 
     # Total duration
     logger.log('Total duration' + 14 * '-'
-               + util.secs_to_time(end - start))
+               + timedelta(seconds=end - start))
 
     # Close the log file
     logger.close()
