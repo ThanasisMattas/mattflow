@@ -1,5 +1,5 @@
 '''
-@file   logger.py  
+@file   logger.py
 @author Thanasis Mattas
 
 Handles the logging precess.
@@ -21,38 +21,38 @@ from mattflow import __version__, __author__, __license__
 
 file_name = str(datetime.now())[:19]
 # replace : with - for windows file name format
-file_name = file_name[:10] + '_' + file_name[11:13] + '-' + file_name[14:16] \
-            + '-' + file_name[17:19] + '.log'
+file_name = file_name.replace(':', '-').replace(' ', '_') + ".log"
 version_msg = 'MattFlow v' + __version__
 author_msg = 'Author: ' + __author__ + ', 2019'
 license_msg = __license__
 
 
 def log(state):
-    """
-    appends a state-message at a new line of the log file
-    -----------------------------------------------------
+    """appends a state-message at a new line of the log file
+
     If a log file does not exist, it creates one, printing the simulation info.
 
-    @param state    : the string to be logged
+    Args:
+        state (str) :  the string to be logged
     """
     # log file object, if there is one
     # False , if ther isn't
-    log_file_object = find_log()
+    log_file = find_log()
 
     # check if a log file is already created or if the log file is from previous
     # simulation
-    if log_file_object:
+    if log_file:
         # append the state
-        with open(log_file_object, 'a') as fa:
+        with open(log_file, 'a') as fa:
             fa.write(state + '\n')
         # rename log to current time
-        os.rename(log_file_object, file_name)
+        os.rename(log_file, file_name)
 
     # if a log file isn't created yet
     else:
         fw = open(file_name, 'w')
-        fw.write(version_msg + '\n' + author_msg + '\n' + license_msg + '\n'
+        fw.write(
+            version_msg + '\n' + author_msg + '\n' + license_msg + '\n'
             + len(license_msg) * '-' + '\n'
             + str(datetime.now())[:19] + '\n\n'
             + 'Configuration of the simulation' + '\n'
@@ -70,9 +70,9 @@ def log(state):
 
 
 def find_log():
-    """
-    finds an open log file, if any, at the working directory (1st encountered)
-    --------------------------------------------------------------------------
+    """finds an open log file, if any, at the working directory
+    (1st encountered)
+
     it is used by logger.log(state) to identify the log file, if any, of the
     ongoing simulation
 
@@ -89,53 +89,55 @@ def find_log():
 
 
 def close():
-    """
-    closes the log file, appending '_done' to the file name
-    """
+    """closes the log file, appending '_done' to the file name"""
     try:
-        log_file_object = find_log()
-        if log_file_object:
+        log_file = find_log()
+        if log_file:
             # append blank line
-            with open(log_file_object, 'a') as fa:
+            with open(log_file, 'a') as fa:
                 fa.write('\n')
             # append '_done' at the file name
-            os.rename(log_file_object, file_name[:-4] + '_done'
+            os.rename(log_file, file_name[:-4] + '_done'
                       + file_name[-4:])
         else:
             fw = open(file_name, 'w')
             fw.write('Trying to close a log file that does not exist...\n\n')
-            os.rename(log_file_object, file_name[:-4] + '_errored'
+            os.rename(log_file, file_name[:-4] + '_errored'
                       + file_name[-4:])
             fw.close()
     except TypeError:
         fw = open(file_name, 'w')
         fw.write('Trying to close a log file that does not exist...\n\n')
-        os.rename(log_file_object, file_name[:-4] + '_errored'
+        os.rename(log_file, file_name[:-4] + '_errored'
                   + file_name[-4:])
         fw.close()
 
 
-def is_open(log_file_object):
+def is_open(log_file):
+    """checks whether a log file object is open or not
+
+    Args:
+        log_file
+
+    Returns:
+        (boolean)
     """
-    checks whether a log file object is open or not
-    -----------------------------------------------
-    @param log_file_object  
-    returns boolean
-    """
-    if log_file_object[-9:-4] != '_done':
+    if log_file[-9:-4] != '_done':
         return True
     else:
         return False
 
 
-def is_mattflow_log(log_file_object):
+def is_mattflow_log(log_file):
+    """checks whether a log file was generated from mattflow or not
+
+    Args:
+        log_file
+
+    Returns:
+        (boolean)
     """
-    checks whether a log file was generated from mattflow or not
-    ------------------------------------------------------------
-    @param log_file_object  
-    returns boolean
-    """
-    with open(log_file_object, 'r') as fr:
+    with open(log_file, 'r') as fr:
         first_word = fr.read(8)
     if first_word == 'MattFlow':
         return True

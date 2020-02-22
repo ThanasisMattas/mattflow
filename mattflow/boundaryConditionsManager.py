@@ -1,5 +1,5 @@
 '''
-@file   boundaryConditionsManager.py  
+@file   boundaryConditionsManager.py
 @author Thanasis Mattas
 
 Handles the boundary conditions.
@@ -31,34 +31,35 @@ from mattflow import config as conf
 
 
 def updateGhostCells(U):
-    """
-    implements boundary conditions
-    ------------------------------
+    """implements boundary conditions
 
-    reflective boundary conditions:  
+    reflective boundary conditions:
 
     + vertical walls (x=X_MIN, x=X_max)
-        - h : dh/dx = 0 (Neumann)     h_0 = h_-1   (1 ghost cell)  
-                                      h_1 = h_-2   (2 ghost cells)  
+        - h : dh/dx = 0 (Neumann)     h_0 = h_-1   (1 ghost cell)
+                                      h_1 = h_-2   (2 ghost cells)
 
-        - u : u = 0    (Dirichlet)    u_0 = -u_-1  (1 ghost cell)  
-                                      u_1 = -u_-2  (2 ghost cells)  
-    
-        - v : dv/dx = 0 (Neumann)     v_0 = v_-1   (1 ghost cell)  
-                                      v_1 = v_-2   (2 ghost cells)  
+        - u : u = 0    (Dirichlet)    u_0 = -u_-1  (1 ghost cell)
+                                      u_1 = -u_-2  (2 ghost cells)
+
+        - v : dv/dx = 0 (Neumann)     v_0 = v_-1   (1 ghost cell)
+                                      v_1 = v_-2   (2 ghost cells)
 
     + horizontal walls (y=Y_MIN, y=Y_max)
-        - h : dh/dy = 0 (Neumann)     h_0 = h_-1   (1 ghost cell)  
-                                      h_1 = h_-2   (2 ghost cells)  
+        - h : dh/dy = 0 (Neumann)     h_0 = h_-1   (1 ghost cell)
+                                      h_1 = h_-2   (2 ghost cells)
 
-        - u : du/dy = 0 (Neumann)     u_0 = u_-1   (1 ghost cell)  
-                                      u_1 = u_-2   (2 ghost cells)  
-    
-        - v : v = 0    (Dirichlet)    v_0 = -v_-1  (1 ghost cell)  
-                                      v_1 = -v_-2  (2 ghost cells)                                  
+        - u : du/dy = 0 (Neumann)     u_0 = u_-1   (1 ghost cell)
+                                      u_1 = u_-2   (2 ghost cells)
 
-    @param U    : 3D matrix of the state variables, populating a x,y grid  
-    returns U
+        - v : v = 0    (Dirichlet)    v_0 = -v_-1  (1 ghost cell)
+                                      v_1 = -v_-2  (2 ghost cells)
+
+    Args:
+        U (3D array) :  the state variables, populating a x,y grid
+
+    Returns:
+        U
     """
     if conf.BOUNDARY_CONDITIONS == 'reflective':
         # left wall (0 <= x < Ng)

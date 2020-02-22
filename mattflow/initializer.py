@@ -1,5 +1,5 @@
 '''
-@file   initializer.py  
+@file   initializer.py
 @author Thanasis Mattas
 
 Handles the initialization of the simulation.
@@ -35,16 +35,18 @@ from mattflow import dat_writer
 
 
 def initialize(cx, cy):
-    """
-    creates and initializes the state-variables-3D-matrix, U
-    --------------------------------------------------------
-    U[0]:  state varables [h, hu, hv], populating the x,y grid  
-    U[1]:  y dimention (rows)  
-    U[2]:  x dimention (columns)  
+    """creates and initializes the state-variables-3D-matrix, U
 
-    @param cx    : centers of the cells along the x axis  
-    @param cy    : centers of the cells along the y axis  
-    returns U    : state-variables-3D-matrix
+    U[0]:  state varables [h, hu, hv], populating the x,y grid
+    U[1]:  y dimention (rows)
+    U[2]:  x dimention (columns)
+
+    Args:
+        cx (array)   :  centers of the cells along the x axis
+        cy (array)   :  centers of the cells along the y axis
+
+    Returns
+        U (3D array) :  state-variables-3D-matrix
     """
 
     U = np.zeros(((3,
@@ -68,15 +70,17 @@ def initialize(cx, cy):
 
 
 def drop(hights_list, cx, cy):
-    """
-    Generates a drop
-    ----------------
+    """Generates a drop
+
     Drop is modeled as a gaussian distribution
 
-    @param hights_list    : the 0th state variable, U[0, :, :]  
-    @param cx             : centers of the cells along the x axis  
-    @param cy             : centers of the cells along the y axis  
-    returns hights_list   : drop is added to the input hights_list
+    Args:
+        hights_list (array)    :  the 0th state variable, U[0, :, :]
+        cx (array)             :  centers of the cells along the x axis
+        cy (array)             :  centers of the cells along the y axis
+
+    Returns:
+        hights_list(2D array)  : drop is added to the input hights_list
     """
     # multiply with 3 / 2 for a small stone droping
     #          with 1 / 5 for a water drop with a considerable momentum build
@@ -93,17 +97,20 @@ def drop(hights_list, cx, cy):
 
 
 def gaussian(variance, cx, cy):
-    '''
-    produces a bivariate gaussian distribution of a certain variance  
-    ----------------------------------------------------------------
+    '''produces a bivariate gaussian distribution of a certain variance
+
     formula: amplitude * np.exp(-exponent)
 
-    @param variance       : target variance of the distribution  
-    @param cx             : centers of the cells along the x axis  
-    @param cy             : centers of the cells along the y axis
+    Args:
+        variance (float) :  target variance of the distribution
+        cx (array)       :  centers of the cells along the x axis
+        cy (array)       :  centers of the cells along the y axis
+
+    Returs:
+        gaussian_distribution (2D array)
     '''
-    # random pick of drop center coordinates (mean or expectation of the
-    # gaussian distribution)
+    # random pick of drop center coordinates
+    # (mean or expectation of the gaussian distribution)
     DROP_CENTER_X = random.uniform(conf.MIN_X, conf.MAX_X)
     DROP_CENTER_Y = random.uniform(conf.MIN_Y, conf.MAX_Y)
 

@@ -1,5 +1,5 @@
 '''
-@file   mattflow_solver.py  
+@file   mattflow_solver.py
 @author Thanasis Mattas
 
 Handles the solution of the simulation.
@@ -27,20 +27,22 @@ from mattflow import dat_writer
 
 
 def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
-    """
-    evaluates the state variables (h, hu, hv) at a new time-step
-    ------------------------------------------------------------
+    """evaluates the state variables (h, hu, hv) at a new time-step
+
     it can be used in a for/while loop, iterating through each time-step
 
-    @param U          : 3D matrix of the state variables, populating a x,y grid  
-    @param dx         : spatial discretization step on x axis  
-    @param cx         : cell centers on x axis  
-    @param dy         : spatial discretization step on y axis  
-    @param cy         : cell centers on y axis  
-    @param delta_t    : time discretization step  
-    @param iter       : current iteration  
-    @param drops      : number of drops been generated  
-    returns U, drops
+    Args:
+        U (3D array)    :  the state variables, populating a x,y grid
+        dx (float)      :  spatial discretization step on x axis
+        cx (array)      :  cell centers on x axis
+        dy (float)      :  spatial discretization step on y axis
+        cy (array)      :  cell centers on y axis
+        delta_t (float) :  time discretization step
+        iter (int)      :  current iteration
+        drops (int)     :  number of drops been generated
+
+    Returns:
+        U, drops
     """
     # Simulation mode
     # ---------------
@@ -121,37 +123,42 @@ def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
 
 
 def dt(U, dx, dy):
-    """
-    evaluates the time discretization step of the current iteration
-    ---------------------------------------------------------------
-    The stability condition of the numerical simulation (Known as
-    Courant–Friedrichs–Lewy or CFL condition) describes that the solution velocity
-    (dx/dt) has to be greater than the wave velocity. Namely, the simulation has
-    to run faster than the information, in order to evaluate it. The wave velocity
-    used is the greatest velocity of the waves that contribute to the fluid,
-    which is the greatest eagenvalue of the Jacobian matrix df(U)/dU (|u| + c),
-    along the x axis, and dG(U)/dU (|v| + c), along the y axis.
+    """evaluates the time discretization step of the current iteration
 
-    We equate    
+    The stability condition of the numerical simulation (Known as
+    Courant–Friedrichs–Lewy or CFL condition) describes that the solution
+    velocity (dx/dt) has to be greater than the wave velocity. Namely, the
+    simulation has to run faster than the information, in order to evaluate
+    it. The wave velocity used is the greatest velocity of the waves that
+    contribute to the fluid, is the greatest eagenvalue of the Jacobian
+    matrix df(U)/dU (|u| + c), along the x axis, and dG(U)/dU (|v| + c),
+    along the y axis.
+
+    We equate
+
                       dx/dt = wave_vel => dt = dx / wave_vel
-    
-    and the magnitude that the solution velocity is greater than the wave velocity
-    is handled by the Courant number (<= 1). Namely, 
-    
+
+    and the magnitude that the solution velocity is greater than the wave
+    velocity is handled by the Courant number (<= 1). Namely,
+
                              dt_final = dt * Courant.
 
-    The velocity varies at each point of the grid, consisting the velocity field.
-    So, dt is evaluated at every cell, as the mean of the dt's at x and y
-    directions. Finally, the minimum dt of all cells is returned, as the time-step
-    of the current iteration.
+    The velocity varies at each point of the grid, consisting the velocity
+    field. So, dt is evaluated at every cell, as the mean of the dt's at x
+    and y directions. Finally, the minimum dt of all cells is returned, as
+    the time-step of the current iteration.
 
-    The velocity field is step-wisely changing and, thus, the calculation of dt
-    is repeated at each iteration, preserving consistency with the CFL condition.
+    The velocity field is step-wisely changing and, thus, the calculation
+    of dt is repeated at each iteration, preserving consistency with the
+    CFL condition.
 
-    @param U          : 3D matrix of the state variables, populating a x,y grid  
-    @param dx         : spatial discretization step on x axis  
-    @param dy         : spatial discretization step on y axis  
-    returns dt        : time discretization step 
+    Args:
+        U (3D array) :  the state variables, populating a x,y grid
+        dx (float)   :  spatial discretization step on x axis
+        dy (float)   :  spatial discretization step on y axis
+
+    Returns:
+        dt (float)   :  time discretization step
     """
     # h = U[0]
     # u = U[1] / h

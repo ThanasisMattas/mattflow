@@ -1,5 +1,5 @@
 '''
-@file   mattflow_post.py  
+@file   mattflow_post.py
 @author Thanasis Mattas
 
 Handles the post-processing of the simulation.
@@ -25,13 +25,13 @@ from mattflow import logger
 
 
 def plotFromDat(time, iter, cx, cy):
-    """
-    creates and saves a frame as png, reading data from a dat file
-    --------------------------------------------------------------
-    @param time        : current time  
-    @param iter        : current iter
-    @param cx          : cell centers at x axis
-    @param cy          : cell centers at y axis
+    """creates and saves a frame as png, reading data from a dat file
+
+    Args:
+        time (float) :  current time
+        iter (int)   :  current iter
+        cx (array)   :  cell centers at x axis
+        cy (array)   :  cell centers at y axis
     """
     # create ./session directory for saving the results
     try:
@@ -47,20 +47,18 @@ def plotFromDat(time, iter, cx, cy):
 
     # plot {
     #
-    fig = plt.figure(figsize=(9.6, 6.4), dpi = 112) # 1080x720
+    fig = plt.figure(figsize=(9.6, 6.4), dpi=112)  # 1080x720
     plt.rcParams.update({'font.size': 8})
     sub = fig.add_subplot(111, projection="3d")
     plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0, hspace=0)
 
     if conf.PLOTTING_STYLE == 'water':
         sub.plot_surface(X, Y, Z[0], rstride=1, cstride=1, linewidth=0,
-            color=(0.251, 0.643, 0.875, 0.9), antialiased=False)
+                         color=(0.251, 0.643, 0.875, 0.9), antialiased=False)
     elif conf.PLOTTING_STYLE == 'contour':
-        sub.contour3D(X, Y, Z[0], 140, cmap='plasma',
-            vmin=0.6, vmax=1.4)
+        sub.contour3D(X, Y, Z[0], 140, cmap='plasma', vmin=0.6, vmax=1.4)
     elif conf.PLOTTING_STYLE == 'wireframe':
-        sub.plot_wireframe(X, Y, Z[0], rstride=2, cstride=2,
-            linewidth=0.5,)
+        sub.plot_wireframe(X, Y, Z[0], rstride=2, cstride=2, linewidth=0.5,)
     else:
         logger.log("Configure PLOTTING_STYLE | options: 'water', 'contour',",
                    "'wireframe'")
@@ -108,17 +106,17 @@ def dataFromDat():
 
 
 def update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
-    """
-    plots a single frame
-    -------------------------------------------------------------------  
-    used from FuncAnimation to iteratively create a timelapse animation  
+    """plots a single frame
 
-    @param frame_number    : current frame  
-    @param X, Y, Z         : meshgrid and values  
-    @param plot            : list holding current plot  
-    @param fig             : activated plt.figure  
-    @param sub             : Axes3D subplot object  
-    @time_array            : holds the iter-wise times
+    used from FuncAnimation to iteratively create a timelapse animation
+
+    Args:
+        frame_number (int)  :  current frame
+        X, Y, Z (2D arrays) :  meshgrid and values
+        plot (list)         :  list holding current plot
+        fig (figure)        :  activated plt.figure
+        sub (subplot)       :  Axes3D subplot object
+        time_array (list)   :  holds the iter-wise times
     """
     if conf.PLOTTING_STYLE == 'water':
         plot[0].remove()
@@ -131,8 +129,8 @@ def update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
                                    shade=True, antialiased=False)
     elif conf.PLOTTING_STYLE == 'contour':
         # Bliting with contour is not supported (because the corresponding
-        # attributes are not artists), so the subplot has to be re-built. That's
-        # why fig is passed.
+        # attributes are not artists), so the subplot has to be re-built.
+        # That's why fig is passed.
         sub.clear()
         sub.view_init(50, 45)
         plt.subplots_adjust(left=0, bottom=0, right=1, top=1,
@@ -157,13 +155,12 @@ def update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
 
 
 def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
-    """
-    generates and saves a timelapse of the simulation
-    -------------------------------------------------
-    @param U_stepwise_for_animation    : list of iter-wise solutions  
-    @param cx                          : x axis cell centers  
-    @param cy                          : y axis cell centers  
-    @time_array                        : holds the iter-wise times
+    """generates and saves a timelapse of the simulation
+
+        U_stepwise_for_animation (list) : list of iter-wise solutions
+        cx (array)                      : x axis cell centers
+        cy (array)                      : y axis cell centers
+        time_array (list)               : holds the iter-wise times
     """
     # frames per sec
     fps = 60
@@ -245,12 +242,12 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
 
 
 def plotBasin(cx, cy, sub):
-    """
-    plots the basin that contains the fluid
-    ---------------------------------------
-    @param cx        : x axis cell centers  
-    @param cy        : y axis cell centers  
-    @param sub       : Axes3D subplot object  
+    """plots the basin that contains the fluid
+
+    Args:
+        cx (array)    :  x axis cell centers
+        cy (array)    :  y axis cell centers
+        sub (subplot) :  Axes3D subplot object
     """
     if conf.SHOW_BASIN is True:
         # make basin a bit wider, because water appears to be out of the basin
@@ -274,19 +271,18 @@ def plotBasin(cx, cy, sub):
 
 
 def saveAni(ani, fps, dpi):
-    """
-    saves the animation
-    -------------------
-    @param ani             : animation.FuncAnimation() object  
-    @param fps             : frames per second  
-    @param dpi             : dots per inch
+    """saves the animation
+
+    Args:
+        ani (obj) :  animation.FuncAnimation() object
+        fps (int) :  frames per second
+        dpi (int) :  dots per inch
     """
     if conf.SAVE_ANIMATION is True:
         # file name
         date_n_time = str(datetime.now())[:19]
         # replace : with - for windows file name format
-        date_n_time = date_n_time[:10] + '_' + date_n_time[11:13] + '-' \
-                      + date_n_time[14:16] + '-' + date_n_time[17:19]
+        date_n_time = date_n_time.replace(':', '-').replace(' ', '_')
         file_name = conf.MODE + '_animation_' + date_n_time
 
         # configure the writer
@@ -306,10 +302,10 @@ def saveAni(ani, fps, dpi):
                        + conf.VID_FORMAT + ' | fps: ' + str(fps))
 
             # convert to a lighter gif
-            cmd = 'ffmpeg -i ' + file_name + '.' + conf.VID_FORMAT + ' -vf ' \
-                '"fps=' + str(fps) + ',scale=240:-1:flags=lanczos,split[s0][s1];' \
-                '[s0]palettegen[p];[s1][p]paletteuse"' \
-                ' -hide_banner -loglevel panic -loop 0 ' + file_name + '.gif'
+            cmd = 'ffmpeg -i ' + file_name + '.' + conf.VID_FORMAT + ' -vf '   \
+                  '"fps=' + str(fps) + ',scale=240:-1:flags=lanczos,split'     \
+                  '[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -hide_banner' \
+                  ' -loglevel panic -loop 0 ' + file_name + '.gif'
             os.system(cmd)
             logger.log('Animation saved as: ' + file_name + '.gif'
                        + ' | fps: ' + str(fps))

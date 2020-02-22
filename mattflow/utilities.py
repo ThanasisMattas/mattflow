@@ -1,5 +1,5 @@
 '''
-@file   utilities.py  
+@file   utilities.py
 @author Thanasis Mattas
 
 Provides some useful-generic functions.
@@ -16,10 +16,10 @@ import os
 
 
 def delete_logs_dats_images():
-    """
-    deletes previous log, dat and png files (for debugging)
+    """deletes previous log, dat and png files (for debugging)
     """
     files_list = [f for f in os.listdir('.')]
+    __import__('ipdb').set_trace(context=9)
     for f in files_list:
         if f.endswith(".dat") or f.endswith(".log") or f.endswith(".png"):
             os.remove(os.path.join('.', f))

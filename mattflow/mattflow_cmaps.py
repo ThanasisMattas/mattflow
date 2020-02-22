@@ -1,5 +1,5 @@
 '''
-@file   mattflow_cmaps.py  
+@file   mattflow_cmaps.py
 @author Thanasis Mattas
 
 Creates some color maps (currently unused).
@@ -23,9 +23,8 @@ from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
 
 def deepWater_cmap():
-    """
-    Creates a deep water color-map out of shades of blue, adding transparency to
-    colors that lie at greater hights (water drops)
+    """Creates a deep water color-map out of shades of blue, adding
+    transparency to colors that lie at greater hights (water drops)
     """
     # deep water color-map (darker)
     water_colors = np.zeros((256, 4))
@@ -50,9 +49,8 @@ def deepWater_cmap():
 
 
 def shallowWater_cmap():
-    """
-    Creates a shallow water color-map out of shades of blue, adding transparency
-    to colors that lie at greater hights (water drops)
+    """Creates a shallow water color-map out of shades of blue, adding
+    transparency to colors that lie at greater hights (water drops)
     """
     # shallow water color-map (lighter)
     water_colors = np.zeros((256, 4))

@@ -1,5 +1,5 @@
 '''
-@file   flux.py  
+@file   flux.py
 @author Thanasis Mattas
 
 Evaluates the total flux entering or leaving a cell.
@@ -32,14 +32,16 @@ from mattflow import config
 
 
 def flux(U, dx, dy):
-    """
-    evaluates the total flux that enters or leaves a cell, using the \
-    Lax-Friedrichs scheme  
-    ---------------------  
-    @param U    : the state variables 3D matrix  
-    @param dx   : x axis discretiazation step  
-    @param dy   : y axis discretiazation step
-    returns total_flux
+    """evaluates the total flux that enters or leaves a cell, using the \
+    Lax-Friedrichs scheme
+
+    Args:
+        U (3D array)   : the state variables 3D matrix
+        dx (float)     : x axis discretiazation step
+        dy (float)     : y axis discretiazation step
+
+    Returns:
+        total_flux (3D array)
     """
     g = 9.81
     Nx = config.Nx
@@ -55,7 +57,7 @@ def flux(U, dx, dy):
         np.abs(U[1, Ng: -Ng, Ng - 1: -Ng] / U[0, Ng: -Ng, Ng - 1: -Ng])
         + np.sqrt(g * np.abs(U[0, Ng: -Ng, Ng - 1: Nx + Ng])),
 
-        # x dim slicing of right values : Ng: Nx + Ng
+        # x dim slicing of right values:  Ng: Nx + Ng
         np.abs(U[1, Ng: -Ng, Ng: Nx + Ng + 1] / U[0, Ng: -Ng, Ng: Nx + Ng + 1])
         + np.sqrt(g * np.abs(U[0, Ng: -Ng, Ng: Nx + Ng + 1]))
     )
@@ -80,11 +82,11 @@ def flux(U, dx, dy):
     #
     # Max vertical speed between top and bottom cells for every interface
     maxVerticalSpeed = np.maximum(
-        # y dim slicing of top values :  Ng - 1: -Ng
+        # y dim slicing of top values:  Ng - 1: -Ng
         np.abs(U[1, Ng - 1: -Ng, Ng: -Ng] / U[0, Ng - 1: -Ng, Ng: -Ng])
         + np.sqrt(g * np.abs(U[0, Ng - 1: -Ng, Ng: -Ng])),
 
-        # y dim slicing of bottom values: Ng: Nx + Ng + 1
+        # y dim slicing of bottom values:  Ng: Nx + Ng + 1
         np.abs(U[1, Ng: Ny + Ng + 1, Ng: -Ng] / U[0, Ng: Ny + Ng + 1, Ng: -Ng])
         + np.sqrt(g * np.abs(U[0, Ng: Ny + Ng + 1, Ng: -Ng]))
     )
@@ -108,10 +110,9 @@ def flux(U, dx, dy):
 
 
 def F(U):
-    """
-    evaluates the x-dimention-fluxes-vector, F  
-    ------------------------------------------  
-    @param U    : the state variables 3D matrix
+    """evaluates the x-dimention-fluxes-vector, F
+    Args:
+        U (3D array) : the state variables 3D matrix
     """
 
     '''
@@ -128,10 +129,9 @@ def F(U):
 
 
 def G(U):
-    """
-    evaluates the y-dimention-fluxes-vector, G  
-    ------------------------------------------  
-    @param U    : the state variables 3D matrix
+    """evaluates the y-dimention-fluxes-vector, G
+    Args:
+        U (3D array) : the state variables 3D matrix
     """
 
     '''

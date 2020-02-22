@@ -1,6 +1,6 @@
 '''
-@file   __main__.py  
-@author Thanasis Mattas  
+@file   __main__.py
+@author Thanasis Mattas
 
 Script that executes all the required processes for the simulation.
 
