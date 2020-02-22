@@ -95,9 +95,7 @@ def main():
             [U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]],
             axis=0)
 
-        spaces = (6 - len(str(iter))) * ' '  # for vertical printing alignment
-        logger.log('iter:' + spaces + str(iter) + '    time: '
-                   + str('{:0.3f}'.format(time)))
+        logger.log_timestep(iter, time)
     #
     # }
 

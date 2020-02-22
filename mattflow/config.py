@@ -1,5 +1,5 @@
 '''
-@file   config.py  
+@file   config.py
 @author Thanasis Mattas
 
 Configuration of the simulation
