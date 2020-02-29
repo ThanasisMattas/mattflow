@@ -52,7 +52,7 @@ def main():
     # }
 
     # Uncomment this to delete previous log, dat and png files (for debugging)
-    # util.delete_logs_dats_images_videos()
+    util.delete_logs_dats_images_videos()
 
     # Solution {
     #
@@ -61,10 +61,12 @@ def main():
     # Initialization
     logger.log('Initialization...')
     U = initializer.initialize(cx, cy)
-    drops = 1
+    drops_count = 1
 
     # This will hold the step-wise solutions for the post-processing animation.
-    U_stepwise_for_animation = [U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]]
+    # (save a frame every 3 iters)
+    U_stepwise_for_animation = np.zeros([conf.MAX_ITERS // 3, conf.Nx, conf.Ny])
+    U_stepwise_for_animation[0] = U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
 
     # This will hold the step-wise time for the post-processing animation.
     # time * 10 is appended, because space is scaled about x10
@@ -86,18 +88,21 @@ def main():
         U = boundaryConditionsManager.updateGhostCells(U)
 
         # Numerical iterative scheme
-        U, drops = mattflow_solver.solve(U, dx, cx, dy, cy,
-                                         delta_t, iter, drops)
-
+        U, drops_count = mattflow_solver.solve(U, dx, cx, dy, cy, delta_t,
+                                               iter, drops_count)
         # Append current frame to the list, to be animated at post-processing
-        U_stepwise_for_animation = np.append(
-            U_stepwise_for_animation,
-            [U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]],
-            axis=0)
+
+        if not (iter - 1) % 3:
+            U_stepwise_for_animation[(iter - 1) // 3] = \
+                U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
 
         logger.log_timestep(iter, time)
     #
     # }
+
+    # clean-up memap
+    if conf.DUMP_MEMMAP and conf.WORKERS > 1:
+        util.delete_memmap()
 
     # Duration of the solution
     solution_end = timer()

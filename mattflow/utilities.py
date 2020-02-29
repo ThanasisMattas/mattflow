@@ -14,6 +14,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 import os
 
+from mattflow import config as conf
+
 
 def delete_logs_dats_images_videos():
     """deletes previous log, dat and png files (for debugging)"""
@@ -27,3 +29,12 @@ def delete_logs_dats_images_videos():
     for dir in directories:
         if os.path.isdir(dir):
             os.rmdir(dir)
+
+
+def delete_memmap():
+    import shutil
+
+    try:
+        shutil.rmtree(conf.MEMMAP_DIR)
+    except FileNotFoundError:
+        print("Could not clean-up the memmap folder")

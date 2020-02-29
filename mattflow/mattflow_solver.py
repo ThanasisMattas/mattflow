@@ -68,7 +68,7 @@ def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
     Ng = conf.Ng
 
     # Numerical scheme
-    # flux.flux(U) returns the total flux entering and leaving each cell
+    # flux.flux() returns the total flux entering and leaving each cell
     if conf.SOLVER_TYPE == 'Lax-Friedrichs Riemann':
         U[:, Ng: -Ng, Ng: -Ng] += delta_t / cellArea * flux.flux(U, dx, dy)
     elif conf.SOLVER_TYPE == '2-stage Runge-Kutta':

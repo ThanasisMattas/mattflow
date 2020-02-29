@@ -111,6 +111,7 @@ def gaussian(variance, cx, cy):
     '''
     # random pick of drop center coordinates
     # (mean or expectation of the gaussian distribution)
+    # random.seed(99)
     DROP_CENTER_X = random.uniform(conf.MIN_X, conf.MAX_X)
     DROP_CENTER_Y = random.uniform(conf.MIN_Y, conf.MAX_Y)
 

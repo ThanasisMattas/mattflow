@@ -29,11 +29,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 #        9 G G G G G G G G G G
 
 
+import os
+
+
 # Pre-processing configuration {
 #
 # Number of cells on x and y axis
-Nx = 110
-Ny = 110
+Nx = 120
+Ny = 120
 
 # Number of ghost cells (used for applying Boundary Conditions)
 # Depends on the used numerical scheme
@@ -52,7 +55,14 @@ MAX_Y = 1.4
 #
 # Ending conditions of the simulation
 STOPPING_TIME = 3
-MAX_ITERS = 650
+MAX_ITERS = 640
+
+# No workers for multiprocessing
+WORKERS = 1
+
+# Pre-allocate and dump a binary memmap, used by all the workers
+DUMP_MEMMAP = False
+MEMMAP_DIR = os.path.join(os.getcwd(), "flux_memmap")
 
 # Courant number
 COURANT = 0.6

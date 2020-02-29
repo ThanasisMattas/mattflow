@@ -105,6 +105,35 @@ def dataFromDat():
     return X, Y, Z, Nx, Ny
 
 
+def plotBasin(cx, cy, sub):
+    """plots the basin that contains the fluid
+
+    Args:
+        cx (array)    :  x axis cell centers
+        cy (array)    :  y axis cell centers
+        sub (subplot) :  Axes3D subplot object
+    """
+    if conf.SHOW_BASIN is True:
+        # make basin a bit wider, because water appears to be out of the basin
+        # because of the perspective mode
+        X_bas, Y_bas = np.meshgrid(cx[conf.Ng - 1: conf.Nx + 2],
+                                   cy[conf.Ng - 1: conf.Ny + 2])
+        # BASIN
+        BASIN = np.zeros((conf.Ny + 2 * conf.Ng, conf.Nx + 2 * conf.Ng))
+        # left-right walls
+        BASIN[:, 0] = 2.5
+        BASIN[:, conf.Nx + 2 * conf.Ng - 1] = 2.5
+        # top-bottom walls
+        BASIN[0, :] = 2.5
+        BASIN[conf.Ny + 2 * conf.Ng - 1, :] = 2.5
+        sub.plot_surface(X_bas, Y_bas, BASIN, rstride=2, cstride=2, linewidth=0,
+                         color=(0.4, 0.4, 0.5, 0.1))
+    elif conf.SHOW_BASIN is False:
+        pass
+    else:
+        logger.log("Configure SHOW_BASIN. Options: True, False")
+
+
 def update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
     """plots a single frame
 
@@ -144,8 +173,9 @@ def update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
     elif conf.PLOTTING_STYLE == 'wireframe':
         plot[0].remove()
         # rotate the domain every 3 frames
-        horizontal_rotate = 45 + frame_number / 8
-        sub.view_init(55, horizontal_rotate)
+        horizontal_rotate = 45 + frame_number / 3
+        vertical_rotate = 55 - frame_number / 4
+        sub.view_init(vertical_rotate, horizontal_rotate)
         plot[0] = sub.plot_wireframe(X, Y, Z[frame_number],
                                      rstride=2, cstride=2, linewidth=1)
 
@@ -163,12 +193,12 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
         time_array (list)               : holds the iter-wise times
     """
     # frames per sec
-    fps = 60
+    fps = 20
     # dots per inch
-    dpi = 50
+    dpi = 60
     # figure size in inches
     # golden ratio: 1.618
-    figsize = (12.944, 8)
+    figsize = (10 * 1.618, 10)
 
     # resolution = figsize * dpi
     # --------------------------
@@ -239,35 +269,6 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
         pass
     else:
         logger.log("Configure SHOW_ANIMATION | Options: True, False")
-
-
-def plotBasin(cx, cy, sub):
-    """plots the basin that contains the fluid
-
-    Args:
-        cx (array)    :  x axis cell centers
-        cy (array)    :  y axis cell centers
-        sub (subplot) :  Axes3D subplot object
-    """
-    if conf.SHOW_BASIN is True:
-        # make basin a bit wider, because water appears to be out of the basin
-        # because of the perspective mode
-        X_bas, Y_bas = np.meshgrid(cx[conf.Ng - 1: conf.Nx + 2],
-                                   cy[conf.Ng - 1: conf.Ny + 2])
-        # BASIN
-        BASIN = np.zeros((conf.Ny + 2 * conf.Ng, conf.Nx + 2 * conf.Ng))
-        # left-right walls
-        BASIN[:, 0] = 2.5
-        BASIN[:, conf.Nx + 2 * conf.Ng - 1] = 2.5
-        # top-bottom walls
-        BASIN[0, :] = 2.5
-        BASIN[conf.Ny + 2 * conf.Ng - 1, :] = 2.5
-        sub.plot_surface(X_bas, Y_bas, BASIN, rstride=2, cstride=2, linewidth=0,
-                         color=(0.4, 0.4, 0.5, 0.1))
-    elif conf.SHOW_BASIN is False:
-        pass
-    else:
-        logger.log("Configure SHOW_BASIN. Options: True, False")
 
 
 def saveAni(ani, fps, dpi):
