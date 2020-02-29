@@ -21,7 +21,7 @@ ___
 1. anaconda environment (recommended)
 
 ```bash
-$ conda create --name mattflow python=3 matplotlib joblib
+$ conda create --name mattflow python=3 matplotlib
 $ conda activate mattflow
 $ pip install mattflow
 $ mattflow
@@ -32,7 +32,7 @@ $ mattflow
 ```bash
 $ python3 -m venv mattflow_env
 $ source mattflow_env/bin/activate
-$ pip install mattflow joblib
+$ pip install mattflow
 $ mattflow
 ```
 

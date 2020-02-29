@@ -4,7 +4,8 @@ import os
 
 
 REQUIRED = ['numpy>=1.16.4',
-            'matplotlib>=3.1.1']
+            'matplotlib>=3.1.1'
+            'joblib>=0.13.2']
 
 EXTRAS = {'write video': ['ffmpeg'],}
 
