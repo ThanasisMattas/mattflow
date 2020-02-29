@@ -13,6 +13,7 @@ ___
 | python 3             | GNU/Linux |
 | numpy >= 1.16.4      | Windows   |
 | matplotlib >= 3.1.1  |           |
+| jpblib >= 0.13.2     |           |
 | ffmpeg (optional)    |           |
 
 ## How to install & run MattFlow
@@ -20,44 +21,44 @@ ___
 1. anaconda environment (recommended)
 
 ```bash
-$ conda create --name mattflow python=3 matplotlib
+$ conda create --name mattflow python=3 matplotlib joblib
 $ conda activate mattflow
 $ pip install mattflow
 $ mattflow
 ```
 
-2. venv (python>=3.3)  
+2. venv (python>=3.3)
 
 ```bash
 $ python3 -m venv mattflow_env
 $ source mattflow_env/bin/activate
-$ pip install mattflow
+$ pip install mattflow joblib
 $ mattflow
 ```
 
 3. pip
 
 ```bash
-$ pip install --user mattflow
+$ pip install --user mattflow joblib
 $ mattflow
 ```
 
 ## Swallow Water Equations
 
-SWE is a simpified CFD problem which models the surface of the water, with the assumption  
-that the horizontal length scale is much greater than the vertical length scale.  
+SWE is a simpified CFD problem which models the surface of the water, with the assumption
+that the horizontal length scale is much greater than the vertical length scale.
 
-SWE is a coupled system of 3 hyperbolic partial differential equations, that derive from the  
-conservation of mass and the conservation of linear momentum (Navier-Stokes) equations, in  
+SWE is a coupled system of 3 hyperbolic partial differential equations, that derive from the
+conservation of mass and the conservation of linear momentum (Navier-Stokes) equations, in
 case of a horizontal stream bed, with no Coriolis, frictional or viscours forces ([wiki]).
 
 <img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/9b9d481407c0c835525291740de8d1c446265ce2" class="mwe-math-fallback-image-inline" aria-hidden="true" style="vertical-align: -18ex; width:46ex; height:19ex;" alt="{\displaystyle {\begin{aligned}{\frac {\partial (\rho \eta )}{\partial t}}&amp;+{\frac {\partial (\rho \eta u)}{\partial x}}+{\frac {\partial (\rho \eta v)}{\partial y}}=0,\\[3pt]{\frac {\partial (\rho \eta u)}{\partial t}}&amp;+{\frac {\partial }{\partial x}}\left(\rho \eta u^{2}+{\frac {1}{2}}\rho g\eta ^{2}\right)+{\frac {\partial (\rho \eta uv)}{\partial y}}=0,\\[3pt]{\frac {\partial (\rho \eta v)}{\partial t}}&amp;+{\frac {\partial (\rho \eta uv)}{\partial x}}+{\frac {\partial }{\partial y}}\left(\rho \eta v^{2}+{\frac {1}{2}}\rho g\eta ^{2}\right)=0.\end{aligned}}}">
 
-where:  
-_η_ : height  
-_u_ : velocity along the x axis  
-_υ_ : velocity along the y axis  
-_ρ_ : density  
+where:
+_η_ : height
+_u_ : velocity along the x axis
+_υ_ : velocity along the y axis
+_ρ_ : density
 _g_ : gravity acceleration
 
 ## MattFlow structure
@@ -65,19 +66,19 @@ _g_ : gravity acceleration
 **More details at this [jupyter notebook]**
 
 0. configuration of the simulation via a config file
-1. pre-process  
+1. pre-process
 structured/cartesian mesh
-2. solution  
-   supported solvers:  
+2. solution
+   supported solvers:
    - [Lax-Friedrichs] Riemann
-   &nbsp;&nbsp;                | O(Δt, Δx<sup>2</sup>, Δy<sup>2</sup>)  
+   &nbsp;&nbsp;                | O(Δt, Δx<sup>2</sup>, Δy<sup>2</sup>)
    - 2-stage [Runge-Kutta]
    &nbsp; &nbsp; &nbsp; &nbsp; | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
-   &ensp;| default  
+   &ensp;| default
    - [MacCormack]
    &emsp; &emsp; &emsp; &emsp; &nbsp; | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
    &ensp;| experimental
-3. post-processing  
+3. post-processing
    matplotlib animation
 
 ## Additional configurations
@@ -87,20 +88,21 @@ structured/cartesian mesh
 - initial conditions (single drop, multiple drops, rain)
 - boundary conditions (currently: reflective)
 - solver
+- multiprocessing
 - plotting style
 - animation options
 
-Currently, you can configure the simulation at the _config_ module  
+Currently, you can configure the simulation at the _config_ module
 
 ## TODO
 
 1. coverage hooks
 2. API
-3. Numba?
+3. Numba
 4. Higher order schemes
 5. Addition of source terms
 6. Addition of viscous models
-7. Algorithm that converts every computational second to a real-time second, playing with the fps  
+7. Algorithm that converts every computational second to a real-time second, playing with the fps
    at the post-processing timelapse, because each iteration uses different time-step (CFL condition)
 8. Moving core to C++ or Cython?
 9. Moving objects inside the domain
@@ -109,7 +111,7 @@ Currently, you can configure the simulation at the _config_ module
 
 ***Start the flow!***
 
->(C) 2019, Thanasis Mattas  
+>(C) 2019, Thanasis Mattas
 >atmattas@physics.auth.gr
 
 
