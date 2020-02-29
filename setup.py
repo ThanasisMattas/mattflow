@@ -4,10 +4,10 @@ import os
 
 
 REQUIRED = ['numpy>=1.16.4',
-            'matplotlib>=3.1.1'
+            'matplotlib>=3.1.1',
             'joblib>=0.13.2']
 
-EXTRAS = {'write video': ['ffmpeg'],}
+EXTRAS = {'write video': ['ffmpeg']}
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -49,4 +49,4 @@ setup(
             "mattflow=mattflow.__main__:main",
         ]
     },
-) 
+)
