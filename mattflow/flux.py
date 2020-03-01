@@ -25,11 +25,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 #        8 G G G G G G G G G G
 #        9 G G G G G G G G G G
 #
-#          -----     -----
-#               -----     -----
+#            _ - - - _
+#                  _ - - - _
 #
-# current example: 4 slices (workers) with window of 5 for parallel solving
-#                  (last column will be removed)
+# example: 2 slices (workers) with window of 3, for parallel solving
+#          (the 'underscore' cells are required by the numerical scheme)
 
 
 import os
@@ -40,16 +40,22 @@ import numpy as np
 from mattflow import config as conf
 
 
-def flux_batch(U, dx, dy, window, sl, flux_out=None, idx=None):
+def flux_batch(U, dx, dy, window, slicing_obj, flux_out=None, idx=None):
     """evaluates the total flux that enters or leaves a cell, using the \
     Lax-Friedrichs scheme
 
-    It runs by each joblib worker.
+    It runs by each joblib worker on a slice of the domain
 
     Args:
-        U (3D array)   : the state variables 3D matrix
-        dx (float)     : x axis discretiazation step
-        dy (float)     : y axis discretiazation step
+        U (3D array)        : the state variables 3D matrix
+        dx (float)          : x axis discretiazation step
+        dy (float)          : y axis discretiazation step
+        window (int)        : the effective width of a slice
+        slicing_obj (slice) : slice of the domain (1 + window + 1)
+        flux_out (3D array) : container of the results of each worker
+                              (default None, in case of single-processing)
+        idx (int)           : the index in flux_out of the current results
+                              (default None, in case of single-processing)
 
     Returns:
         total_flux (3D array)
@@ -58,7 +64,7 @@ def flux_batch(U, dx, dy, window, sl, flux_out=None, idx=None):
     Nx = conf.Nx
     Ny = conf.Ny
     Ng = conf.Ng
-    U_batch = U[:, :, sl]
+    U_batch = U[:, :, slicing_obj]
     total_flux = np.zeros(((3, Ny + 2 * Ng, window + 2)))
 
     # Vertical interfaces - Horizontal flux {
@@ -157,9 +163,9 @@ def flux(U, dx, dy):
     window = -(-(Nx + 2 * Ng) // workers)
     window = 5
 
-    # the extra cells at the two ends are required by the iterative scheme
+    # the extra cells at the two ends are required by the numerical scheme
     #
-    # say Ng =2, window = 30:
+    # say Ng = 2, window = 30:
     # [slice(1, 33, slice(31, 63), slice(61, 63), ...]
     slices = [slice(start - 1, start + window + 1)
               for start in range(Ng, Nx + 2 * Ng, window)]
@@ -177,22 +183,22 @@ def flux(U, dx, dy):
                              mode="w+")
 
         Parallel(n_jobs=workers)(
-            delayed(flux_batch)(U, dx, dy, window, sl, flux_out, idx)
-            for idx, sl in enumerate(slices)
+            delayed(flux_batch)(U, dx, dy, window, slicing_obj, flux_out, idx)
+            for idx, slicing_obj in enumerate(slices)
         )
     else:
         flux_out = np.zeros([len(slices), 3, Ny, window])
 
         flux_out = Parallel(n_jobs=workers)(
-            delayed(flux_batch)(U, dx, dy, window, sl)
-            for sl in slices
+            delayed(flux_batch)(U, dx, dy, window, slicing_obj)
+            for slicing_obj in slices
         )
 
     total_flux = np.concatenate(flux_out, axis=2)
 
     # Ghost cells are not needed for the calculations.
     # Also, last slice appended some extra columns that must be left out.
-    return total_flux[:, :, : Nx]  # Ng: - Ng]
+    return total_flux[:, :, : Nx]
 
 
 def flux_serial(U, dx, dy):
