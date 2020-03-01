@@ -57,7 +57,7 @@ MAX_Y = 1.4
 STOPPING_TIME = 3
 MAX_ITERS = 640
 
-# No workers for multiprocessing
+# Number of workers for multiprocessing
 WORKERS = 1
 
 # Pre-allocate and dump a binary memmap, used by all the workers
