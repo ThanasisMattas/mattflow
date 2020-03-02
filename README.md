@@ -45,20 +45,20 @@ $ mattflow
 
 ## Swallow Water Equations
 
-SWE is a simpified CFD problem which models the surface of the water, with the assumption
+SWE is a simpified CFD problem which models the surface of the water, with the assumption<br />
 that the horizontal length scale is much greater than the vertical length scale.
 
-SWE is a coupled system of 3 hyperbolic partial differential equations, that derive from the
-conservation of mass and the conservation of linear momentum (Navier-Stokes) equations, in
+SWE is a coupled system of 3 hyperbolic partial differential equations, that derive from the<br />
+conservation of mass and the conservation of linear momentum (Navier-Stokes) equations, in<br />
 case of a horizontal stream bed, with no Coriolis, frictional or viscours forces ([wiki]).
 
 <img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/9b9d481407c0c835525291740de8d1c446265ce2" class="mwe-math-fallback-image-inline" aria-hidden="true" style="vertical-align: -18ex; width:46ex; height:19ex;" alt="{\displaystyle {\begin{aligned}{\frac {\partial (\rho \eta )}{\partial t}}&amp;+{\frac {\partial (\rho \eta u)}{\partial x}}+{\frac {\partial (\rho \eta v)}{\partial y}}=0,\\[3pt]{\frac {\partial (\rho \eta u)}{\partial t}}&amp;+{\frac {\partial }{\partial x}}\left(\rho \eta u^{2}+{\frac {1}{2}}\rho g\eta ^{2}\right)+{\frac {\partial (\rho \eta uv)}{\partial y}}=0,\\[3pt]{\frac {\partial (\rho \eta v)}{\partial t}}&amp;+{\frac {\partial (\rho \eta uv)}{\partial x}}+{\frac {\partial }{\partial y}}\left(\rho \eta v^{2}+{\frac {1}{2}}\rho g\eta ^{2}\right)=0.\end{aligned}}}">
 
-where:
-_η_ : height
-_u_ : velocity along the x axis
-_υ_ : velocity along the y axis
-_ρ_ : density
+where:<br />
+_η_ : height<br />
+_u_ : velocity along the x axis<br />
+_υ_ : velocity along the y axis<br />
+_ρ_ : density<br />
 _g_ : gravity acceleration
 
 ## MattFlow structure
@@ -66,9 +66,9 @@ _g_ : gravity acceleration
 **More details at this [jupyter notebook]**
 
 0. configuration of the simulation via a config file
-1. pre-process
+1. pre-process<br />
 structured/cartesian mesh
-2. solution
+2. solution<br />
    supported solvers:
    - [Lax-Friedrichs] Riemann
    &nbsp;&nbsp;                | O(Δt, Δx<sup>2</sup>, Δy<sup>2</sup>)
@@ -78,7 +78,7 @@ structured/cartesian mesh
    - [MacCormack]
    &emsp; &emsp; &emsp; &emsp; &nbsp; | O(Δt<sup>2</sup>, Δx<sup>2</sup>, Δy<sup>2</sup>)
    &ensp;| experimental
-3. post-processing
+3. post-processing<br />
    matplotlib animation
 
 ## Additional configurations
@@ -102,7 +102,7 @@ Currently, you can configure the simulation at the _config_ module
 4. Higher order schemes
 5. Addition of source terms
 6. Addition of viscous models
-7. Algorithm that converts every computational second to a real-time second, playing with the fps
+7. Algorithm that converts every computational second to a real-time second, playing with the fps<br />
    at the post-processing timelapse, because each iteration uses different time-step (CFL condition)
 8. Moving core to C++ or Cython?
 9. Moving objects inside the domain
