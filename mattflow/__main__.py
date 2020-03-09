@@ -69,10 +69,10 @@ def main():
     U_stepwise_for_animation[0] = U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
 
     # This will hold the step-wise time for the post-processing animation.
-    # time * 10 is appended, because space is scaled about x10
+    # (time * 10 is appended, because space is scaled about x10)
     time_array_for_animation = np.array([0])
 
-    for iter in range(1, conf.MAX_ITERS):     # conf.MAX_ITERS
+    for iter in range(1, conf.MAX_ITERS):
 
         # Time discretization step (CFL condition)
         delta_t = mattflow_solver.dt(U, dx, dy)
@@ -91,7 +91,6 @@ def main():
         U, drops_count = mattflow_solver.solve(U, dx, cx, dy, cy, delta_t,
                                                iter, drops_count)
         # Append current frame to the list, to be animated at post-processing
-
         if not (iter - 1) % 3:
             U_stepwise_for_animation[(iter - 1) // 3] = \
                 U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]

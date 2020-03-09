@@ -130,9 +130,9 @@ def dt(U, dx, dy):
     velocity (dx/dt) has to be greater than the wave velocity. Namely, the
     simulation has to run faster than the information, in order to evaluate
     it. The wave velocity used is the greatest velocity of the waves that
-    contribute to the fluid, is the greatest eagenvalue of the Jacobian
-    matrix df(U)/dU (|u| + c), along the x axis, and dG(U)/dU (|v| + c),
-    along the y axis.
+    contribute to the fluid, which is the greatest eagenvalue of the Jacobian
+    matrix df(U)/dU, along the x axis, and dG(U)/dU, along the y axis,
+    |u| + c and |v| + c respectively.
 
     We equate
 
@@ -146,7 +146,8 @@ def dt(U, dx, dy):
     The velocity varies at each point of the grid, consisting the velocity
     field. So, dt is evaluated at every cell, as the mean of the dt's at x
     and y directions. Finally, the minimum dt of all cells is returned, as
-    the time-step of the current iteration.
+    the time-step of the current iteration, ensuring that the CFL condition
+    is met at all cells.
 
     The velocity field is step-wisely changing and, thus, the calculation
     of dt is repeated at each iteration, preserving consistency with the

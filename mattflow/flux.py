@@ -214,8 +214,8 @@ def flux_batch(U, dx, dy, window=None, slicing_obj=None,
     # }
 
     # No need to keep ghost cells --> removes 2*(Nx + Ny) operations stepwise
-    # Also, the 1st and the 2 last nodes of each column are removed (they
-    # were only needed from the scheme, to calculate the others)
+    # Also, 1st and last nodes of each column are removed (they were only
+    # needed from the numerical scheme, to calculate the others)
     if flux_out is not None:
         flux_out[idx] = total_flux[:, Ng: -Ng, x_limit: -x_limit]
     else:
@@ -246,20 +246,19 @@ def flux(U, dx, dy):
     Ng = conf.Ng
     workers = conf.WORKERS
     # slice the column dimention (x) to the number of workers
-    # devide-ceil
+    # (devide-ceil)
     window = -(-(Nx + 2 * Ng) // workers)
-    window = 5
 
     # the extra cells at the two ends are required by the numerical scheme
     #
     # say Ng = 2, window = 30:
-    # [slice(1, 33, slice(31, 63), slice(61, 63), ...]
+    # slices = [slice(1, 33, slice(31, 63), slice(61, 63), ...]
     slices = [slice(start - 1, start + window + 1)
               for start in range(Ng, Nx + 2 * Ng, window)]
 
     if conf.DUMP_MEMMAP:
         # pre-allocate a writeable shared memory map as a container for the
-        # results of the parallel computation
+        # results of the parallel computation, to be shared by all workers
         try:
             os.mkdir(conf.MEMMAP_DIR)
         except FileExistsError:
