@@ -10,10 +10,10 @@ ___
 
 | requirements         | os        |
 | -------------------- | --------- |
-| python 3             | GNU/Linux |
+| python3              | GNU/Linux |
 | numpy >= 1.16.4      | Windows   |
 | matplotlib >= 3.1.1  |           |
-| jpblib >= 0.13.2     |           |
+| joblib >= 0.13.2     |           |
 | ffmpeg (optional)    |           |
 
 ## How to install & run MattFlow
@@ -111,7 +111,7 @@ Currently, you can configure the simulation at the _config_ module
 
 ***Start the flow!***
 
->(C) 2019, Thanasis Mattas
+>(C) 2019, Thanasis Mattas<br />
 >atmattas@physics.auth.gr
 
 
