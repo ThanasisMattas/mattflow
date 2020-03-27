@@ -63,7 +63,7 @@ _g_ : gravity acceleration
 
 ## MattFlow structure
 
-**More details at this [jupyter notebook]**
+**More details at this [Colab notebook]**
 
 0. configuration of the simulation via a config file
 1. pre-process<br />
@@ -96,18 +96,18 @@ Currently, you can configure the simulation at the _config_ module
 
 ## TODO
 
-1. coverage hooks
-2. API
-3. Numba
+1. CI
+2. API (TUI-GUI)
+3. Optimization: Moving core to C++ or Cython, Numba
 4. Higher order schemes
 5. Addition of source terms
 6. Addition of viscous models
-7. Algorithm that converts every computational second to a real-time second, playing with the fps<br />
-   at the post-processing timelapse, because each iteration uses different time-step (CFL condition)
-8. Moving core to C++ or Cython?
-9. Moving objects inside the domain
-10. Unstructured mesh
-11. Extent to 3D CFD
+7. Algorithm that converts every computational second to a real-time second,
+   playing with the fps<br /> at the post-processing timelapse, because each
+   iteration uses different time-step (CFL condition)
+8. Moving objects inside the domain
+9.  Unstructured mesh
+10. Extent to 3D CFD?
 
 ***Start the flow!***
 
@@ -122,4 +122,4 @@ Currently, you can configure the simulation at the _config_ module
 [Runge-Kutta]: <https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods>
 [Lax-Wendroff]: <https://en.wikipedia.org/wiki/Lax%E2%80%93Wendroff_method>
 [MacCormack]: <https://en.wikipedia.org/wiki/MacCormack_method>
-[jupyter notebook]: <https://colab.research.google.com/github/ThanasisMattas/mattflow/blob/master/notebooks/mattflow_notebook.ipynb#scrollTo=sqSJYpEwmJN3>
+[Colab notebook]: <https://colab.research.google.com/github/ThanasisMattas/mattflow/blob/master/notebooks/mattflow_notebook.ipynb#scrollTo=sqSJYpEwmJN3>
