@@ -1,16 +1,17 @@
-'''
-@file   flux.py
-@author Thanasis Mattas
-
-Evaluates the total flux entering or leaving a cell.
-
-MattFlow is free software; you may redistribute it and/or modify it under the
-terms of the GNU General Public License as published by the Free Software
-Foundation, either version 3 of the License, or (at your option) any later
-version. You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-'''
-
+# MattFlow is free software; you may redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation, either version 3 of the License, or (at your
+# option) any later version. You should have received a copy of the GNU
+# General Public License along with this program. If not, see
+# <https://www.gnu.org/licenses/>.
+# ======================================================================
+"""
+info:
+    file        : flux.py
+    author      : Thanasis Mattas
+    license     : GNU General Public License v3
+    description : Evaluates the total flux entering or leaving a cell
+"""
 
 #                  x
 #          0 1 2 3 4 5 6 7 8 9
@@ -31,15 +32,16 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 # example: 2 slices (workers) with window of 3, for parallel solving
 #          (the 'underscore' cells are required by the numerical scheme)
 
-
 import os
 
 from joblib import Parallel, delayed, dump, load
+from numba import njit
 import numpy as np
 
 from mattflow import config as conf
 
 
+@njit(cache=True, nogil=True)
 def max_horizontal_speed(U, Nx, Ng, parallel=True):
     """Max horizontal speed between left and right cells for every vertical
     interface"""
@@ -68,6 +70,7 @@ def max_horizontal_speed(U, Nx, Ng, parallel=True):
     return max_h_speed
 
 
+@njit(cache=True, nogil=True)
 def max_vertical_speed(U, Ny, Ng, parallel=True):
     """Max vertical speed between top and bottom cells for every horizontal
     interface"""
