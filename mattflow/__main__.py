@@ -107,8 +107,8 @@ def main():
 
     # Duration of the solution
     solution_end = timer()
-    logger.log('Solution duration' + 11 * '-'
-               + str(timedelta(seconds=solution_end - start)))
+    print('Solution duration' + 11 * '-'
+          + str(timedelta(seconds=solution_end - start)))
 
     # Post-processing
     mattflow_post.createAnimation(U_stepwise_for_animation, cx, cy,
