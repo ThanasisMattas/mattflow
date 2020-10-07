@@ -1,29 +1,29 @@
-'''
-@file   mattflow_solver.py
-@author Thanasis Mattas
+# MattFlow is free software; you may redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation, either version 3 of the License, or (at your
+# option) any later version. You should have received a copy of the GNU
+# General Public License along with this program. If not, see
+# <https://www.gnu.org/licenses/>.
+# ======================================================================
+"""
+info:
+    file        : mattflow_solver.py
+    author      : Thanasis Mattas
+    license     : GNU General Public License v3
+    description : Handles the solution of the simulation
+"""
 
-Handles the solution of the simulation.
-
-MattFlow is free software; you may redistribute it and/or modify it under the
-terms of the GNU General Public License as published by the Free Software
-Foundation, either version 3 of the License, or (at your option) any later
-version. You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-'''
-
+# TODO implement high order schemes
 
 import random
 
 import numpy as np
 
 from mattflow import config as conf
-from mattflow import logger
+from mattflow import dat_writer
 from mattflow import flux
 from mattflow import initializer
-from mattflow import dat_writer
-
-
-# TODO implement high order schemes
+from mattflow import logger
 
 
 def solve(U, dx, cx, dy, cy, delta_t, iter, drops):

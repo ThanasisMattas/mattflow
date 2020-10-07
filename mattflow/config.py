@@ -1,19 +1,19 @@
-'''
-@file   config.py
-@author Thanasis Mattas
-
-Configuration of the simulation
-
-MattFlow is free software; you may redistribute it and/or modify it under the
-terms of the GNU General Public License as published by the Free Software
-Foundation, either version 3 of the License, or (at your option) any later
-version. You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-'''
-
+# MattFlow is free software; you may redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation, either version 3 of the License, or (at your
+# option) any later version. You should have received a copy of the GNU
+# General Public License along with this program. If not, see
+# <https://www.gnu.org/licenses/>.
+# ======================================================================
+"""
+info:
+    file        : config.py
+    author      : Thanasis Mattas
+    license     : GNU General Public License v3
+    description : Configures the simulation
+"""
 
 # TODO simple API: configuring options on a small window popup
-
 
 #                  x
 #          0 1 2 3 4 5 6 7 8 9
@@ -27,7 +27,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 #        7 G G - - - - - - G G
 #        8 G G G G G G G G G G
 #        9 G G G G G G G G G G
-
 
 import os
 
