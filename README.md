@@ -13,6 +13,7 @@ ___
 | python3              | GNU/Linux |
 | numpy >= 1.16.4      | Windows   |
 | matplotlib >= 3.1.1  |           |
+| numba >= 0.48.0      |           |
 | joblib >= 0.13.2     |           |
 | ffmpeg (optional)    |           |
 
