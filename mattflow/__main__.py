@@ -28,7 +28,7 @@ from mattflow import initializer
 from mattflow import logger
 from mattflow import mattflow_post
 from mattflow import mattflow_solver
-from mattflow import utilities as util
+from mattflow import utils
 
 
 def main():
@@ -52,7 +52,7 @@ def main():
     # }
 
     # Uncomment this to delete previous log, dat and png files (for debugging)
-    # util.delete_logs_dats_images_videos()
+    # utils.delete_logs_dats_images_videos()
 
     # Solution {
     #
@@ -101,7 +101,7 @@ def main():
 
     # clean-up memap
     if conf.DUMP_MEMMAP and conf.WORKERS > 1:
-        util.delete_memmap()
+        utils.delete_memmap()
 
     # Duration of the solution
     solution_end = timer()

@@ -1,4 +1,4 @@
-# utilities.py is part of MattFlow
+# utils.py is part of MattFlow
 #
 # MattFlow is free software; you may redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
