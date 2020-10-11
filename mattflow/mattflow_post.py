@@ -1,16 +1,15 @@
-'''
-@file   mattflow_post.py
-@author Thanasis Mattas
-
-Handles the post-processing of the simulation.
-
-MattFlow is free software; you may redistribute it and/or modify it under the
-terms of the GNU General Public License as published by the Free Software
-Foundation, either version 3 of the License, or (at your option) any later
-version. You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
-'''
-
+# mattflow_post.py is part of MattFlow
+#
+# MattFlow is free software; you may redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation, either version 3 of the License, or (at your
+# option) any later version. You should have received a copy of the GNU
+# General Public License along with this program. If not, see
+# <https://www.gnu.org/licenses/>.
+#
+# (C) 2019 Athanasios Mattas
+# ======================================================================
+"""Handles the post-processing of the simulation"""
 
 from datetime import datetime
 import os

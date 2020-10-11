@@ -1,17 +1,15 @@
+# __main__.py is part of MattFlow
+#
 # MattFlow is free software; you may redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
 # Free Software Foundation, either version 3 of the License, or (at your
 # option) any later version. You should have received a copy of the GNU
 # General Public License along with this program. If not, see
 # <https://www.gnu.org/licenses/>.
+#
+# (C) 2019 Athanasios Mattas
 # ======================================================================
-"""
-info:
-    file        : __main__.py
-    author      : Thanasis Mattas
-    license     : GNU General Public License v3
-    description : Executes pre-processing, solution and post-processing
-"""
+"""Executes pre-processing, solution and post-processing"""
 
 
 """
@@ -54,7 +52,7 @@ def main():
     # }
 
     # Uncomment this to delete previous log, dat and png files (for debugging)
-    util.delete_logs_dats_images_videos()
+    # util.delete_logs_dats_images_videos()
 
     # Solution {
     #

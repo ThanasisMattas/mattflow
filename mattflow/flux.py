@@ -1,17 +1,15 @@
+# flux.py is part of MattFlow
+#
 # MattFlow is free software; you may redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
 # Free Software Foundation, either version 3 of the License, or (at your
 # option) any later version. You should have received a copy of the GNU
 # General Public License along with this program. If not, see
 # <https://www.gnu.org/licenses/>.
+#
+# (C) 2019 Athanasios Mattas
 # ======================================================================
-"""
-info:
-    file        : flux.py
-    author      : Thanasis Mattas
-    license     : GNU General Public License v3
-    description : Evaluates the total flux entering or leaving a cell
-"""
+"""Evaluates the total flux entering or leaving a cell"""
 
 #                  x
 #          0 1 2 3 4 5 6 7 8 9
