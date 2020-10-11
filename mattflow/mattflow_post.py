@@ -23,6 +23,30 @@ from mattflow import config as conf
 from mattflow import logger
 
 
+def _dataFromDat():
+    """pulls solution data from a dat file
+    """
+    zeros_left = (4 - len(str(iter))) * '0'
+    file_name = 'solution' + zeros_left + str(iter) + '.dat'
+
+    fr = open('./data_files/' + file_name, 'r')
+    Nx = int(fr.readline().split(":")[1])
+    Ny = int(fr.readline().split(":")[1])
+    # Ng = int(fr.readline().split(":")[1])
+    time = float(fr.readline().split(":")[1])
+    fr.close()
+
+    # hu and hv are not written in the dat file, to reduce the overhead
+    # x, y, h, hu, hv = np.loadtxt('./data_files/' + file_name, skiprows = 4,
+    #                              unpack = True)
+    x, y, h = np.loadtxt('./data_files/' + file_name, skiprows=4, unpack=True)
+    # unpack the row-major vectors into matrices
+    X = x.reshape(Ny, Nx)
+    Y = y.reshape(Ny, Nx)
+    Z = h.reshape(Ny, Nx)
+    return X, Y, Z, Nx, Ny
+
+
 def plotFromDat(time, iter, cx, cy):
     """creates and saves a frame as png, reading data from a dat file
 
@@ -42,7 +66,7 @@ def plotFromDat(time, iter, cx, cy):
         logger.log("Unable to create data_files directory")
 
     # extract data from dat
-    X, Y, Z, Nx, Ny = dataFromDat()
+    X, Y, Z, Nx, Ny = _dataFromDat()
 
     # plot {
     #
@@ -80,31 +104,7 @@ def plotFromDat(time, iter, cx, cy):
     # }
 
 
-def dataFromDat():
-    """pulls solution data from a dat file
-    """
-    zeros_left = (4 - len(str(iter))) * '0'
-    file_name = 'solution' + zeros_left + str(iter) + '.dat'
-
-    fr = open('./data_files/' + file_name, 'r')
-    Nx = int(fr.readline().split(":")[1])
-    Ny = int(fr.readline().split(":")[1])
-    # Ng = int(fr.readline().split(":")[1])
-    time = float(fr.readline().split(":")[1])
-    fr.close()
-
-    # hu and hv are not written in the dat file, to reduce the overhead
-    # x, y, h, hu, hv = np.loadtxt('./data_files/' + file_name, skiprows = 4,
-    #                              unpack = True)
-    x, y, h = np.loadtxt('./data_files/' + file_name, skiprows=4, unpack=True)
-    # unpack the row-major vectors into matrices
-    X = x.reshape(Ny, Nx)
-    Y = y.reshape(Ny, Nx)
-    Z = h.reshape(Ny, Nx)
-    return X, Y, Z, Nx, Ny
-
-
-def plotBasin(cx, cy, sub):
+def _plotBasin(cx, cy, sub):
     """plots the basin that contains the fluid
 
     Args:
@@ -133,7 +133,7 @@ def plotBasin(cx, cy, sub):
         logger.log("Configure SHOW_BASIN. Options: True, False")
 
 
-def update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
+def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
     """plots a single frame
 
     used from FuncAnimation to iteratively create a timelapse animation
@@ -181,6 +181,53 @@ def update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
     # frame title
     plt.title('time: {0:.3f}'.format(time_array[frame_number]))
     sub.title.set_position([0.51, 0.83])
+
+
+def _saveAni(ani, fps, dpi):
+    """saves the animation
+
+    Args:
+        ani (obj) :  animation.FuncAnimation() object
+        fps (int) :  frames per second
+        dpi (int) :  dots per inch
+    """
+    if conf.SAVE_ANIMATION is True:
+        # file name
+        date_n_time = str(datetime.now())[:19]
+        # replace : with - for windows file name format
+        date_n_time = date_n_time.replace(':', '-').replace(' ', '_')
+        file_name = conf.MODE + '_animation_' + date_n_time
+
+        # configure the writer
+        plt.rcParams['animation.ffmpeg_path'] = conf.PATH_TO_FFMPEG
+        FFwriter = animation.FFMpegWriter(
+            fps=fps, bitrate=-1,
+            extra_args=['-r', str(fps), '-pix_fmt', 'yuv420p', '-vcodec',
+                        'libx264', '-qscale:v', '1']
+        )
+
+        # save
+        try:
+            ani.save(file_name + '.' + conf.VID_FORMAT,
+                     writer=FFwriter, dpi=dpi)
+
+            logger.log('Animation saved as: ' + file_name + '.'
+                       + conf.VID_FORMAT + ' | fps: ' + str(fps))
+
+            # convert to a lighter gif
+            cmd = 'ffmpeg -i ' + file_name + '.' + conf.VID_FORMAT + ' -vf '   \
+                  '"fps=' + str(fps) + ',scale=240:-1:flags=lanczos,split'     \
+                  '[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -hide_banner' \
+                  ' -loglevel panic -loop 0 ' + file_name + '.gif'
+            os.system(cmd)
+            logger.log('Animation saved as: ' + file_name + '.gif'
+                       + ' | fps: ' + str(fps))
+        except FileNotFoundError:
+            logger.log('Configure PATH_TO_FFMPEG')
+    elif conf.SAVE_ANIMATION is False:
+        pass
+    else:
+        logger.log("Configure SAVE_ANIMATION | Options: True, False")
 
 
 def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
@@ -241,18 +288,18 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
     # }
 
     # render the basin that contains the fluid
-    plotBasin(cx, cy, sub)
+    _plotBasin(cx, cy, sub)
 
     # generate the animation
     ani = animation.FuncAnimation(
-        fig, update_plot, frames,
+        fig, _update_plot, frames,
         fargs=(X, Y, Z, plot, fig, sub, time_array),
         interval=1000 / fps,
         repeat=True
     )
 
     # save the animation
-    saveAni(ani, fps, dpi)
+    _saveAni(ani, fps, dpi)
 
     # Play the animation
     if conf.SHOW_ANIMATION is True:
@@ -268,50 +315,3 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
         pass
     else:
         logger.log("Configure SHOW_ANIMATION | Options: True, False")
-
-
-def saveAni(ani, fps, dpi):
-    """saves the animation
-
-    Args:
-        ani (obj) :  animation.FuncAnimation() object
-        fps (int) :  frames per second
-        dpi (int) :  dots per inch
-    """
-    if conf.SAVE_ANIMATION is True:
-        # file name
-        date_n_time = str(datetime.now())[:19]
-        # replace : with - for windows file name format
-        date_n_time = date_n_time.replace(':', '-').replace(' ', '_')
-        file_name = conf.MODE + '_animation_' + date_n_time
-
-        # configure the writer
-        plt.rcParams['animation.ffmpeg_path'] = conf.PATH_TO_FFMPEG
-        FFwriter = animation.FFMpegWriter(
-            fps=fps, bitrate=-1,
-            extra_args=['-r', str(fps), '-pix_fmt', 'yuv420p', '-vcodec',
-                        'libx264', '-qscale:v', '1']
-        )
-
-        # save
-        try:
-            ani.save(file_name + '.' + conf.VID_FORMAT,
-                     writer=FFwriter, dpi=dpi)
-
-            logger.log('Animation saved as: ' + file_name + '.'
-                       + conf.VID_FORMAT + ' | fps: ' + str(fps))
-
-            # convert to a lighter gif
-            cmd = 'ffmpeg -i ' + file_name + '.' + conf.VID_FORMAT + ' -vf '   \
-                  '"fps=' + str(fps) + ',scale=240:-1:flags=lanczos,split'     \
-                  '[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -hide_banner' \
-                  ' -loglevel panic -loop 0 ' + file_name + '.gif'
-            os.system(cmd)
-            logger.log('Animation saved as: ' + file_name + '.gif'
-                       + ' | fps: ' + str(fps))
-        except FileNotFoundError:
-            logger.log('Configure PATH_TO_FFMPEG')
-    elif conf.SAVE_ANIMATION is False:
-        pass
-    else:
-        logger.log("Configure SAVE_ANIMATION | Options: True, False")

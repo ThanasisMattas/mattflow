@@ -33,6 +33,63 @@ from mattflow import config as conf
 from mattflow import dat_writer
 
 
+def _gaussian(variance, cx, cy):
+    '''produces a bivariate gaussian distribution of a certain variance
+
+    formula: amplitude * np.exp(-exponent)
+
+    Args:
+        variance (float) :  target variance of the distribution
+        cx (array)       :  centers of the cells along the x axis
+        cy (array)       :  centers of the cells along the y axis
+
+    Returs:
+        gaussian_distribution (2D array)
+    '''
+    # random pick of drop center coordinates
+    # (mean or expectation of the gaussian distribution)
+    # random.seed(99)
+    DROP_CENTER_X = random.uniform(conf.MIN_X, conf.MAX_X)
+    DROP_CENTER_Y = random.uniform(conf.MIN_Y, conf.MAX_Y)
+
+    # grid of the cell centers
+    CX, CY = np.meshgrid(cx, cy)
+
+    amplitude = 1 / np.sqrt(2 * np.pi * variance)
+    exponent = \
+        ((CX - DROP_CENTER_X)**2 + (CY - DROP_CENTER_Y)**2) / (2 * variance)
+
+    gaussian_distribution = amplitude * np.exp(-exponent)
+    return gaussian_distribution
+
+
+def drop(hights_list, cx, cy):
+    """Generates a drop
+
+    Drop is modeled as a gaussian distribution
+
+    Args:
+        hights_list (array)    :  the 0th state variable, U[0, :, :]
+        cx (array)             :  centers of the cells along the x axis
+        cy (array)             :  centers of the cells along the y axis
+
+    Returns:
+        hights_list(2D array)  : drop is added to the input hights_list
+    """
+    # multiply with 3 / 2 for a small stone droping
+    #          with 1 / 5 for a water drop with a considerable momentum build
+    #          with 1 / 8 for a soft water drop
+    if conf.MODE == 'single drop' or conf.MODE == 'drops':
+        variance = 0.03**2
+        hights_list += 3 / 2 * _gaussian(variance, cx, cy)
+    elif conf.MODE == 'rain':
+        variance = 0.01**2
+        hights_list += 1 / 8 * _gaussian(variance, cx, cy)
+    else:
+        print("Configure MODE | options: 'single drop', 'drops', 'rain'")
+    return hights_list
+
+
 def initialize(cx, cy):
     """creates and initializes the state-variables-3D-matrix, U
 
@@ -66,60 +123,3 @@ def initialize(cx, cy):
     else:
         print("Configure DAT_WRITING_MODE | Options: True, False")
     return U
-
-
-def drop(hights_list, cx, cy):
-    """Generates a drop
-
-    Drop is modeled as a gaussian distribution
-
-    Args:
-        hights_list (array)    :  the 0th state variable, U[0, :, :]
-        cx (array)             :  centers of the cells along the x axis
-        cy (array)             :  centers of the cells along the y axis
-
-    Returns:
-        hights_list(2D array)  : drop is added to the input hights_list
-    """
-    # multiply with 3 / 2 for a small stone droping
-    #          with 1 / 5 for a water drop with a considerable momentum build
-    #          with 1 / 8 for a soft water drop
-    if conf.MODE == 'single drop' or conf.MODE == 'drops':
-        variance = 0.03**2
-        hights_list += 3 / 2 * gaussian(variance, cx, cy)
-    elif conf.MODE == 'rain':
-        variance = 0.01**2
-        hights_list += 1 / 8 * gaussian(variance, cx, cy)
-    else:
-        print("Configure MODE | options: 'single drop', 'drops', 'rain'")
-    return hights_list
-
-
-def gaussian(variance, cx, cy):
-    '''produces a bivariate gaussian distribution of a certain variance
-
-    formula: amplitude * np.exp(-exponent)
-
-    Args:
-        variance (float) :  target variance of the distribution
-        cx (array)       :  centers of the cells along the x axis
-        cy (array)       :  centers of the cells along the y axis
-
-    Returs:
-        gaussian_distribution (2D array)
-    '''
-    # random pick of drop center coordinates
-    # (mean or expectation of the gaussian distribution)
-    # random.seed(99)
-    DROP_CENTER_X = random.uniform(conf.MIN_X, conf.MAX_X)
-    DROP_CENTER_Y = random.uniform(conf.MIN_Y, conf.MAX_Y)
-
-    # grid of the cell centers
-    CX, CY = np.meshgrid(cx, cy)
-
-    amplitude = 1 / np.sqrt(2 * np.pi * variance)
-    exponent = \
-        ((CX - DROP_CENTER_X)**2 + (CY - DROP_CENTER_Y)**2) / (2 * variance)
-
-    gaussian_distribution = amplitude * np.exp(-exponent)
-    return gaussian_distribution

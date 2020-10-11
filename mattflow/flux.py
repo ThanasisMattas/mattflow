@@ -40,7 +40,7 @@ from mattflow import config as conf
 
 
 @njit(cache=True, nogil=True)
-def max_horizontal_speed(U, Nx, Ng, parallel=True):
+def _max_horizontal_speed(U, Nx, Ng, parallel=True):
     """Max horizontal speed between left and right cells for every vertical
     interface"""
     g = 9.81
@@ -69,7 +69,7 @@ def max_horizontal_speed(U, Nx, Ng, parallel=True):
 
 
 @njit(cache=True, nogil=True)
-def max_vertical_speed(U, Ny, Ng, parallel=True):
+def _max_vertical_speed(U, Ny, Ng, parallel=True):
     """Max vertical speed between top and bottom cells for every horizontal
     interface"""
     g = 9.81
@@ -92,21 +92,59 @@ def max_vertical_speed(U, Ny, Ng, parallel=True):
     return max_v_speed
 
 
-def horizontal_flux(U, Nx, Ng, dy, maxHorizontalSpeed, parallel=True):
+def _F(U):
+    """evaluates the x-dimention-fluxes-vector, F
+    Args:
+        U (3D array) : the state variables 3D matrix
+    """
+
+    '''
+    h = U[0]
+    u = U[1] / h
+    v = U[2] / h
+
+    # 0.5 * g = 0.5 * 9.81 = 4.905
+    return np.array([h * u, h * u**2 + 4.905 * h**2, h * u * v])
+    '''
+    return np.array([U[1],
+                     U[1]**2 / U[0] + 4.905 * U[0]**2,
+                     U[1] * U[2] / U[0]])
+
+
+def _G(U):
+    """evaluates the y-dimention-fluxes-vector, G
+    Args:
+        U (3D array) : the state variables 3D matrix
+    """
+
+    '''
+    h = U[0]
+    u = U[1] / h
+    v = U[2] / h
+
+    # 0.5 * g = 0.5 * 9.81 = 4.905
+    return np.array([h * v, h * u * v, h * v**2 + 4.905 * h**2])
+    '''
+    return np.array([U[2],
+                     U[1] * U[2] / U[0],
+                     U[2]**2 / U[0] + 4.905 * U[0]**2])
+
+
+def _horizontal_flux(U, Nx, Ng, dy, maxHorizontalSpeed, parallel=True):
     """Lax-Friedrichs scheme (flux is calculated on each vertical interface)
 
     flux = 0.5 * (F_left + F_right) - 0.5 * maxSpeed * (U_right - U_left)
     """
     if parallel:
         h_flux = (
-            0.5 * (F(U[:, Ng: -Ng, 0: -1]) + F(U[:, Ng: -Ng, 1:]))
+            0.5 * (_F(U[:, Ng: -Ng, 0: -1]) + _F(U[:, Ng: -Ng, 1:]))
             - 0.5 * maxHorizontalSpeed * (U[:, Ng: -Ng, 1:]
                                           - U[:, Ng: -Ng, 0: -1])
         )
     else:
         h_flux = (
-            0.5 * (F(U[:, Ng: -Ng, Ng - 1: -Ng])
-                   + F(U[:, Ng: -Ng, Ng: Nx + Ng + 1]))
+            0.5 * (_F(U[:, Ng: -Ng, Ng - 1: -Ng])
+                   + _F(U[:, Ng: -Ng, Ng: Nx + Ng + 1]))
             - 0.5 * maxHorizontalSpeed * (U[:, Ng: -Ng, Ng: Nx + Ng + 1]
                                           - U[:, Ng: -Ng, Ng - 1: -Ng])
         )
@@ -114,7 +152,7 @@ def horizontal_flux(U, Nx, Ng, dy, maxHorizontalSpeed, parallel=True):
     return h_flux
 
 
-def vertical_flux(U, Ny, Ng, dx, maxVerticalSpeed, parallel=True):
+def _vertical_flux(U, Ny, Ng, dx, maxVerticalSpeed, parallel=True):
     """Lax-Friedrichs scheme (flux is calculated on each horizontal interface)
 
     flux = 0.5 * (F_top + F_bottom) - 0.5 * maxSpeed * (U_bottom - U_top)
@@ -125,8 +163,8 @@ def vertical_flux(U, Ny, Ng, dx, maxVerticalSpeed, parallel=True):
         x_limit = Ng
 
     v_flux = (
-        0.5 * dx * (G(U[:, Ng - 1: -Ng, x_limit: -x_limit])
-                    + G(U[:, Ng: Ny + Ng + 1, x_limit: -x_limit]))
+        0.5 * dx * (_G(U[:, Ng - 1: -Ng, x_limit: -x_limit])
+                    + _G(U[:, Ng: Ny + Ng + 1, x_limit: -x_limit]))
         - 0.5 * dx * maxVerticalSpeed
             * (U[:, Ng: Ny + Ng + 1, x_limit: -x_limit]
                 - U[:, Ng - 1: -Ng, x_limit: -x_limit])
@@ -134,7 +172,7 @@ def vertical_flux(U, Ny, Ng, dx, maxVerticalSpeed, parallel=True):
     return v_flux
 
 
-def flux_batch(U, dx, dy, window=None, slicing_obj=None,
+def _flux_batch(U, dx, dy, window=None, slicing_obj=None,
                flux_out=None, idx=None, parallel=True):
     """evaluates the total flux that enters or leaves a cell, using the \
     Lax-Friedrichs scheme
@@ -176,13 +214,13 @@ def flux_batch(U, dx, dy, window=None, slicing_obj=None,
     # Vertical interfaces - Horizontal flux {
     #
     # Max horizontal speed between left and right cells for every interface
-    maxHorizontalSpeed = max_horizontal_speed(U_batch, Nx, Ng,
+    maxHorizontalSpeed = _max_horizontal_speed(U_batch, Nx, Ng,
                                               parallel=parallel)
 
     # Lax-Friedrichs scheme
     # flux = 0.5 * (F_left + F_right) - 0.5 * maxSpeed * (U_right - U_left)
     # flux is calculated on each interface
-    horizontalFlux = horizontal_flux(U_batch, Nx, Ng, dy, maxHorizontalSpeed,
+    horizontalFlux = _horizontal_flux(U_batch, Nx, Ng, dy, maxHorizontalSpeed,
                                      parallel=parallel)
 
     # horizontalFlux is subtracted from the left and added to the right cells
@@ -198,11 +236,11 @@ def flux_batch(U, dx, dy, window=None, slicing_obj=None,
     #
     # Max vertical speed between top and bottom cells for every interface
     # (for the vertical calculations the extra horizontal cells are not needed)
-    maxVerticalSpeed = max_vertical_speed(U_batch, Ny, Ng, parallel=parallel)
+    maxVerticalSpeed = _max_vertical_speed(U_batch, Ny, Ng, parallel=parallel)
 
     # Lax-Friedrichs scheme
     # flux = 0.5 * (F_top + F_bottom) - 0.5 * maxSpeed * (U_bottom - U_top)
-    verticalFlux = vertical_flux(U_batch, Ny, Ng, dx, maxVerticalSpeed,
+    verticalFlux = _vertical_flux(U_batch, Ny, Ng, dx, maxVerticalSpeed,
                                  parallel=parallel)
 
     # verticalFlux is subtracted from the top and added to the bottom cells
@@ -238,9 +276,9 @@ def flux(U, dx, dy):
         total_flux (3D array)
     """
     # Although joblib.Parallel can work single-processing, passing the whole
-    # state-matrix directly to flux_batch() is much faster
+    # state-matrix directly to _flux_batch() is much faster
     if conf.WORKERS == 1:
-        return flux_batch(U, dx, dy, parallel=False)
+        return _flux_batch(U, dx, dy, parallel=False)
 
     Nx = conf.Nx
     Ny = conf.Ny
@@ -270,14 +308,14 @@ def flux(U, dx, dy):
                              mode="w+")
 
         Parallel(n_jobs=workers)(
-            delayed(flux_batch)(U, dx, dy, window, slicing_obj, flux_out, idx)
+            delayed(_flux_batch)(U, dx, dy, window, slicing_obj, flux_out, idx)
             for idx, slicing_obj in enumerate(slices)
         )
     else:
         flux_out = np.zeros([len(slices), 3, Ny, window])
 
         flux_out = Parallel(n_jobs=workers)(
-            delayed(flux_batch)(U, dx, dy, window, slicing_obj)
+            delayed(_flux_batch)(U, dx, dy, window, slicing_obj)
             for slicing_obj in slices
         )
 
@@ -286,41 +324,3 @@ def flux(U, dx, dy):
     # Ghost cells are not needed for the calculations.
     # Also, last slice appended some extra columns that must be left out.
     return total_flux[:, :, : Nx]
-
-
-def F(U):
-    """evaluates the x-dimention-fluxes-vector, F
-    Args:
-        U (3D array) : the state variables 3D matrix
-    """
-
-    '''
-    h = U[0]
-    u = U[1] / h
-    v = U[2] / h
-
-    # 0.5 * g = 0.5 * 9.81 = 4.905
-    return np.array([h * u, h * u**2 + 4.905 * h**2, h * u * v])
-    '''
-    return np.array([U[1],
-                     U[1]**2 / U[0] + 4.905 * U[0]**2,
-                     U[1] * U[2] / U[0]])
-
-
-def G(U):
-    """evaluates the y-dimention-fluxes-vector, G
-    Args:
-        U (3D array) : the state variables 3D matrix
-    """
-
-    '''
-    h = U[0]
-    u = U[1] / h
-    v = U[2] / h
-
-    # 0.5 * g = 0.5 * 9.81 = 4.905
-    return np.array([h * v, h * u * v, h * v**2 + 4.905 * h**2])
-    '''
-    return np.array([U[2],
-                     U[1] * U[2] / U[0],
-                     U[2]**2 / U[0] + 4.905 * U[0]**2])
