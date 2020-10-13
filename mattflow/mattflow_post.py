@@ -47,6 +47,35 @@ def _dataFromDat():
     return X, Y, Z, Nx, Ny
 
 
+def _plotBasin(cx, cy, sub):
+    """plots the basin that contains the fluid
+
+    Args:
+        cx (array)    :  x axis cell centers
+        cy (array)    :  y axis cell centers
+        sub (subplot) :  Axes3D subplot object
+    """
+    if conf.SHOW_BASIN is True:
+        # make basin a bit wider, because water appears to be out of the basin
+        # because of the perspective mode
+        X_bas, Y_bas = np.meshgrid(cx[conf.Ng - 1: conf.Nx + 2],
+                                   cy[conf.Ng - 1: conf.Ny + 2])
+        # BASIN
+        BASIN = np.zeros((conf.Ny + 2 * conf.Ng, conf.Nx + 2 * conf.Ng))
+        # left-right walls
+        BASIN[:, 0] = 2.5
+        BASIN[:, conf.Nx + 2 * conf.Ng - 1] = 2.5
+        # top-bottom walls
+        BASIN[0, :] = 2.5
+        BASIN[conf.Ny + 2 * conf.Ng - 1, :] = 2.5
+        sub.plot_surface(X_bas, Y_bas, BASIN, rstride=2, cstride=2, linewidth=0,
+                         color=(0.4, 0.4, 0.5, 0.1))
+    elif conf.SHOW_BASIN is False:
+        pass
+    else:
+        logger.log("Configure SHOW_BASIN. Options: True, False")
+
+
 def plotFromDat(time, iter, cx, cy):
     """creates and saves a frame as png, reading data from a dat file
 
@@ -93,7 +122,7 @@ def plotFromDat(time, iter, cx, cy):
     sub.view_init(50, 45)
 
     # render the basin that contains the fluid
-    plotBasin(cx, cy, sub)
+    _plotBasin(cx, cy, sub)
 
     # save
     zeros_left = (4 - len(str(iter))) * '0'
@@ -102,35 +131,6 @@ def plotFromDat(time, iter, cx, cy):
     plt.close()
     #
     # }
-
-
-def _plotBasin(cx, cy, sub):
-    """plots the basin that contains the fluid
-
-    Args:
-        cx (array)    :  x axis cell centers
-        cy (array)    :  y axis cell centers
-        sub (subplot) :  Axes3D subplot object
-    """
-    if conf.SHOW_BASIN is True:
-        # make basin a bit wider, because water appears to be out of the basin
-        # because of the perspective mode
-        X_bas, Y_bas = np.meshgrid(cx[conf.Ng - 1: conf.Nx + 2],
-                                   cy[conf.Ng - 1: conf.Ny + 2])
-        # BASIN
-        BASIN = np.zeros((conf.Ny + 2 * conf.Ng, conf.Nx + 2 * conf.Ng))
-        # left-right walls
-        BASIN[:, 0] = 2.5
-        BASIN[:, conf.Nx + 2 * conf.Ng - 1] = 2.5
-        # top-bottom walls
-        BASIN[0, :] = 2.5
-        BASIN[conf.Ny + 2 * conf.Ng - 1, :] = 2.5
-        sub.plot_surface(X_bas, Y_bas, BASIN, rstride=2, cstride=2, linewidth=0,
-                         color=(0.4, 0.4, 0.5, 0.1))
-    elif conf.SHOW_BASIN is False:
-        pass
-    else:
-        logger.log("Configure SHOW_BASIN. Options: True, False")
 
 
 def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
