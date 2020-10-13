@@ -33,6 +33,17 @@ from mattflow import config as conf
 from mattflow import dat_writer
 
 
+def _variance(mode):
+    """use small variance to make the distribution steep and sharp, for a
+    better representation of a drop"""
+    variance = {
+        "single drop": 0.0009,
+        "drops": 0.0009,
+        "rain": 0.0001
+    }
+    return variance[mode]
+
+
 def _gaussian(variance, cx, cy):
     '''produces a bivariate gaussian distribution of a certain variance
 
@@ -80,10 +91,10 @@ def drop(hights_list, cx, cy):
     #          with 1 / 5 for a water drop with a considerable momentum build
     #          with 1 / 8 for a soft water drop
     if conf.MODE == 'single drop' or conf.MODE == 'drops':
-        variance = 0.03**2
+        variance = _variance("single drop")
         hights_list += 3 / 2 * _gaussian(variance, cx, cy)
     elif conf.MODE == 'rain':
-        variance = 0.01**2
+        variance = _variance("rain")
         hights_list += 1 / 8 * _gaussian(variance, cx, cy)
     else:
         print("Configure MODE | options: 'single drop', 'drops', 'rain'")
