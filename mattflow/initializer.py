@@ -25,7 +25,7 @@
 #        9 G G G G G G G G G G
 
 
-import random
+from random import uniform
 
 import numpy as np
 
@@ -49,8 +49,8 @@ def _gaussian(variance, cx, cy):
     # random pick of drop center coordinates
     # (mean or expectation of the gaussian distribution)
     # random.seed(99)
-    DROP_CENTER_X = random.uniform(conf.MIN_X, conf.MAX_X)
-    DROP_CENTER_Y = random.uniform(conf.MIN_Y, conf.MAX_Y)
+    DROP_CENTER_X = uniform(conf.MIN_X, conf.MAX_X)
+    DROP_CENTER_Y = uniform(conf.MIN_Y, conf.MAX_Y)
 
     # grid of the cell centers
     CX, CY = np.meshgrid(cx, cy)
