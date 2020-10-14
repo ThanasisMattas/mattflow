@@ -25,7 +25,7 @@ from mattflow import logger
 from mattflow import mattflow_post
 
 
-def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
+def solve(U, dx, cx, dy, cy, delta_t, it, drops):
     """evaluates the state variables (h, hu, hv) at a new time-step
 
     it can be used in a for/while loop, iterating through each time-step
@@ -37,7 +37,7 @@ def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
         dy (float)      :  spatial discretization step on y axis
         cy (array)      :  cell centers on y axis
         delta_t (float) :  time discretization step
-        iter (int)      :  current iteration
+        it (int)        :  current iteration
         drops (int)     :  number of drops been generated
 
     Returns:
@@ -50,12 +50,12 @@ def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
         pass
     # 'drops': specified number of drops are generated at specified frequency
     elif conf.MODE == 'drops':
-        if iter % conf.ITERS_FOR_NEXT_DROP == 0 and drops < conf.N_DROPS:
+        if it % conf.ITERS_FOR_NEXT_DROP == 0 and drops < conf.N_DROPS:
             U[0, :, :] = initializer.drop(U[0, :, :], cx, cy)
             drops += 1
     # 'rain': random number of drops are generated at random frequency
     elif conf.MODE == 'rain':
-        if iter % random.randrange(1, 15) == 0:
+        if it % random.randrange(1, 15) == 0:
             for simultaneous_drops in range(random.randrange(1, 2)):
                 U[0, :, :] = initializer.drop(U[0, :, :], cx, cy)
     else:

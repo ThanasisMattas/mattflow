@@ -68,14 +68,14 @@ def log(state):
         fw.close()
 
 
-def log_timestep(iter, time):
+def log_timestep(it, time):
     """appends timestep info to the log file"""
-    spaces = (6 - len(str(iter))) * ' '  # for vertical printing alignment
-    if (iter == 1) | (iter % 15 == 0):
+    spaces = (6 - len(str(it))) * ' '  # for vertical printing alignment
+    if (it == 1) | (it % 15 == 0):
         log("  iter     time")
-        log(spaces + str(iter) + "    {:0.3f}".format(time))
+        log(spaces + str(it) + "    {:0.3f}".format(time))
     else:
-        log(spaces + str(iter) + "    {:0.3f}".format(time))
+        log(spaces + str(it) + "    {:0.3f}".format(time))
 
 
 def _find_log():

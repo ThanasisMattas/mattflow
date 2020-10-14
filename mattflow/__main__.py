@@ -73,7 +73,7 @@ def main():
     # (time * 10 is appended, because space is scaled about x10)
     time_array_for_animation = np.array([0])
 
-    for iter in range(1, conf.MAX_ITERS):
+    for it in range(1, conf.MAX_ITERS):
 
         # Time discretization step (CFL condition)
         delta_t = mattflow_solver.dt(U, dx, dy)
@@ -90,20 +90,20 @@ def main():
 
         # Numerical iterative scheme
         U, drops_count = mattflow_solver.solve(U, dx, cx, dy, cy, delta_t,
-                                               iter, drops_count)
+                                               it, drops_count)
 
         # write dat | default: False
         if conf.DAT_WRITING_MODE:
             dat_writer.writeDat(
                 U[0, conf.Ng: conf.Ny + conf.Ng, conf.Ng: conf.Nx + conf.Ng],
-                cx, cy, time, iter
+                cx, cy, time, it
             )
-            mattflow_post.plotFromDat(time, iter, cx, cy)
+            mattflow_post.plotFromDat(time, it, cx, cy)
         elif not conf.DAT_WRITING_MODE:
             # Append current frame to the list, to be animated at post-processing
-            if not (iter - 1) % 3:
+            if not (it - 1) % 3:
                 try:
-                    U_stepwise_for_animation[(iter - 1) // 3] = \
+                    U_stepwise_for_animation[(it - 1) // 3] = \
                         U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
                 except IndexError:
                     pass
@@ -111,7 +111,7 @@ def main():
         else:
             logger.log("Configure DAT_WRITING_MODE | Options: True, False")
 
-        logger.log_timestep(iter, time)
+        logger.log_timestep(it, time)
     #
     # }
 

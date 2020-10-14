@@ -23,10 +23,10 @@ from mattflow import config as conf
 from mattflow import logger
 
 
-def _dataFromDat(iter):
+def _dataFromDat(it):
     """pulls solution data from a dat file"""
-    zeros_left = (4 - len(str(iter))) * '0'
-    file_name = 'solution' + zeros_left + str(iter) + '.dat'
+    zeros_left = (4 - len(str(it))) * '0'
+    file_name = 'solution' + zeros_left + str(it) + '.dat'
 
     dat_path = os.path.join(os.getcwd(), "data_files", file_name)
     with open(dat_path, 'r') as fr:
@@ -75,12 +75,12 @@ def _plotBasin(cx, cy, sub):
         logger.log("Configure SHOW_BASIN. Options: True, False")
 
 
-def plotFromDat(time, iter, cx, cy):
+def plotFromDat(time, it, cx, cy):
     """creates and saves a frame as png, reading data from a dat file
 
     Args:
         time (float) :  current time
-        iter (int)   :  current iter
+        it (int)     :  current itereration
         cx (array)   :  cell centers at x axis
         cy (array)   :  cell centers at y axis
     """
@@ -94,7 +94,7 @@ def plotFromDat(time, iter, cx, cy):
         logger.log("Unable to create data_files directory")
 
     # extract data from dat
-    X, Y, Z, Nx, Ny = _dataFromDat(iter)
+    X, Y, Z, Nx, Ny = _dataFromDat(it)
 
     # plot {
     #
@@ -106,8 +106,8 @@ def plotFromDat(time, iter, cx, cy):
     if conf.PLOTTING_STYLE == 'water':
         # rotate the domain:
         # horizontally every 8 frames and vetically every 20 frames
-        horizontal_rotate = 45 + iter / 8
-        vertical_rotate = 55 - iter / 20
+        horizontal_rotate = 45 + it / 8
+        vertical_rotate = 55 - it / 20
         sub.view_init(vertical_rotate, horizontal_rotate)
         sub.plot_surface(X, Y, Z,
                          rstride=1, cstride=1, linewidth=0,
@@ -119,8 +119,8 @@ def plotFromDat(time, iter, cx, cy):
     elif conf.PLOTTING_STYLE == 'wireframe':
         # rotate the domain:
         # horizontally every 3 frames and vetically every 4 frames
-        horizontal_rotate = 45 + iter / 3
-        vertical_rotate = 55 - iter / 4
+        horizontal_rotate = 45 + it / 3
+        vertical_rotate = 55 - it / 4
         sub.view_init(vertical_rotate, horizontal_rotate)
         sub.plot_wireframe(X, Y, Z, rstride=2, cstride=2, linewidth=1,)
     else:
@@ -137,9 +137,9 @@ def plotFromDat(time, iter, cx, cy):
     _plotBasin(cx, cy, sub)
 
     # save
-    zeros_left = (4 - len(str(iter))) * '0'
+    zeros_left = (4 - len(str(it))) * '0'
     # fig.tight_layout()
-    fig_file = os.path.join("session", "iter_" + zeros_left + str(iter) + ".png")
+    fig_file = os.path.join("session", "iter_" + zeros_left + str(it) + ".png")
     plt.savefig(fig_file)
     plt.close()
     #

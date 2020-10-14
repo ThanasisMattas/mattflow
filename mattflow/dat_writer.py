@@ -20,7 +20,7 @@ from mattflow import config as conf
 # file_name = str(datetime.now())[:19]
 # file_name = file_name[:10] + '_' + file_name[11:] + '.dat'
 
-def writeDat(hights_list, cx, cy, time, iter):
+def writeDat(hights_list, cx, cy, time, it):
     """writes solution data to a dat file
 
     Args:
@@ -28,7 +28,7 @@ def writeDat(hights_list, cx, cy, time, iter):
         cx (array)           : cell center along the x axis
         cy (array)           : cell center along the y axis
         time (float)         : current time
-        imter (int)          : current iter
+        it (int)             : current iteration
     """
     try:
         if os.path.isdir('./data_files'):
@@ -38,8 +38,8 @@ def writeDat(hights_list, cx, cy, time, iter):
     except OSError:
         print("Unable to create data_files directory")
     try:
-        zeros_left = (4 - len(str(iter))) * '0'
-        file_name = './data_files/solution' + zeros_left + str(iter) + '.dat'
+        zeros_left = (4 - len(str(it))) * '0'
+        file_name = './data_files/solution' + zeros_left + str(it) + '.dat'
         fw = open(file_name, 'w')
         fw.write('xCells: ' + str(conf.Nx) + '\n'
                  + 'yCells: ' + str(conf.Ny) + '\n'
