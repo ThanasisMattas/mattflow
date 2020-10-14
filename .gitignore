@@ -41,4 +41,4 @@
 **/*.egg-info/*
 **/*.egg
 **/extras/*
-
+.hidden
