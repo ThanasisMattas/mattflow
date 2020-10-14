@@ -108,6 +108,8 @@ def main():
 
     # Duration of the solution
     solution_end = timer()
+    logger.log('Solution duration' + 11 * '-'
+               + str(timedelta(seconds=solution_end - start)))
     print('Solution duration' + 11 * '-'
           + str(timedelta(seconds=solution_end - start)))
 
@@ -119,10 +121,14 @@ def main():
     end = timer()
     logger.log('Post-processing duration' + 4 * '-'
                + str(timedelta(seconds=end - solution_end)))
+    print('Post-processing duration' + 4 * '-'
+          + str(timedelta(seconds=end - solution_end)))
 
     # Total duration
     logger.log('Total duration' + 14 * '-'
                + str(timedelta(seconds=end - start)))
+    print('Total duration' + 14 * '-'
+          + str(timedelta(seconds=end - start)))
 
     # Close the log file
     logger.close()
