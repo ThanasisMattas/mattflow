@@ -105,9 +105,9 @@ def plotFromDat(time, iter, cx, cy):
 
     if conf.PLOTTING_STYLE == 'water':
         # rotate the domain:
-        # horizontally every 8 frames and vetically every 5 frames
+        # horizontally every 8 frames and vetically every 20 frames
         horizontal_rotate = 45 + iter / 8
-        vertical_rotate = 55 - iter / 5
+        vertical_rotate = 55 - iter / 20
         sub.view_init(vertical_rotate, horizontal_rotate)
         sub.plot_surface(X, Y, Z,
                          rstride=1, cstride=1, linewidth=0,
