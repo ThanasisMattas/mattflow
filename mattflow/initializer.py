@@ -128,7 +128,7 @@ def initialize(cx, cy):
         dat_writer.writeDat(U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng], cx, cy,
                             time=0, iter=0)
         from mattflow import mattflow_post
-        mattflow_post.plotFromDat(time=0, iter=0)
+        mattflow_post.plotFromDat(time=0, iter=0, cx=cx, cy=cy)
     elif not conf.DAT_WRITING_MODE:
         pass
     else:
