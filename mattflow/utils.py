@@ -12,6 +12,7 @@
 """Provides some helper functions"""
 
 import os
+import shutil
 
 from mattflow import config as conf
 
@@ -27,7 +28,7 @@ def delete_logs_dats_images_videos():
             os.remove(f)
     for dir in directories:
         if os.path.isdir(dir):
-            os.rmdir(dir)
+            shutil.rmtree(dir)
 
 
 def delete_memmap():
