@@ -23,9 +23,8 @@ from mattflow import config as conf
 from mattflow import logger
 
 
-def _dataFromDat():
-    """pulls solution data from a dat file
-    """
+def _dataFromDat(iter):
+    """pulls solution data from a dat file"""
     zeros_left = (4 - len(str(iter))) * '0'
     file_name = 'solution' + zeros_left + str(iter) + '.dat'
 
@@ -95,7 +94,7 @@ def plotFromDat(time, iter, cx, cy):
         logger.log("Unable to create data_files directory")
 
     # extract data from dat
-    X, Y, Z, Nx, Ny = _dataFromDat()
+    X, Y, Z, Nx, Ny = _dataFromDat(iter)
 
     # plot {
     #
