@@ -74,31 +74,31 @@ def _gaussian(variance, cx, cy):
     return gaussian_distribution
 
 
-def drop(hights_list, cx, cy):
+def drop(heights_list, cx, cy):
     """Generates a drop
 
     Drop is modeled as a gaussian distribution
 
     Args:
-        hights_list (array)    :  the 0th state variable, U[0, :, :]
+        heights_list (array)   :  the 0th state variable, U[0, :, :]
         cx (array)             :  centers of the cells along the x axis
         cy (array)             :  centers of the cells along the y axis
 
     Returns:
-        hights_list(2D array)  : drop is added to the input hights_list
+        heights_list(2D array)  : drop is added to the input heights_list
     """
     # multiply with 3 / 2 for a small stone droping
     #          with 1 / 5 for a water drop with a considerable momentum build
     #          with 1 / 8 for a soft water drop
     if conf.MODE == 'single drop' or conf.MODE == 'drops':
         variance = _variance("single drop")
-        hights_list += 3 / 2 * _gaussian(variance, cx, cy)
+        heights_list += 3 / 2 * _gaussian(variance, cx, cy)
     elif conf.MODE == 'rain':
         variance = _variance("rain")
-        hights_list += 1 / 8 * _gaussian(variance, cx, cy)
+        heights_list += 1 / 8 * _gaussian(variance, cx, cy)
     else:
         print("Configure MODE | options: 'single drop', 'drops', 'rain'")
-    return hights_list
+    return heights_list
 
 
 def initialize(cx, cy):
