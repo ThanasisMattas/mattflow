@@ -22,6 +22,7 @@ from mattflow import dat_writer
 from mattflow import flux
 from mattflow import initializer
 from mattflow import logger
+from mattflow import mattflow_post
 
 
 def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
@@ -108,16 +109,6 @@ def solve(U, dx, cx, dy, cy, delta_t, iter, drops):
             - 0.5 * delta_t / dy * (flux.G(U_pred[:, Ng: -Ng, Ng: -Ng]) \
                 - flux.G(U_pred[:, Ng - 1: Ny + Ng - 1, Ng: -Ng]))
     '''
-
-    # write dat | default: False
-    if conf.DAT_WRITING_MODE is False:
-        pass
-    elif conf.DAT_WRITING_MODE is True:
-        time = iter * delta_t
-        dat_writer.writeDat(U[0, Ng: Ny + Ng, Ng: Nx + Ng], cx, cy, time, iter)
-        # mattFlow_post.plotFromDat(time=0, iter=0)
-    else:
-        logger.log("Configure DAT_WRITING_MODE | Options: True, False")
 
 
 def dt(U, dx, dy):

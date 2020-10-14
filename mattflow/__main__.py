@@ -24,6 +24,7 @@ import numpy as np
 
 from mattflow import boundaryConditionsManager
 from mattflow import config as conf
+from mattflow import dat_writer
 from mattflow import initializer
 from mattflow import logger
 from mattflow import mattflow_post
@@ -90,13 +91,25 @@ def main():
         # Numerical iterative scheme
         U, drops_count = mattflow_solver.solve(U, dx, cx, dy, cy, delta_t,
                                                iter, drops_count)
-        # Append current frame to the list, to be animated at post-processing
-        if not (iter - 1) % 3:
-            try:
-                U_stepwise_for_animation[(iter - 1) // 3] = \
-                    U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
-            except IndexError:
-                pass
+
+        # write dat | default: False
+        if conf.DAT_WRITING_MODE:
+            dat_writer.writeDat(
+                U[0, conf.Ng: conf.Ny + conf.Ng, conf.Ng: conf.Nx + conf.Ng],
+                cx, cy, time, iter
+            )
+            mattflow_post.plotFromDat(time, iter, cx, cy)
+        elif not conf.DAT_WRITING_MODE:
+            # Append current frame to the list, to be animated at post-processing
+            if not (iter - 1) % 3:
+                try:
+                    U_stepwise_for_animation[(iter - 1) // 3] = \
+                        U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
+                except IndexError:
+                    pass
+            pass
+        else:
+            logger.log("Configure DAT_WRITING_MODE | Options: True, False")
 
         logger.log_timestep(iter, time)
     #
