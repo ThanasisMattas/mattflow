@@ -104,12 +104,25 @@ def plotFromDat(time, iter, cx, cy):
     plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0, hspace=0)
 
     if conf.PLOTTING_STYLE == 'water':
-        sub.plot_surface(X, Y, Z[0], rstride=1, cstride=1, linewidth=0,
-                         color=(0.251, 0.643, 0.875, 0.9), antialiased=False)
+        # rotate the domain:
+        # horizontally every 8 frames and vetically every 5 frames
+        horizontal_rotate = 45 + iter / 8
+        vertical_rotate = 55 - iter / 5
+        sub.view_init(vertical_rotate, horizontal_rotate)
+        sub.plot_surface(X, Y, Z,
+                         rstride=1, cstride=1, linewidth=0,
+                         color=(0.251, 0.643, 0.875, 0.95),
+                         shade=True, antialiased=False)
     elif conf.PLOTTING_STYLE == 'contour':
-        sub.contour3D(X, Y, Z[0], 140, cmap='plasma', vmin=0.6, vmax=1.4)
+        sub.view_init(50, 45)
+        sub.contour3D(X, Y, Z, 140, cmap='plasma', vmin=0.6, vmax=1.4)
     elif conf.PLOTTING_STYLE == 'wireframe':
-        sub.plot_wireframe(X, Y, Z[0], rstride=2, cstride=2, linewidth=0.5,)
+        # rotate the domain:
+        # horizontally every 3 frames and vetically every 4 frames
+        horizontal_rotate = 45 + iter / 3
+        vertical_rotate = 55 - iter / 4
+        sub.view_init(vertical_rotate, horizontal_rotate)
+        sub.plot_wireframe(X, Y, Z, rstride=2, cstride=2, linewidth=1,)
     else:
         logger.log("Configure PLOTTING_STYLE | options: 'water', 'contour',",
                    "'wireframe'")
@@ -118,7 +131,7 @@ def plotFromDat(time, iter, cx, cy):
     plt.title('time: {0:.3f}'.format(time))
     sub.title.set_position([0.51, 0.8])
     plt.axis('off')
-    sub.view_init(50, 45)
+    # sub.view_init(50, 45)
 
     # render the basin that contains the fluid
     _plotBasin(cx, cy, sub)
@@ -147,9 +160,11 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
     """
     if conf.PLOTTING_STYLE == 'water':
         plot[0].remove()
-        # rotate the domain every 3 frames
+        # rotate the domain:
+        # horizontally every 8 frames and vetically every 5 frames
         horizontal_rotate = 45 + frame_number / 8
-        sub.view_init(55, horizontal_rotate)
+        vertical_rotate = 55 - frame_number / 5
+        sub.view_init(vertical_rotate, horizontal_rotate)
         plot[0] = sub.plot_surface(X, Y, Z[frame_number],
                                    rstride=1, cstride=1, linewidth=0,
                                    color=(0.251, 0.643, 0.875, 0.95),
@@ -170,7 +185,8 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
                                 vmin=0.5, vmax=1.5)
     elif conf.PLOTTING_STYLE == 'wireframe':
         plot[0].remove()
-        # rotate the domain every 3 frames
+        # rotate the domain:
+        # horizontally every 3 frames and vetically every 4 frames
         horizontal_rotate = 45 + frame_number / 3
         vertical_rotate = 55 - frame_number / 4
         sub.view_init(vertical_rotate, horizontal_rotate)
