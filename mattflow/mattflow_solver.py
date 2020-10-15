@@ -132,7 +132,7 @@ def dt(U, dx, dy):
 
                              dt_final = dt * Courant.
 
-    The velocity varies at each point of the grid, consisting the velocity
+    The velocity varies at each point of the grid, constituting the velocity
     field. So, dt is evaluated at every cell, as the mean of the dt's at x
     and y directions. Finally, the minimum dt of all cells is returned, as
     the time-step of the current iteration, ensuring that the CFL condition
@@ -141,6 +141,11 @@ def dt(U, dx, dy):
     The velocity field is step-wisely changing and, thus, the calculation
     of dt is repeated at each iteration, preserving consistency with the
     CFL condition.
+
+    If the CFL condition is not met even at one cell, the simulation will not
+    evaluate correctly the state variables there, resulting to discontinuities
+    with the neighbor cells. These inconsistencies add up and bleed to nearby
+    cells and, eventually the simulation (literally) blows up.
 
     Args:
         U (3D array) :  the state variables, populating a x,y grid
