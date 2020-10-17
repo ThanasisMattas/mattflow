@@ -66,12 +66,12 @@ def main():
 
     # This will hold the step-wise solutions for the post-processing animation.
     # (save a frame every 3 iters)
-    U_stepwise_for_animation = np.zeros([conf.MAX_ITERS // 3, conf.Nx, conf.Ny])
-    U_stepwise_for_animation[0] = U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
+    U_array = np.zeros([conf.MAX_ITERS // 3, conf.Nx, conf.Ny])
+    U_array[0] = U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
 
     # This will hold the step-wise time for the post-processing animation.
     # (time * 10 is appended, because space is scaled about x10)
-    time_array_for_animation = np.array([0])
+    time_array = np.array([0])
 
     for it in range(1, conf.MAX_ITERS):
 
@@ -82,8 +82,7 @@ def main():
         time += delta_t
         if time > conf.STOPPING_TIME:
             break
-        time_array_for_animation = np.hstack((time_array_for_animation,
-                                              [time * 10]))
+        time_array = np.hstack((time_array, [time * 10]))
 
         # Apply boundary conditions (reflective)
         U = boundaryConditionsManager.updateGhostCells(U)
@@ -103,7 +102,7 @@ def main():
             # Append current frame to the list, to be animated at post-processing
             if not (it - 1) % 3:
                 try:
-                    U_stepwise_for_animation[(it - 1) // 3] = \
+                    U_array[(it - 1) // 3] = \
                         U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
                 except IndexError:
                     pass
@@ -126,8 +125,7 @@ def main():
           + str(timedelta(seconds=solution_end - start)))
 
     # Post-processing
-    mattflow_post.createAnimation(U_stepwise_for_animation, cx, cy,
-                                  time_array_for_animation)
+    mattflow_post.createAnimation(U_array, cx, cy, time_array)
 
     # Post-processing duration
     end = timer()
