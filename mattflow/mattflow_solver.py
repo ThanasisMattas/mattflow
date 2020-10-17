@@ -50,11 +50,11 @@ def solve(U, dx, cx, dy, cy, delta_t, it, drops_count):
         pass
     # 'drops': specified number of drops are generated at specified frequency
     elif conf.MODE == 'drops':
-        if conf.FIXED_ITERS_TO_NEXT_DROP:
-            drop_condition = (it % conf.ITERS_FOR_NEXT_DROP == 0
+        if conf.FIXED_ITERS_BETWEEN_DROPS:
+            drop_condition = (it % conf.FIXED_ITERS_TO_NEXT_DROP == 0
                               and drops_count < conf.N_DROPS)
         else:
-            drop_condition = (it == conf.ITERS_FOR_NEXT_DROP[drops_count]
+            drop_condition = (it == conf.ITERS_TO_NEXT_DROP[drops_count]
                               and drops_count < conf.N_DROPS)
         if drop_condition:
             U[0, :, :] = initializer.drop(U[0, :, :], cx, cy, drops_count + 1)

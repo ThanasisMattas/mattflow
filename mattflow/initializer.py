@@ -126,7 +126,7 @@ def initialize(cx, cy):
                    conf.Nx + 2 * conf.Ng)))
 
     # 1st drop
-    U[0, :, :] = conf.SURFACE_LEVEL + drop(U[0, :, :], cx, cy, drop=1)
+    U[0, :, :] = conf.SURFACE_LEVEL + drop(U[0, :, :], cx, cy, drops_count=1)
 
     # write dat | default: False
     if conf.DAT_WRITING_MODE:

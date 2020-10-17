@@ -28,6 +28,8 @@
 
 import os
 
+import numpy as np
+
 
 # Pre-processing configuration {
 #
@@ -96,14 +98,10 @@ MODE = 'drops'
 N_DROPS = 5
 
 # Number of iterations between drops
-FIXED_ITERS_TO_NEXT_DROP = True
-
-if FIXED_ITERS_TO_NEXT_DROP:
-  ITERS_FOR_NEXT_DROP = 105
-else:
-  import numpy as np
-  ITERS_FOR_NEXT_DROP = [0, 80, 90, 130, 110, 60, 120, 120, 150, 100, 130, 120, 120, 100]
-  ITERS_FOR_NEXT_DROP = np.cumsum(ITERS_FOR_NEXT_DROP)
+FIXED_ITERS_BETWEEN_DROPS = False
+FIXED_ITERS_TO_NEXT_DROP = 105
+ITERS_TO_NEXT_DROP = [0, 80, 90, 130, 110, 60, 120, 120, 150, 100, 130, 120, 120, 100]
+ITERS_TO_NEXT_DROP = np.cumsum(ITERS_TO_NEXT_DROP)
 
 
 RANODM_DROP_CENTERS = True
