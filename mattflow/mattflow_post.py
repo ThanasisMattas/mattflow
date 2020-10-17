@@ -254,11 +254,15 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
                                      rstride=2, cstride=2, linewidth=1)
 
     # frame title
-    plt.title('time: {0:.3f}'.format(time_array[frame_number]))
+    if time_array is not None:
+        plt.title('time: {0:.3f}'.format(time_array[frame_number]))
+    else:
+        plt.title("mesh: {0}x{1}\tsolver: ".format(conf.Nx, conf.Ny)
+                  + conf.SOLVER_TYPE)
     sub.title.set_position([0.51, 0.83])
 
 
-def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
+def createAnimation(U_stepwise_for_animation, cx, cy, time_array=None):
     """generates and saves a timelapse of the simulation
 
         U_stepwise_for_animation (list) : list of iter-wise solutions
@@ -312,7 +316,11 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array):
     else:
         logger.log("Configure PLOTTING_STYLE | options: 'water', 'contour',",
                    "'wireframe'")
-    plt.title('time: {0:.3f}'.format(time_array[0]))
+    if time_array is not None:
+        plt.title('time: {0:.3f}'.format(time_array[0]))
+    else:
+        plt.title("mesh: {0}x{1}\tsolver: ".format(conf.Nx, conf.Ny)
+                  + conf.SOLVER_TYPE)
     # }
 
     # render the basin that contains the fluid
