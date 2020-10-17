@@ -107,7 +107,6 @@ def main():
                         U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
                 except IndexError:
                     pass
-            pass
         else:
             logger.log("Configure DAT_WRITING_MODE | Options: True, False")
 
