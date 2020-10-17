@@ -106,6 +106,16 @@ else:
   ITERS_FOR_NEXT_DROP = np.cumsum(ITERS_FOR_NEXT_DROP)
 
 
+RANODM_DROP_CENTERS = True
+
+# Define x, y drop centers (normalized to one)
+drop_x_centers = [0, -0.56, 0.28, -0.25, 0.48, -0.42, 0.90, 0.24, -0.78, -0.2, 0.84]
+drop_y_centers = [0, 0.25, 0.48, -0.24, -0.59, -0.64, 0.05, -0.40, 0.63, -0.39, -0.40]
+drop_x_centers = [x * MAX_X for x in drop_x_centers]
+drop_x_centers = [y * MAX_Y for y in drop_y_centers]
+drop_centers = list(zip(drop_x_centers, drop_y_centers))
+
+
 # Boundary conditions
 # -------------------
 # Supported:

@@ -57,7 +57,7 @@ def solve(U, dx, cx, dy, cy, delta_t, it, drops):
             drop_condition = (it == conf.ITERS_FOR_NEXT_DROP[drops]
                               and drops < conf.N_DROPS)
         if drop_condition:
-            U[0, :, :] = initializer.drop(U[0, :, :], cx, cy)
+            U[0, :, :] = initializer.drop(U[0, :, :], cx, cy, drops + 1)
             drops += 1
     # 'rain': random number of drops are generated at random frequency
     elif conf.MODE == 'rain':
