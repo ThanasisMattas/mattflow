@@ -104,6 +104,9 @@ SOLVER_TYPE = '2-stage Runge-Kutta'
 # Options: water, contour, wireframe
 PLOTTING_STYLE = 'wireframe'
 
+# Rotate the domain at each frame
+ROTATION = True
+
 # Render the basin that contains the fluid
 SHOW_BASIN = False
 
