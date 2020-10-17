@@ -44,7 +44,7 @@ def _variance(mode):
     return variance[mode]
 
 
-def _gaussian(variance, cx, cy, drop):
+def _gaussian(variance, cx, cy, drops_count):
     '''produces a bivariate gaussian distribution of a certain variance
 
     formula: amplitude * np.exp(-exponent)
@@ -53,7 +53,7 @@ def _gaussian(variance, cx, cy, drop):
         variance (float) :  target variance of the distribution
         cx (array)       :  centers of the cells along the x axis
         cy (array)       :  centers of the cells along the y axis
-        drop(int)        :  drop counter
+        drops_count(int) :  drop counter
 
     Returs:
         gaussian_distribution (2D array)
@@ -64,8 +64,8 @@ def _gaussian(variance, cx, cy, drop):
         DROP_CENTER_X = uniform(conf.MIN_X, conf.MAX_X)
         DROP_CENTER_Y = uniform(conf.MIN_Y, conf.MAX_Y)
     else:
-        DROP_CENTER_X = conf.drop_x_centers[drop]
-        DROP_CENTER_Y = conf.drop_y_centers[drop]
+        DROP_CENTER_X = conf.drop_x_centers[drops_count]
+        DROP_CENTER_Y = conf.drop_y_centers[drops_count]
 
     # grid of the cell centers
     CX, CY = np.meshgrid(cx, cy)
@@ -78,7 +78,7 @@ def _gaussian(variance, cx, cy, drop):
     return gaussian_distribution
 
 
-def drop(heights_list, cx, cy, drop=None):
+def drop(heights_list, cx, cy, drops_count=None):
     """Generates a drop
 
     Drop is modeled as a gaussian distribution
@@ -87,6 +87,7 @@ def drop(heights_list, cx, cy, drop=None):
         heights_list (array)   :  the 0th state variable, U[0, :, :]
         cx (array)             :  centers of the cells along the x axis
         cy (array)             :  centers of the cells along the y axis
+        drops_count(int) :  drop counter
 
     Returns:
         heights_list(2D array)  : drop is added to the input heights_list
@@ -96,10 +97,10 @@ def drop(heights_list, cx, cy, drop=None):
     #          with 1 / 8 for a soft water drop
     if conf.MODE == 'single drop' or conf.MODE == 'drops':
         variance = _variance("single drop")
-        heights_list += 3 / 2 * _gaussian(variance, cx, cy, drop)
+        heights_list += 3 / 2 * _gaussian(variance, cx, cy, drops_count)
     elif conf.MODE == 'rain':
         variance = _variance("rain")
-        heights_list += 1 / 8 * _gaussian(variance, cx, cy, drop)
+        heights_list += 1 / 8 * _gaussian(variance, cx, cy, drops_count)
     else:
         print("Configure MODE | options: 'single drop', 'drops', 'rain'")
     return heights_list

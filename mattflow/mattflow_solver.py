@@ -25,20 +25,20 @@ from mattflow import logger
 from mattflow import mattflow_post
 
 
-def solve(U, dx, cx, dy, cy, delta_t, it, drops):
+def solve(U, dx, cx, dy, cy, delta_t, it, drops_count):
     """evaluates the state variables (h, hu, hv) at a new time-step
 
     it can be used in a for/while loop, iterating through each time-step
 
     Args:
-        U (3D array)    :  the state variables, populating a x,y grid
-        dx (float)      :  spatial discretization step on x axis
-        cx (array)      :  cell centers on x axis
-        dy (float)      :  spatial discretization step on y axis
-        cy (array)      :  cell centers on y axis
-        delta_t (float) :  time discretization step
-        it (int)        :  current iteration
-        drops (int)     :  number of drops been generated
+        U (3D array)      :  the state variables, populating a x,y grid
+        dx (float)        :  spatial discretization step on x axis
+        cx (array)        :  cell centers on x axis
+        dy (float)        :  spatial discretization step on y axis
+        cy (array)        :  cell centers on y axis
+        delta_t (float)   :  time discretization step
+        it (int)          :  current iteration
+        drops_count (int) :  number of drops been generated
 
     Returns:
         U, drops
@@ -52,13 +52,13 @@ def solve(U, dx, cx, dy, cy, delta_t, it, drops):
     elif conf.MODE == 'drops':
         if conf.FIXED_ITERS_TO_NEXT_DROP:
             drop_condition = (it % conf.ITERS_FOR_NEXT_DROP == 0
-                              and drops < conf.N_DROPS)
+                              and drops_count < conf.N_DROPS)
         else:
-            drop_condition = (it == conf.ITERS_FOR_NEXT_DROP[drops]
-                              and drops < conf.N_DROPS)
+            drop_condition = (it == conf.ITERS_FOR_NEXT_DROP[drops_count]
+                              and drops_count < conf.N_DROPS)
         if drop_condition:
-            U[0, :, :] = initializer.drop(U[0, :, :], cx, cy, drops + 1)
-            drops += 1
+            U[0, :, :] = initializer.drop(U[0, :, :], cx, cy, drops_count + 1)
+            drops_count += 1
     # 'rain': random number of drops are generated at random frequency
     elif conf.MODE == 'rain':
         if it % random.randrange(1, 15) == 0:
@@ -90,7 +90,7 @@ def solve(U, dx, cx, dy, cy, delta_t, it, drops):
     else:
         logger.log("Configure SOLVER_TYPE | Options: 'Lax-Friedrichs Riemann',",
                    "' 2-stage Runge-Kutta'")
-    return U, drops
+    return U, drops_count
 
     '''
     # Experimenting on the finite differences form of the MacCormack solver
