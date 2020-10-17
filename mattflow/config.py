@@ -62,7 +62,24 @@ DUMP_MEMMAP = False
 MEMMAP_DIR = os.path.join(os.getcwd(), "flux_memmap")
 
 # Courant number
-COURANT = 0.6
+# --------------
+# dx * COURANT = 0.015 for a more realistic result, in the current fps range
+#
+#
+# dt_sim = dt * COURANT
+# dt_sim = dx / wave_vel * COURANT
+# dx * COURANT = dt_sim * wave_vel (= dx_sim?)
+#
+# where:
+#   - dt is the time that the slowest wave component (represented by the
+#     velocity eagenvector with the min eagenvalue at the jacobian of the
+#     non-conservative form of the vectorized representation of the system)
+#     takes to travel for dx.
+#   - dt_sim is the time that the simulation covers dx
+#
+dx = (MAX_X - MIN_X) / Nx
+dy = (MAX_Y - MIN_Y) / Ny
+COURANT = min(0.9, 0.015 / min(dx, dy))
 
 # Surface level
 SURFACE_LEVEL = 1
