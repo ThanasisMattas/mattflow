@@ -50,7 +50,13 @@ def solve(U, dx, cx, dy, cy, delta_t, it, drops):
         pass
     # 'drops': specified number of drops are generated at specified frequency
     elif conf.MODE == 'drops':
-        if it % conf.ITERS_FOR_NEXT_DROP == 0 and drops < conf.N_DROPS:
+        if conf.FIXED_ITERS_TO_NEXT_DROP:
+            drop_condition = (it % conf.ITERS_FOR_NEXT_DROP == 0
+                              and drops < conf.N_DROPS)
+        else:
+            drop_condition = (it == conf.ITERS_FOR_NEXT_DROP[drops]
+                              and drops < conf.N_DROPS)
+        if drop_condition:
             U[0, :, :] = initializer.drop(U[0, :, :], cx, cy)
             drops += 1
     # 'rain': random number of drops are generated at random frequency
