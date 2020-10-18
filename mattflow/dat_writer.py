@@ -15,6 +15,7 @@
 import os
 
 from mattflow import config as conf
+from mattflow import utils
 
 
 # file_name = str(datetime.now())[:19]
@@ -30,13 +31,7 @@ def writeDat(hights_list, cx, cy, time, it):
         time (float)         : current time
         it (int)             : current iteration
     """
-    try:
-        if os.path.isdir('./data_files'):
-            pass
-        else:
-            os.mkdir('./data_files')
-    except OSError:
-        print("Unable to create data_files directory")
+    utils.create_child_dir("data_files")
     try:
         zeros_left = (4 - len(str(it))) * '0'
         file_name = './data_files/solution' + zeros_left + str(it) + '.dat'

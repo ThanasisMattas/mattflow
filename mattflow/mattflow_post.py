@@ -85,13 +85,7 @@ def plotFromDat(time, it, cx, cy):
         cy (array)   : cell centers at y axis
     """
     # create ./session directory for saving the results
-    try:
-        if os.path.isdir(os.path.join(os.getcwd(), "session")):
-            pass
-        else:
-            os.mkdir(os.path.join(os.getcwd(), "session"))
-    except OSError:
-        logger.log("Unable to create data_files directory")
+    utils.create_child_dir("session")
 
     # extract data from dat
     X, Y, Z, Nx, Ny = _dataFromDat(it)

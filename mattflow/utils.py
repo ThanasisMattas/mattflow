@@ -60,3 +60,14 @@ def print_duration(start, end, process):
   print(process.capitalize() + " duration"
         + dashes
         + str(timedelta(seconds=end - start))[:10])
+
+
+def create_child_dir(dirname):
+  """create a directory under the current working directory"""
+  try:
+      if os.path.isdir(os.path.join(os.getcwd(), dirname)):
+          pass
+      else:
+          os.mkdir(os.path.join(os.getcwd(), dirname))
+  except OSError:
+      print("Unable to create ./" + dirname + " directory")
