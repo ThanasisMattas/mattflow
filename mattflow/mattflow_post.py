@@ -27,9 +27,9 @@ def _plotBasin(cx, cy, sub):
     """plots the basin that contains the fluid
 
     Args:
-        cx (array)    :  x axis cell centers
-        cy (array)    :  y axis cell centers
-        sub (subplot) :  Axes3D subplot object
+        cx (array)    : x axis cell centers
+        cy (array)    : y axis cell centers
+        sub (subplot) : Axes3D subplot object
     """
     if conf.SHOW_BASIN is True:
         # make basin a bit wider, because water appears to be out of the basin
@@ -79,10 +79,10 @@ def plotFromDat(time, it, cx, cy):
     """creates and saves a frame as png, reading data from a dat file
 
     Args:
-        time (float) :  current time
-        it (int)     :  current itereration
-        cx (array)   :  cell centers at x axis
-        cy (array)   :  cell centers at y axis
+        time (float) : current time
+        it (int)     : current itereration
+        cx (array)   : cell centers at x axis
+        cy (array)   : cell centers at y axis
     """
     # create ./session directory for saving the results
     try:
@@ -156,9 +156,9 @@ def _saveAni(ani, fps, dpi):
     """saves the animation
 
     Args:
-        ani (obj) :  animation.FuncAnimation() object
-        fps (int) :  frames per second
-        dpi (int) :  dots per inch
+        ani (obj) : animation.FuncAnimation() object
+        fps (int) : frames per second
+        dpi (int) : dots per inch
     """
     if conf.SAVE_ANIMATION is True:
         # file name
@@ -205,12 +205,12 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
     used from FuncAnimation to iteratively create a timelapse animation
 
     Args:
-        frame_number (int)  :  current frame
-        X, Y, Z (2D arrays) :  meshgrid and values
-        plot (list)         :  list holding current plot
-        fig (figure)        :  activated plt.figure
-        sub (subplot)       :  Axes3D subplot object
-        time_array (list)   :  holds the iter-wise times
+        frame_number (int)  : current frame
+        X, Y, Z (2D arrays) : meshgrid and values
+        plot (list)         : list holding current plot
+        fig (figure)        : activated plt.figure
+        sub (subplot)       : Axes3D subplot object
+        time_array (list)   : holds the iter-wise times
     """
     if conf.PLOTTING_STYLE == 'water':
         plot[0].remove()
@@ -262,13 +262,13 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
     sub.title.set_position([0.51, 0.83])
 
 
-def createAnimation(U_stepwise_for_animation, cx, cy, time_array=None):
+def createAnimation(U_array, cx, cy, time_array=None):
     """generates and saves a timelapse of the simulation
 
-        U_stepwise_for_animation (list) : list of iter-wise solutions
-        cx (array)                      : x axis cell centers
-        cy (array)                      : y axis cell centers
-        time_array (list)               : holds the iter-wise times
+        U_array (list)    : list of iter-wise solutions
+        cx (array)        : x axis cell centers
+        cy (array)        : y axis cell centers
+        time_array (list) : holds the iter-wise times
     """
     fps = conf.FPS
     dpi = conf.DPI
@@ -281,11 +281,11 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array=None):
     # resolution: 1920x1080 (1920/200=9.6)
 
     # total frames
-    frames = len(U_stepwise_for_animation)
+    frames = len(U_array)
 
     # X, Y, Z
     X, Y = np.meshgrid(cx[conf.Ng: -conf.Ng], cy[conf.Ng: -conf.Ng])
-    Z = U_stepwise_for_animation
+    Z = U_array
 
     # plot configuration
     fig = plt.figure(figsize=figsize, dpi=dpi)
