@@ -270,13 +270,9 @@ def createAnimation(U_stepwise_for_animation, cx, cy, time_array=None):
         cy (array)                      : y axis cell centers
         time_array (list)               : holds the iter-wise times
     """
-    # frames per sec
-    fps = 20
-    # dots per inch
-    dpi = 60
-    # figure size in inches
-    # golden ratio: 1.618
-    figsize = (10 * 1.618, 10)
+    fps = conf.FPS
+    dpi = conf.DPI
+    figsize = conf.FIGSIZE
 
     # resolution = figsize * dpi
     # --------------------------

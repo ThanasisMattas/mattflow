@@ -139,6 +139,20 @@ SOLVER_TYPE = '2-stage Runge-Kutta'
 # Options: water, contour, wireframe
 PLOTTING_STYLE = 'wireframe'
 
+# frames per sec
+FPS = 20
+# dots per inch
+DPI = 60
+# figure size in inches
+# golden ratio: 1.618
+FIGSIZE = (10 * 1.618, 10)
+
+# resolution = figsize * dpi
+# --------------------------
+# example:
+# figsize = (9.6, 5.4), dpi=200
+# resolution: 1920x1080 (1920/200=9.6)
+
 # Rotate the domain at each frame
 ROTATION = True
 
