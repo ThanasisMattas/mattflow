@@ -11,7 +11,7 @@
 # ======================================================================
 """Handles the logging precess"""
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 
 from mattflow import config as conf
@@ -152,3 +152,11 @@ def is_mattflow_log(log_file):
         return True
     else:
         return False
+
+
+def log_duration(start, end, process):
+  """logs the duration of a process"""
+  dashes = (19 - len(process)) * '-'
+  log(process.capitalize() + " duration"
+      + dashes
+      + str(timedelta(seconds=end - start))[:10])

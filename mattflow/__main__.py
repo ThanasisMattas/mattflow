@@ -17,7 +17,6 @@
                         """
 
 
-from datetime import timedelta
 from timeit import default_timer as timer
 
 import numpy as np
@@ -112,8 +111,7 @@ def main():
 
     # Duration of the solution
     solution_end = timer()
-    logger.log('Solution duration' + 11 * '-'
-               + str(timedelta(seconds=solution_end - start)))
+    logger.log_duration(start, solution_end, "solution")
     utils.print_duration(start, solution_end, "solution")
 
     # Post-processing
@@ -121,13 +119,11 @@ def main():
 
     # Post-processing duration
     end = timer()
-    logger.log('Post-processing duration' + 4 * '-'
-               + str(timedelta(seconds=end - solution_end)))
+    logger.log_duration(solution_end, end, "post-processing")
     utils.print_duration(solution_end, end, "post-processing")
 
     # Total duration
-    logger.log('Total duration' + 14 * '-'
-               + str(timedelta(seconds=end - start)))
+    logger.log_duration(start, end, "total")
     utils.print_duration(start, end, "total")
 
     # Close the log file
