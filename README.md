@@ -11,9 +11,9 @@ ___
 | requirements         | os        |
 | -------------------- | --------- |
 | python3              | GNU/Linux |
-| numpy >= 1.16.4      | Windows   |
-| matplotlib >= 3.1.1  |           |
-| numba >= 0.48.0      |           |
+| numpy >= 1.19.2      | Windows   |
+| matplotlib >= 3.3.2  |           |
+| numba >= 0.51.2      |           |
 | joblib >= 0.13.2     |           |
 | ffmpeg (optional)    |           |
 
@@ -107,13 +107,13 @@ Currently, you can configure the simulation at the _config_ module
    playing with the fps<br /> at the post-processing timelapse, because each
    iteration uses different time-step (CFL condition)
 8. Moving objects inside the domain
-9.  Unstructured mesh
+9. Unstructured mesh
 10. Extent to 3D CFD?
 
 ***Start the flow!***
 
->(C) 2019, Thanasis Mattas<br />
->atmattas@physics.auth.gr
+>(C) 2019, Athanasios Mattas<br />
+>thanasismatt@gmail.com
 
 
 [//]: # "links"
