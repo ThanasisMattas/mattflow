@@ -13,10 +13,10 @@
 
 
 __name__ = 'mattflow'
-__version__ = '1.1.1'
-__author__ = 'Thanasis Mattas'
-__author_email__ = 'atmattas@physics.auth.gr'
+__version__ = '1.2.0'
+__author__ = 'Athanasios Mattas'
+__author_email__ = 'thanasismatt@gmail.com'
 __description__ = 'A CFD python package for the shallow water equations'
 __url__ = 'https://github.com/ThanasisMattas/mattflow.git'
 __license__ = 'GNU General Public License v3'
-__copyright__ = 'Copyright 2019 Thanasis Mattas'
+__copyright__ = 'Copyright 2019 Athanasios Mattas'
