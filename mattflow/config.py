@@ -46,6 +46,10 @@ MIN_X = -1.4
 MAX_X = 1.4
 MIN_Y = -1.4
 MAX_Y = 1.4
+
+# Spatial discretization steps (structured/Cartesian mesh)
+dx = (MAX_X - MIN_X) / Nx
+dy = (MAX_Y - MIN_Y) / Ny
 #
 # }
 
@@ -79,8 +83,6 @@ MEMMAP_DIR = os.path.join(os.getcwd(), "flux_memmap")
 #     takes to travel for dx.
 #   - dt_sim is the time that the simulation covers dx
 #
-dx = (MAX_X - MIN_X) / Nx
-dy = (MAX_Y - MIN_Y) / Ny
 COURANT = min(0.9, 0.015 / min(dx, dy))
 
 # Surface level

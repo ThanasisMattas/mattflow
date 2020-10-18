@@ -33,23 +33,16 @@ from mattflow import utils
 
 
 def main():
-    # Recording of the duration of the simulation
+
     start = timer()
 
     # Pre-processing {
     #
-    # Spatial discretization steps (structured/cartetian mesh)
-    dx = (conf.MAX_X - conf.MIN_X) / conf.Nx
-    dy = (conf.MAX_Y - conf.MIN_Y) / conf.Ny
-
+    # Spatial discretization steps (structured/Cartesian mesh)
+    dx = conf.dx
+    dy = conf.dy
     # Cell centers on x and y dimensions
-    cx = np.arange(conf.MIN_X + (0.5 - conf.Ng) * dx,
-                   conf.MAX_X + conf.Ng * dx,
-                   dx)
-    cy = np.arange(conf.MIN_Y + (0.5 - conf.Ng) * dy,
-                   conf.MAX_Y + conf.Ng * dy,
-                   dy)
-    #
+    cx, cy = utils.cell_centers()
     # }
 
     # Uncomment this to delete previous log, dat and png files (for debugging)

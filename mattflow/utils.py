@@ -14,7 +14,20 @@
 import os
 import shutil
 
+import numpy as np
+
 from mattflow import config as conf
+
+
+def cell_centers():
+    """generates the cell centers along the x and y axes"""
+    cx = np.arange(conf.MIN_X + (0.5 - conf.Ng) * conf.dx,
+                   conf.MAX_X + conf.Ng * conf.dx,
+                   conf.dx)
+    cy = np.arange(conf.MIN_Y + (0.5 - conf.Ng) * conf.dy,
+                   conf.MAX_Y + conf.Ng * conf.dy,
+                   conf.dy)
+    return cx, cy
 
 
 def delete_logs_dats_images_videos():
