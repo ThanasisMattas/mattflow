@@ -46,8 +46,6 @@ def delete_logs_dats_images_videos():
 
 
 def delete_memmap():
-    import shutil
-
     try:
         shutil.rmtree(conf.MEMMAP_DIR)
     except FileNotFoundError:
