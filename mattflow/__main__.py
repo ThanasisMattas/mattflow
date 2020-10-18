@@ -114,8 +114,7 @@ def main():
     solution_end = timer()
     logger.log('Solution duration' + 11 * '-'
                + str(timedelta(seconds=solution_end - start)))
-    print('Solution duration' + 11 * '-'
-          + str(timedelta(seconds=solution_end - start)))
+    utils.print_duration(start, solution_end, "solution")
 
     # Post-processing
     mattflow_post.createAnimation(U_array, cx, cy, time_array)
@@ -124,14 +123,12 @@ def main():
     end = timer()
     logger.log('Post-processing duration' + 4 * '-'
                + str(timedelta(seconds=end - solution_end)))
-    print('Post-processing duration' + 4 * '-'
-          + str(timedelta(seconds=end - solution_end)))
+    utils.print_duration(solution_end, end, "post-processing")
 
     # Total duration
     logger.log('Total duration' + 14 * '-'
                + str(timedelta(seconds=end - start)))
-    print('Total duration' + 14 * '-'
-          + str(timedelta(seconds=end - start)))
+    utils.print_duration(start, end, "total")
 
     # Close the log file
     logger.close()

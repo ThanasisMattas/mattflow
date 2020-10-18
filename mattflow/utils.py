@@ -11,6 +11,7 @@
 # ======================================================================
 """Provides some helper functions"""
 
+from datetime import timedelta
 import os
 import shutil
 
@@ -51,3 +52,11 @@ def delete_memmap():
         shutil.rmtree(conf.MEMMAP_DIR)
     except FileNotFoundError:
         print("Could not clean-up the memmap folder")
+
+
+def print_duration(start, end, process):
+  """prints the duration of a process"""
+  dashes = (19 - len(process)) * '-'
+  print(process.capitalize() + " duration"
+        + dashes
+        + str(timedelta(seconds=end - start))[:10])
