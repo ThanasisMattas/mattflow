@@ -22,7 +22,7 @@ ___
 1. anaconda environment (recommended)
 
 ```bash
-$ conda create --name mattflow python=3, numba
+$ conda create --name mattflow python=3 numba
 $ conda activate mattflow
 $ pip install mattflow
 $ mattflow
