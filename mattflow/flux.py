@@ -173,7 +173,7 @@ def _vertical_flux(U, Ny, Ng, dx, maxVerticalSpeed, parallel=True):
 
 
 def _flux_batch(U, dx, dy, window=None, slicing_obj=None,
-               flux_out=None, idx=None, parallel=True):
+                flux_out=None, idx=None, parallel=True):
     """evaluates the total flux that enters or leaves a cell, using the \
     Lax-Friedrichs scheme
 
@@ -215,13 +215,13 @@ def _flux_batch(U, dx, dy, window=None, slicing_obj=None,
     #
     # Max horizontal speed between left and right cells for every interface
     maxHorizontalSpeed = _max_horizontal_speed(U_batch, Nx, Ng,
-                                              parallel=parallel)
+                                               parallel=parallel)
 
     # Lax-Friedrichs scheme
     # flux = 0.5 * (F_left + F_right) - 0.5 * maxSpeed * (U_right - U_left)
     # flux is calculated on each interface
     horizontalFlux = _horizontal_flux(U_batch, Nx, Ng, dy, maxHorizontalSpeed,
-                                     parallel=parallel)
+                                      parallel=parallel)
 
     # horizontalFlux is subtracted from the left and added to the right cells
     if parallel:
@@ -241,7 +241,7 @@ def _flux_batch(U, dx, dy, window=None, slicing_obj=None,
     # Lax-Friedrichs scheme
     # flux = 0.5 * (F_top + F_bottom) - 0.5 * maxSpeed * (U_bottom - U_top)
     verticalFlux = _vertical_flux(U_batch, Ny, Ng, dx, maxVerticalSpeed,
-                                 parallel=parallel)
+                                  parallel=parallel)
 
     # verticalFlux is subtracted from the top and added to the bottom cells
     if parallel:
