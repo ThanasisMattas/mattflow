@@ -87,10 +87,10 @@ def drop(heights_list, cx, cy, drops_count=None):
         heights_list (array)   :  the 0th state variable, U[0, :, :]
         cx (array)             :  centers of the cells along the x axis
         cy (array)             :  centers of the cells along the y axis
-        drops_count(int) :  drop counter
+        drops_count(int)       :  drop counter
 
     Returns:
-        heights_list(2D array)  : drop is added to the input heights_list
+        heights_list(2D array) : drop is added to the input heights_list
     """
     # multiply with 3 / 2 for a small stone droping
     #          with 1 / 5 for a water drop with a considerable momentum build
