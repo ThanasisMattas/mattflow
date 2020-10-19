@@ -174,8 +174,10 @@ def _saveAni(ani, fps, dpi):
             ani.save(file_name + '.' + conf.VID_FORMAT,
                      writer=FFwriter, dpi=dpi)
 
-            logger.log('Animation saved as: ' + file_name + '.'
-                       + conf.VID_FORMAT + ' | fps: ' + str(fps))
+            # log only if a log file is already initialzed
+            if logger.find_log() and logger.is_open(logger.find_log()):
+                logger.log('Animation saved as: ' + file_name + '.'
+                           + conf.VID_FORMAT + ' | fps: ' + str(fps))
 
             # convert to a lighter gif
             cmd = 'ffmpeg -i ' + file_name + '.' + conf.VID_FORMAT + ' -vf '   \
@@ -183,8 +185,9 @@ def _saveAni(ani, fps, dpi):
                   '[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -hide_banner' \
                   ' -loglevel panic -loop 0 ' + file_name + '.gif'
             os.system(cmd)
-            logger.log('Animation saved as: ' + file_name + '.gif'
-                       + ' | fps: ' + str(fps))
+            if logger.find_log() and logger.is_open(logger.find_log()):
+                logger.log('Animation saved as: ' + file_name + '.gif'
+                           + ' | fps: ' + str(fps))
         except FileNotFoundError:
             logger.log('Configure PATH_TO_FFMPEG')
     elif conf.SAVE_ANIMATION is False:

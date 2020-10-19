@@ -36,7 +36,7 @@ def log(state):
     """
     # log file object, if there is one
     # False , if ther isn't
-    log_file = _find_log()
+    log_file = find_log()
 
     # check if a log file is already created or if the log file is from previous
     # simulation
@@ -78,7 +78,7 @@ def log_timestep(it, time):
         log(spaces + str(it) + "    {:0.3f}".format(time))
 
 
-def _find_log():
+def find_log():
     """finds an open log file, if any, at the working directory
     (1st encountered)
 
@@ -100,7 +100,7 @@ def _find_log():
 def close():
     """closes the log file, appending '_done' to the file name"""
     try:
-        log_file = _find_log()
+        log_file = find_log()
         if log_file:
             # append blank line
             with open(log_file, 'a') as fa:
