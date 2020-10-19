@@ -21,6 +21,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 from mattflow import config as conf
 from mattflow import logger
+from mattflow import utils
 
 
 def _plotBasin(cx, cy, sub):
