@@ -209,6 +209,7 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
         fig (figure)        : activated plt.figure
         sub (subplot)       : Axes3D subplot object
         time_array (list)   : holds the iter-wise times
+        ani_title (str)     : to be formated with the frame_number
     """
     if conf.PLOTTING_STYLE == 'water':
         plot[0].remove()
@@ -252,10 +253,10 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
                                      rstride=2, cstride=2, linewidth=1)
 
     # frame title
-    if time_array is not None:
-        plt.title(ani_title.format(time_array[frame_number]))
-    else:
+    if time_array is None:
         plt.title(ani_title)
+    else:
+        plt.title(ani_title.format(time_array[frame_number]))
     sub.title.set_position([0.51, 0.83])
 
 
@@ -293,30 +294,28 @@ def createAnimation(U_array, cx, cy, time_array=None):
     sub.title.set_position([0.51, 0.83])
     plt.rcParams.update({'font.size': 20})
 
-    # initialization plot {
+    # initialization plot
     if conf.PLOTTING_STYLE == 'water':
         plot = [sub.plot_surface(X, Y, Z[0],
-                rstride=1, cstride=1, linewidth=0,
-                color=(0.251, 0.643, 0.875, 0.9),
-                shade=True, antialiased=False)]
+                                 rstride=1, cstride=1, linewidth=0,
+                                 color=(0.251, 0.643, 0.875, 0.9),
+                                 shade=True, antialiased=False)]
     elif conf.PLOTTING_STYLE == 'contour':
         plot = [sub.contour3D(X, Y, Z[0], 150, cmap='ocean',
-                vmin=0.5, vmax=1.5)]
+                              vmin=0.5, vmax=1.5)]
     elif conf.PLOTTING_STYLE == 'wireframe':
         plot = [sub.plot_wireframe(X, Y, Z[0], rstride=2, cstride=2,
                                    linewidth=1)]
     else:
         logger.log("Configure PLOTTING_STYLE | options: 'water', 'contour',",
                    "'wireframe'")
-    time_array = None
-    if time_array is not None:
-        ani_title = "time: {0:.3f}"
-        plt.title(ani_title.format(time_array[0]))
-    else:
+    if time_array is None:
         ani_title = ("mesh: {0}x{1}\tsolver: ".format(conf.Nx, conf.Ny)
                      + conf.SOLVER_TYPE)
         plt.title(ani_title)
-    # }
+    else:
+        ani_title = "time: {0:.3f}"
+        plt.title(ani_title.format(time_array[0]))
 
     # render the basin that contains the fluid
     _plotBasin(cx, cy, sub)
