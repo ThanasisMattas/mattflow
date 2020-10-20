@@ -197,7 +197,7 @@ def _saveAni(ani, fps, dpi):
         logger.log("Configure SAVE_ANIMATION | Options: True, False")
 
 
-def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
+def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
     """plots a single frame
 
     used from FuncAnimation to iteratively create a timelapse animation
@@ -253,10 +253,9 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array):
 
     # frame title
     if time_array is not None:
-        plt.title('time: {0:.3f}'.format(time_array[frame_number]))
+        plt.title(ani_title.format(time_array[frame_number]))
     else:
-        plt.title("mesh: {0}x{1}\tsolver: ".format(conf.Nx, conf.Ny)
-                  + conf.SOLVER_TYPE)
+        plt.title(ani_title)
     sub.title.set_position([0.51, 0.83])
 
 
@@ -268,15 +267,14 @@ def createAnimation(U_array, cx, cy, time_array=None):
         cy (array)        : y axis cell centers
         time_array (list) : holds the iter-wise times
     """
-    fps = conf.FPS
-    dpi = conf.DPI
-    figsize = conf.FIGSIZE
-
     # resolution = figsize * dpi
     # --------------------------
     # example:
     # figsize = (9.6, 5.4), dpi=200
     # resolution: 1920x1080 (1920/200=9.6)
+    fps = conf.FPS
+    dpi = conf.DPI
+    figsize = conf.FIGSIZE
 
     # total frames
     frames = len(U_array)
@@ -310,11 +308,14 @@ def createAnimation(U_array, cx, cy, time_array=None):
     else:
         logger.log("Configure PLOTTING_STYLE | options: 'water', 'contour',",
                    "'wireframe'")
+    time_array = None
     if time_array is not None:
-        plt.title('time: {0:.3f}'.format(time_array[0]))
+        ani_title = "time: {0:.3f}"
+        plt.title(ani_title.format(time_array[0]))
     else:
-        plt.title("mesh: {0}x{1}\tsolver: ".format(conf.Nx, conf.Ny)
-                  + conf.SOLVER_TYPE)
+        ani_title = ("mesh: {0}x{1}\tsolver: ".format(conf.Nx, conf.Ny)
+                     + conf.SOLVER_TYPE)
+        plt.title(ani_title)
     # }
 
     # render the basin that contains the fluid
@@ -323,7 +324,7 @@ def createAnimation(U_array, cx, cy, time_array=None):
     # generate the animation
     ani = animation.FuncAnimation(
         fig, _update_plot, frames,
-        fargs=(X, Y, Z, plot, fig, sub, time_array),
+        fargs=(X, Y, Z, plot, fig, sub, time_array, ani_title),
         interval=1000 / fps,
         repeat=True
     )
