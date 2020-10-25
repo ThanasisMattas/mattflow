@@ -229,8 +229,6 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
         plt.subplots_adjust(left=0, bottom=0, right=1, top=1,
                             wspace=0, hspace=0)
         fig.gca().set_zlim([-0.5, 4])
-        plt.title('time: {0:.3f}'.format(time_array[frame_number]))
-        sub.title.set_position([0.51, 0.80])
         plt.axis('off')
         plot[0] = sub.contour3D(X, Y, Z[frame_number], 120, cmap='ocean',
                                 vmin=0.5, vmax=1.5)
