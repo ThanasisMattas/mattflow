@@ -200,8 +200,8 @@ def simulate():
 
     # This will hold the step-wise solutions for the post-processing animation.
     # (save a frame every 3 iters)
-    U_array = np.zeros([conf.MAX_ITERS // 3, conf.Nx, conf.Ny])
-    U_array[0] = U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
+    heights_array = np.zeros([conf.MAX_ITERS // 3, conf.Nx, conf.Ny])
+    heights_array[0] = U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
 
     if conf.SAVE_DS_FOR_ML:
         dataset_name = "mattflow_data_{0}x{1}x{2}x{3}".format(
@@ -259,7 +259,7 @@ def simulate():
         elif not conf.DAT_WRITING_MODE:
             # Append current frame to the list, to be animated at post-processing
             if not (it - 1) % 3:
-                U_array[(it - 1) // 3] = \
+                heights_array[(it - 1) // 3] = \
                     U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
                 # time * 10 is insertd, because space is scaled about x10
                 time_array[(it - 1) // 3] = time * 10
@@ -276,4 +276,4 @@ def simulate():
     if conf.DUMP_MEMMAP and conf.WORKERS > 1:
         utils.delete_memmap()
 
-    return U_array, time_array
+    return heights_array, time_array

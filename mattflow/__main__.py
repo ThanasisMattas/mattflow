@@ -40,10 +40,10 @@ def main():
                         max_y=1.4, min_y=-1.4)
 
     # Solution
-    U_array, time_array = mattflow_solver.simulate()
+    heights_array, time_array = mattflow_solver.simulate()
 
     # Post-processing
-    mattflow_post.createAnimation(U_array, time_array)
+    mattflow_post.createAnimation(heights_array, time_array)
 
     # Close the log file
     logger.close()
