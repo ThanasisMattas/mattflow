@@ -24,6 +24,7 @@ from mattflow import flux
 from mattflow import initializer
 from mattflow import logger
 from mattflow import mattflow_post
+from mattflow.utils import time_this
 
 
 def solve(U, delta_t, it, drops_count):
@@ -172,6 +173,7 @@ def dt(U):
     return np.min(dt) * conf.COURANT
 
 
+@time_this
 def simulate():
     time = 0
     dx = conf.dx
