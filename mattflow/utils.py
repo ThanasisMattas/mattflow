@@ -12,12 +12,14 @@
 """Provides some helper functions"""
 
 from datetime import timedelta
+from functools import wraps
 import os
 import shutil
+from timeit import default_timer as timer
 
 import numpy as np
 
-from mattflow import config as conf
+from mattflow import config as conf, logger
 
 
 def cell_centers():
@@ -69,3 +71,28 @@ def create_child_dir(dirname):
           os.mkdir(os.path.join(os.getcwd(), dirname))
   except OSError:
       print("Unable to create ./" + dirname + " directory")
+
+
+def time_this(f):
+    """function timer decorator
+
+    - Uses wraps to preserve the metadata of the decorated function
+      (__name__ and __doc__)
+    - logs the duration
+    - prints the duration
+
+    Args:
+        f(funtion)      : the function to be decorated
+
+    Returns:
+        wrap (function) : returns the result of the decorated function
+    """
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        start = timer()
+        result = f(*args, **kwargs)
+        end = timer()
+        logger.log_duration(start, end, f.__name__)
+        print_duration(start, end, f.__name__)
+        return result
+    return wrap

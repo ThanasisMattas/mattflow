@@ -22,6 +22,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from mattflow import config as conf
 from mattflow import logger
 from mattflow import utils
+from mattflow.utils import time_this
 
 
 def _plotBasin(cx, cy, sub):
@@ -260,6 +261,7 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
     sub.title.set_position([0.51, 0.83])
 
 
+@time_this
 def createAnimation(U_array, cx, cy, time_array=None):
     """generates and saves a timelapse of the simulation
 

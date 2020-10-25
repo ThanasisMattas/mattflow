@@ -17,8 +17,6 @@
                         """
 
 
-from timeit import default_timer as timer
-
 import numpy as np
 
 from mattflow import boundaryConditionsManager
@@ -29,12 +27,11 @@ from mattflow import logger
 from mattflow import mattflow_post
 from mattflow import mattflow_solver
 from mattflow import utils
+from mattflow.utils import time_this
 
 
+@time_this
 def main():
-
-    start = timer()
-
     # Pre-processing {
     #
     # Spatial discretization steps (structured/Cartesian mesh)
@@ -109,22 +106,8 @@ def main():
     if conf.DUMP_MEMMAP and conf.WORKERS > 1:
         utils.delete_memmap()
 
-    # Duration of the solution
-    solution_end = timer()
-    logger.log_duration(start, solution_end, "solution")
-    utils.print_duration(start, solution_end, "solution")
-
     # Post-processing
     mattflow_post.createAnimation(U_array, cx, cy, time_array)
-
-    # Post-processing duration
-    end = timer()
-    logger.log_duration(solution_end, end, "post-processing")
-    utils.print_duration(solution_end, end, "post-processing")
-
-    # Total duration
-    logger.log_duration(start, end, "total")
-    utils.print_duration(start, end, "total")
 
     # Close the log file
     logger.close()
