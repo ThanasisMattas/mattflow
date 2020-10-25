@@ -216,8 +216,7 @@ def simulate():
         U_dataset[0] = U
 
     # This will hold the step-wise time for the post-processing animation.
-    # (time * 10 is appended, because space is scaled about x10)
-    time_array = np.array([0])
+    time_array = np.zeros(conf.MAX_ITERS // 3)
 
     if conf.ITERS_BETWEEN_DROPS_MODE in ["custom", "random"]:
         # list with the simulation iterationss at which a drop is going to fall
@@ -240,7 +239,6 @@ def simulate():
         time += delta_t
         if time > conf.STOPPING_TIME:
             break
-        time_array = np.hstack((time_array, [time * 10]))
 
         # Apply boundary conditions (reflective)
         U = boundaryConditionsManager.updateGhostCells(U)
@@ -263,6 +261,8 @@ def simulate():
             if not (it - 1) % 3:
                 U_array[(it - 1) // 3] = \
                     U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
+                # time * 10 is insertd, because space is scaled about x10
+                time_array[(it - 1) // 3] = time * 10
             if conf.SAVE_DS_FOR_ML:
                 U_dataset[it] = U
         else:
