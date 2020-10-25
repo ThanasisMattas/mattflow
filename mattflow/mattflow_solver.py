@@ -66,7 +66,7 @@ def solve(U,
     # 'drops': specified number of drops are generated at specified frequency
     elif conf.MODE == 'drops':
         if conf.ITERS_BETWEEN_DROPS_MODE == "fixed":
-            drop_condition = (it % conf.FIXED_ITERS_TO_NEXT_DROP == 0
+            drop_condition = (it % conf.FIXED_ITERS_BETWEEN_DROPS == 0
                               and drops_count < conf.MAX_N_DROPS)
         else:  # conf.ITERS_TO_NEXT_DROP_MODE in ["custom", "random"]
             drop_condition = (it == next_drop_it
