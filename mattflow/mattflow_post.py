@@ -262,11 +262,11 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
 
 
 @time_this
-def createAnimation(U_array, time_array=None):
+def createAnimation(heights_array, time_array=None):
     """generates and saves a timelapse of the simulation
 
-        U_array (list)    : list of iter-wise solutions
-        time_array (list) : holds the iter-wise times
+        heights_array (list) :  list of iter-wise heights solutions
+        time_array (list)    :  holds the iter-wise times
     """
     # resolution = figsize * dpi
     # --------------------------
@@ -278,11 +278,11 @@ def createAnimation(U_array, time_array=None):
     figsize = conf.FIGSIZE
 
     # total frames
-    frames = len(U_array)
+    frames = len(heights_array)
 
     # X, Y, Z
     X, Y = np.meshgrid(conf.CX[conf.Ng: -conf.Ng], conf.CY[conf.Ng: -conf.Ng])
-    Z = U_array
+    Z = heights_array
 
     # plot configuration
     fig = plt.figure(figsize=figsize, dpi=dpi)
