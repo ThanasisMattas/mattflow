@@ -17,6 +17,7 @@ import random
 
 import numpy as np
 
+from mattflow import boundaryConditionsManager
 from mattflow import config as conf
 from mattflow import dat_writer
 from mattflow import flux
@@ -169,3 +170,70 @@ def dt(U):
     dt_y = conf.dy / (np.abs(U[2] / U[0]) + np.sqrt(np.abs(9.81 * U[0])))
     dt = 1.0 / (1.0 / dt_x + 1.0 / dt_y)
     return np.min(dt) * conf.COURANT
+
+
+def simulate():
+    time = 0
+    dx = conf.dx
+    dy = conf.dy
+
+    # Initialization
+    logger.log('Initialization...')
+    U = initializer.initialize()
+    drops_count = 1
+
+    # This will hold the step-wise solutions for the post-processing animation.
+    # (save a frame every 3 iters)
+    U_array = np.zeros([conf.MAX_ITERS // 3, conf.Nx, conf.Ny])
+    U_array[0] = U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
+
+    # This will hold the step-wise time for the post-processing animation.
+    # (time * 10 is appended, because space is scaled about x10)
+    time_array = np.array([0])
+
+    for it in range(1, conf.MAX_ITERS):
+
+        # Time discretization step (CFL condition)
+        delta_t = dt(U)
+
+        # Update current time
+        time += delta_t
+        if time > conf.STOPPING_TIME:
+            break
+        time_array = np.hstack((time_array, [time * 10]))
+
+        # Apply boundary conditions (reflective)
+        U = boundaryConditionsManager.updateGhostCells(U)
+
+        # Numerical iterative scheme
+        U, drops_count = solve(U, delta_t, it, drops_count)
+
+        # write dat | default: False
+        if conf.DAT_WRITING_MODE:
+            dat_writer.writeDat(
+                U[0, conf.Ng: conf.Ny + conf.Ng, conf.Ng: conf.Nx + conf.Ng],
+                time, it
+            )
+            mattflow_post.plotFromDat(time, it)
+        elif not conf.DAT_WRITING_MODE:
+            # Append current frame to the list, to be animated at post-processing
+            if not (it - 1) % 3:
+                try:
+                    U_array[(it - 1) // 3] = \
+                        U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
+                except IndexError:
+                    pass
+        else:
+            logger.log("Configure DAT_WRITING_MODE | Options: True, False")
+
+        logger.log_timestep(it, time)
+    #
+    # }
+
+    # clean-up memap
+    if conf.DUMP_MEMMAP and conf.WORKERS > 1:
+        utils.delete_memmap()
+
+    return U_array, time_array
+
+
