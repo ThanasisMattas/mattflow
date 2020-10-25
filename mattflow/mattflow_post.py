@@ -125,7 +125,7 @@ def plotFromDat(time, it):
 
     fig.gca().set_zlim([-0.5, 4])
     plt.title('time: {0:.3f}'.format(time))
-    sub.title.set_position([0.51, 0.80])
+    sub.title.set_position([0.49, 0.80])
     plt.axis('off')
     # sub.view_init(50, 45)
 
@@ -245,13 +245,20 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
         plot[0] = sub.plot_wireframe(X, Y, Z[frame_number],
                                      rstride=2, cstride=2, linewidth=1)
 
+    # reverse engineer the iteration
+    it = (
+        frame_number
+        + ((frame_number // conf.CONSECUTIVE_FRAMES)
+           * (conf.FRAME_SAVE_FREQ - conf.CONSECUTIVE_FRAMES))
+    )
+
     # frame title
     if time_array is None:
         plt.title(ani_title, y=0.8, fontsize=20)
     else:
-        plt.title(ani_title.format(time_array[frame_number]),
+        plt.title(ani_title.format(time_array[frame_number], it),
                   y=0.8, fontsize=20)
-    sub.title.set_position([0.51, 0.80])
+    sub.title.set_position([0.49, 0.80])
 
 
 @time_this
@@ -289,9 +296,9 @@ def createAnimation(U_array, time_array=None):
                      + conf.SOLVER_TYPE)
         plt.title(ani_title)
     else:
-        ani_title = "time: {0:.3f}"
-        plt.title(ani_title.format(time_array[0]), y=0.8, fontsize=20)
-    sub.title.set_position([0.51, 0.80])
+        ani_title = "time: {0:.3f}    iter: {1}"
+        plt.title(ani_title.format(time_array[0], 0), y=0.8, fontsize=20)
+    sub.title.set_position([0.49, 0.80])
     plt.rcParams.update({'font.size': 20})
 
     # initialization plot
