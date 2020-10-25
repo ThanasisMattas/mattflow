@@ -63,7 +63,7 @@ CY = None
 #
 # Ending conditions of the simulation
 STOPPING_TIME = 3
-MAX_ITERS = 640
+MAX_ITERS = 700
 
 # Number of workers for multiprocessing
 WORKERS = 1
@@ -101,18 +101,22 @@ SURFACE_LEVEL = 1
 # 1. 'rain'       : random drops
 MODE = 'drops'
 
-# Number of drops
-N_DROPS = 5
+# Default max number of drops
+# (it will be overwriten if ITERS_BETWEEN_DROPS_MODE in ["random", "custom"])
+MAX_N_DROPS = 5
 
 # Number of iterations between drops
-FIXED_ITERS_BETWEEN_DROPS = False
-FIXED_ITERS_TO_NEXT_DROP = 105
-ITERS_TO_NEXT_DROP = [0, 80, 90, 130, 110, 60, 120, 120, 150, 100, 130, 120, 120, 100]
-ITERS_TO_NEXT_DROP = np.cumsum(ITERS_TO_NEXT_DROP)
+# ----------------------------------
+# Options:
+# 1. 'fixed'  : fixed every 105 iters (default)
+# 2. 'custom' : periodically selected from a list of 10 custom iter intervals
+# 3. 'random' : between 50 - 200 iters
+ITERS_BETWEEN_DROPS_MODE = "fixed"
 
+FIXED_ITERS_TO_NEXT_DROP = 105
+CUSTOM_ITERS_BETWEEN_DROPS = [120, 150, 140, 130, 210, 60, 180, 220, 140, 130]
 
 RANODM_DROP_CENTERS = True
-
 # Define x, y drop centers (normalized to one)
 drop_x_centers = [0, -0.56, 0.28, -0.25, 0.48, -0.42, 0.90, 0.24, -0.78, -0.2, 0.84]
 drop_y_centers = [0, 0.25, 0.48, -0.24, -0.59, -0.64, 0.05, -0.40, 0.63, -0.39, -0.40]

@@ -14,6 +14,7 @@
 from datetime import timedelta
 from functools import wraps
 import os
+import random
 import shutil
 from timeit import default_timer as timer
 
@@ -117,3 +118,25 @@ def preprocessing(Nx, Ny, Ng, max_x, min_x, max_y, min_y):
     conf.COURANT = min(0.9, 0.015 / min(conf.dx, conf.dy))
     conf.drop_x_centers = [x * max_x for x in conf.drop_x_centers]
     conf.drop_x_centers = [y * max_y for y in conf.drop_y_centers]
+
+
+def drop_iters_list():
+    """list with the simulation iters at which a drop is going to fall"""
+    drop_iters = []
+    iters_cumsum = 0
+    i = 0
+    if conf.ITERS_BETWEEN_DROPS_MODE == "custom":
+        while iters_cumsum <= conf.MAX_ITERS:
+            iters_cumsum += conf.CUSTOM_ITERS_BETWEEN_DROPS[i % 10]
+            drop_iters.append(iters_cumsum)
+            i += 1
+    elif conf.ITERS_BETWEEN_DROPS_MODE == "random":
+        while iters_cumsum <= conf.MAX_ITERS:
+            iters_cumsum += random.randint(50, 200)
+            drop_iters.append(iters_cumsum)
+    else:
+        logger.log("Configure ITERS_BETWEEN_DROPS_MODE | options:"
+                   " 'fixed', 'custom', 'random'")
+    # Max number of drops
+    conf.MAX_N_DROPS = len(drop_iters)
+    return drop_iters

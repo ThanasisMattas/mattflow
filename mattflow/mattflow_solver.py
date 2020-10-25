@@ -23,23 +23,33 @@ from mattflow import (boundaryConditionsManager,
                       flux,
                       initializer,
                       logger,
-                      mattflow_post)
+                      mattflow_post,
+                      utils)
 from mattflow.utils import time_this
 
 
-def solve(U, delta_t, it, drops_count):
+def solve(U,
+          delta_t,
+          it,
+          drops_count,
+          drop_its_iterator,
+          next_drop_it):
     """evaluates the state variables (h, hu, hv) at a new time-step
 
     it can be used in a for/while loop, iterating through each time-step
 
     Args:
-        U (3D array)      :  the state variables, populating a x,y grid
-        delta_t (float)   :  time discretization step
-        it (int)          :  current iteration
-        drops_count (int) :  number of drops been generated
+        U (3D array)       :  the state variables, populating a x,y grid
+        delta_t (float)    :  time discretization step
+        it (int)           :  current iteration
+        drops_count (int)  :  number of drops been generated
+        drop_its_iterator (iterator)
+                           :  iterator of the drop_its list (the list with
+                              the iters at which a new drop falls)
+        next_drop_it (int) :  the next iteration at which drop will fall
 
     Returns:
-        U, drops
+        U, drops_count, drop_its_iterator, next_drop_it
     """
     # Retrieve the mesh
     Ng = conf.Ng
@@ -54,15 +64,18 @@ def solve(U, delta_t, it, drops_count):
         pass
     # 'drops': specified number of drops are generated at specified frequency
     elif conf.MODE == 'drops':
-        if conf.FIXED_ITERS_BETWEEN_DROPS:
+        if conf.ITERS_BETWEEN_DROPS_MODE == "fixed":
             drop_condition = (it % conf.FIXED_ITERS_TO_NEXT_DROP == 0
-                              and drops_count < conf.N_DROPS)
-        else:
-            drop_condition = (it == conf.ITERS_TO_NEXT_DROP[drops_count]
-                              and drops_count < conf.N_DROPS)
+                              and drops_count < conf.MAX_N_DROPS)
+        else:  # conf.ITERS_TO_NEXT_DROP_MODE in ["custom", "random"]
+            drop_condition = (it == next_drop_it
+                              and drops_count < conf.MAX_N_DROPS)
+
         if drop_condition:
             U[0, :, :] = initializer.drop(U[0, :, :], drops_count + 1)
             drops_count += 1
+            if conf.ITERS_BETWEEN_DROPS_MODE in ["custom", "random"]:
+                next_drop_it = next(drop_its_iterator)
     # 'rain': random number of drops are generated at random frequency
     elif conf.MODE == 'rain':
         if it % random.randrange(1, 15) == 0:
@@ -89,7 +102,7 @@ def solve(U, delta_t, it, drops_count):
     else:
         logger.log("Configure SOLVER_TYPE | Options: 'Lax-Friedrichs Riemann',",
                    "' 2-stage Runge-Kutta'")
-    return U, drops_count
+    return U, drops_count, drop_its_iterator, next_drop_it
 
     '''
     # Experimenting on the finite differences form of the MacCormack solver
@@ -193,6 +206,18 @@ def simulate():
     # (time * 10 is appended, because space is scaled about x10)
     time_array = np.array([0])
 
+    if conf.ITERS_BETWEEN_DROPS_MODE in ["custom", "random"]:
+        # list with the simulation iterationss at which a drop is going to fall
+        drop_its = utils.drop_iters_list()
+        drop_its_iterator = iter(drop_its)
+        # the iteration at which the next drop will fall
+        next_drop_it = next(drop_its_iterator)
+        # print("drop_its tail(10): " + str(drop_its[-10:]))
+        # print("drop_its length: {}".format(len(drop_its)))
+    else:
+        drop_its_iterator = None
+        next_drop_it = None
+
     for it in range(1, conf.MAX_ITERS):
 
         # Time discretization step (CFL condition)
@@ -208,7 +233,10 @@ def simulate():
         U = boundaryConditionsManager.updateGhostCells(U)
 
         # Numerical iterative scheme
-        U, drops_count = solve(U, delta_t, it, drops_count)
+        U, drops_count, drop_its_iterator, next_drop_it = solve(
+            U, delta_t, it, drops_count,
+            drop_its_iterator, next_drop_it
+        )
 
         # write dat | default: False
         if conf.DAT_WRITING_MODE:
@@ -237,5 +265,3 @@ def simulate():
         utils.delete_memmap()
 
     return U_array, time_array
-
-
