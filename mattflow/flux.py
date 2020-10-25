@@ -172,7 +172,7 @@ def _vertical_flux(U, Ny, Ng, dx, maxVerticalSpeed, parallel=True):
     return v_flux
 
 
-def _flux_batch(U, dx, dy, window=None, slicing_obj=None,
+def _flux_batch(U, window=None, slicing_obj=None,
                 flux_out=None, idx=None, parallel=True):
     """evaluates the total flux that enters or leaves a cell, using the \
     Lax-Friedrichs scheme
@@ -182,8 +182,6 @@ def _flux_batch(U, dx, dy, window=None, slicing_obj=None,
 
     Args:
         U (3D array)        : the state variables 3D matrix
-        dx (float)          : x axis discretiazation step
-        dy (float)          : y axis discretiazation step
         window (int)        : the effective width of a slice
                               (default None, in case of single-processing)
         slicing_obj (slice) : slice of the domain (1 + window + 1)
@@ -201,6 +199,8 @@ def _flux_batch(U, dx, dy, window=None, slicing_obj=None,
     Nx = conf.Nx
     Ny = conf.Ny
     Ng = conf.Ng
+    dx = conf.dx
+    dy = conf.dy
 
     if parallel:
         x_limit = 1
@@ -261,7 +261,7 @@ def _flux_batch(U, dx, dy, window=None, slicing_obj=None,
         return total_flux[:, Ng: -Ng, x_limit: -x_limit]
 
 
-def flux(U, dx, dy):
+def flux(U):
     """evaluates the total flux that enters or leaves a cell, using the \
     Lax-Friedrichs scheme
 
@@ -269,21 +269,22 @@ def flux(U, dx, dy):
 
     Args:
         U (3D array)   : the state variables 3D matrix
-        dx (float)     : x axis discretiazation step
-        dy (float)     : y axis discretiazation step
 
     Returns:
         total_flux (3D array)
     """
-    # Although joblib.Parallel can work single-processing, passing the whole
-    # state-matrix directly to _flux_batch() is much faster
-    if conf.WORKERS == 1:
-        return _flux_batch(U, dx, dy, parallel=False)
-
     Nx = conf.Nx
     Ny = conf.Ny
     Ng = conf.Ng
+    dx = conf.dx
+    dy = conf.dy
     workers = conf.WORKERS
+
+    # Although joblib.Parallel can work single-processing, passing the whole
+    # state-matrix directly to _flux_batch() is much faster
+    if workers == 1:
+        return _flux_batch(U, parallel=False)
+
     # slice the column dimention (x) to the number of workers
     # (devide-ceil)
     window = -(-(Nx + 2 * Ng) // workers)
@@ -308,14 +309,14 @@ def flux(U, dx, dy):
                              mode="w+")
 
         Parallel(n_jobs=workers)(
-            delayed(_flux_batch)(U, dx, dy, window, slicing_obj, flux_out, idx)
+            delayed(_flux_batch)(U, window, slicing_obj, flux_out, idx)
             for idx, slicing_obj in enumerate(slices)
         )
     else:
         flux_out = np.zeros([len(slices), 3, Ny, window])
 
         flux_out = Parallel(n_jobs=workers)(
-            delayed(_flux_batch)(U, dx, dy, window, slicing_obj)
+            delayed(_flux_batch)(U, window, slicing_obj)
             for slicing_obj in slices
         )
 

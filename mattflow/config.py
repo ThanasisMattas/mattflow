@@ -30,6 +30,8 @@ import os
 
 import numpy as np
 
+from mattflow import utils
+
 
 # Pre-processing configuration {
 #
@@ -53,6 +55,8 @@ dy = (MAX_Y - MIN_Y) / Ny
 #
 # }
 
+# cell centers along the x and y axes
+CX, CY = utils.cell_centers()
 
 # Solution configuration {
 #

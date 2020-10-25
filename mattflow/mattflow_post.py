@@ -25,19 +25,17 @@ from mattflow import utils
 from mattflow.utils import time_this
 
 
-def _plotBasin(cx, cy, sub):
+def _plotBasin(sub):
     """plots the basin that contains the fluid
 
     Args:
-        cx (array)    : x axis cell centers
-        cy (array)    : y axis cell centers
         sub (subplot) : Axes3D subplot object
     """
     if conf.SHOW_BASIN is True:
         # make basin a bit wider, because water appears to be out of the basin
         # because of the perspective mode
-        X_bas, Y_bas = np.meshgrid(cx[conf.Ng - 1: conf.Nx + 2],
-                                   cy[conf.Ng - 1: conf.Ny + 2])
+        X_bas, Y_bas = np.meshgrid(conf.CX[conf.Ng - 1: conf.Nx + 2],
+                                   conf.CY[conf.Ng - 1: conf.Ny + 2])
         # BASIN
         BASIN = np.zeros((conf.Ny + 2 * conf.Ng, conf.Nx + 2 * conf.Ng))
         # left-right walls
@@ -77,14 +75,12 @@ def _dataFromDat(it):
     return X, Y, Z, Nx, Ny
 
 
-def plotFromDat(time, it, cx, cy):
+def plotFromDat(time, it):
     """creates and saves a frame as png, reading data from a dat file
 
     Args:
         time (float) : current time
         it (int)     : current itereration
-        cx (array)   : cell centers at x axis
-        cy (array)   : cell centers at y axis
     """
     # create ./session directory for saving the results
     utils.create_child_dir("session")
@@ -136,7 +132,7 @@ def plotFromDat(time, it, cx, cy):
     # sub.view_init(50, 45)
 
     # render the basin that contains the fluid
-    _plotBasin(cx, cy, sub)
+    _plotBasin(sub)
 
     # save
     zeros_left = (4 - len(str(it))) * '0'
@@ -262,12 +258,10 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
 
 
 @time_this
-def createAnimation(U_array, cx, cy, time_array=None):
+def createAnimation(U_array, time_array=None):
     """generates and saves a timelapse of the simulation
 
         U_array (list)    : list of iter-wise solutions
-        cx (array)        : x axis cell centers
-        cy (array)        : y axis cell centers
         time_array (list) : holds the iter-wise times
     """
     # resolution = figsize * dpi
@@ -283,7 +277,7 @@ def createAnimation(U_array, cx, cy, time_array=None):
     frames = len(U_array)
 
     # X, Y, Z
-    X, Y = np.meshgrid(cx[conf.Ng: -conf.Ng], cy[conf.Ng: -conf.Ng])
+    X, Y = np.meshgrid(conf.CX[conf.Ng: -conf.Ng], conf.CY[conf.Ng: -conf.Ng])
     Z = U_array
 
     # plot configuration
@@ -320,7 +314,7 @@ def createAnimation(U_array, cx, cy, time_array=None):
         plt.title(ani_title.format(time_array[0]))
 
     # render the basin that contains the fluid
-    _plotBasin(cx, cy, sub)
+    _plotBasin(sub)
 
     # generate the animation
     ani = animation.FuncAnimation(

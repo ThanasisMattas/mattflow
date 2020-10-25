@@ -44,15 +44,13 @@ def _variance(mode):
     return variance[mode]
 
 
-def _gaussian(variance, cx, cy, drops_count):
+def _gaussian(variance, drops_count):
     '''produces a bivariate gaussian distribution of a certain variance
 
     formula: amplitude * np.exp(-exponent)
 
     Args:
         variance (float) :  target variance of the distribution
-        cx (array)       :  centers of the cells along the x axis
-        cy (array)       :  centers of the cells along the y axis
         drops_count(int) :  drop counter
 
     Returs:
@@ -68,7 +66,7 @@ def _gaussian(variance, cx, cy, drops_count):
         DROP_CENTER_Y = conf.drop_y_centers[drops_count]
 
     # grid of the cell centers
-    CX, CY = np.meshgrid(cx, cy)
+    CX, CY = np.meshgrid(conf.CX, conf.CY)
 
     amplitude = 1 / np.sqrt(2 * np.pi * variance)
     exponent = \
@@ -78,15 +76,13 @@ def _gaussian(variance, cx, cy, drops_count):
     return gaussian_distribution
 
 
-def drop(heights_list, cx, cy, drops_count=None):
+def drop(heights_list, drops_count=None):
     """Generates a drop
 
     Drop is modeled as a gaussian distribution
 
     Args:
         heights_list (array)   :  the 0th state variable, U[0, :, :]
-        cx (array)             :  centers of the cells along the x axis
-        cy (array)             :  centers of the cells along the y axis
         drops_count(int)       :  drop counter
 
     Returns:
@@ -97,25 +93,21 @@ def drop(heights_list, cx, cy, drops_count=None):
     #          with 1 / 8 for a soft water drop
     if conf.MODE == 'single drop' or conf.MODE == 'drops':
         variance = _variance("single drop")
-        heights_list += 3 / 2 * _gaussian(variance, cx, cy, drops_count)
+        heights_list += 3 / 2 * _gaussian(variance, drops_count)
     elif conf.MODE == 'rain':
         variance = _variance("rain")
-        heights_list += 1 / 8 * _gaussian(variance, cx, cy, drops_count)
+        heights_list += 1 / 8 * _gaussian(variance, drops_count)
     else:
         print("Configure MODE | options: 'single drop', 'drops', 'rain'")
     return heights_list
 
 
-def initialize(cx, cy):
+def initialize():
     """creates and initializes the state-variables-3D-matrix, U
 
     U[0]:  state varables [h, hu, hv], populating the x,y grid
     U[1]:  y dimention (rows)
     U[2]:  x dimention (columns)
-
-    Args:
-        cx (array)   :  centers of the cells along the x axis
-        cy (array)   :  centers of the cells along the y axis
 
     Returns
         U (3D array) :  state-variables-3D-matrix
@@ -126,14 +118,14 @@ def initialize(cx, cy):
                    conf.Nx + 2 * conf.Ng)))
 
     # 1st drop
-    U[0, :, :] = conf.SURFACE_LEVEL + drop(U[0, :, :], cx, cy, drops_count=1)
+    U[0, :, :] = conf.SURFACE_LEVEL + drop(U[0, :, :], drops_count=1)
 
     # write dat | default: False
     if conf.DAT_WRITING_MODE:
-        dat_writer.writeDat(U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng], cx, cy,
+        dat_writer.writeDat(U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng],
                             time=0, it=0)
         from mattflow import mattflow_post
-        mattflow_post.plotFromDat(time=0, it=0, cx=cx, cy=cy)
+        mattflow_post.plotFromDat(time=0, it=0)
     elif not conf.DAT_WRITING_MODE:
         pass
     else:

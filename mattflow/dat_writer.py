@@ -21,13 +21,11 @@ from mattflow import utils
 # file_name = str(datetime.now())[:19]
 # file_name = file_name[:10] + '_' + file_name[11:] + '.dat'
 
-def writeDat(hights_list, cx, cy, time, it):
+def writeDat(hights_list, time, it):
     """writes solution data to a dat file
 
     Args:
         hights_list (array)  : the 0th state variable, U[0, :, :]
-        cx (array)           : cell center along the x axis
-        cy (array)           : cell center along the y axis
         time (float)         : current time
         it (int)             : current iteration
     """
@@ -45,13 +43,13 @@ def writeDat(hights_list, cx, cy, time, it):
             for i in range(len(hights_list[0])):
                 # if-else used for comumn-wise alignment
                 fw.write(
-                    ("{0:.15f}".format(cx[i + conf.Ng])
-                     if cx[i + conf.Ng] < 0
-                     else ' ' + "{0:.15f}".format(cx[i + conf.Ng])) + ' '
+                    ("{0:.15f}".format(conf.CX[i + conf.Ng])
+                     if conf.CX[i + conf.Ng] < 0
+                     else ' ' + "{0:.15f}".format(conf.CX[i + conf.Ng])) + ' '
 
-                    + ("{0:.15f}".format(cy[j + conf.Ng])
-                       if cy[j + conf.Ng] < 0
-                       else ' ' + "{0:.15f}".format(cy[j + conf.Ng])) + ' '
+                    + ("{0:.15f}".format(conf.CY[j + conf.Ng])
+                       if conf.CY[j + conf.Ng] < 0
+                       else ' ' + "{0:.15f}".format(conf.CY[j + conf.Ng])) + ' '
 
                     + ("{0:.15f}".format(hights_list[j, i])
                        if hights_list[j, i] < 0

@@ -32,15 +32,6 @@ from mattflow.utils import time_this
 
 @time_this
 def main():
-    # Pre-processing {
-    #
-    # Spatial discretization steps (structured/Cartesian mesh)
-    dx = conf.dx
-    dy = conf.dy
-    # Cell centers on x and y dimensions
-    cx, cy = utils.cell_centers()
-    # }
-
     # Uncomment this to delete previous log, dat and png files (for debugging)
     # utils.delete_logs_dats_images_videos()
 
@@ -50,7 +41,7 @@ def main():
 
     # Initialization
     logger.log('Initialization...')
-    U = initializer.initialize(cx, cy)
+    U = initializer.initialize()
     drops_count = 1
 
     # This will hold the step-wise solutions for the post-processing animation.
@@ -65,7 +56,7 @@ def main():
     for it in range(1, conf.MAX_ITERS):
 
         # Time discretization step (CFL condition)
-        delta_t = mattflow_solver.dt(U, dx, dy)
+        delta_t = mattflow_solver.dt(U)
 
         # Update current time
         time += delta_t
@@ -77,16 +68,15 @@ def main():
         U = boundaryConditionsManager.updateGhostCells(U)
 
         # Numerical iterative scheme
-        U, drops_count = mattflow_solver.solve(U, dx, cx, dy, cy, delta_t,
-                                               it, drops_count)
+        U, drops_count = mattflow_solver.solve(U, delta_t, it, drops_count)
 
         # write dat | default: False
         if conf.DAT_WRITING_MODE:
             dat_writer.writeDat(
                 U[0, conf.Ng: conf.Ny + conf.Ng, conf.Ng: conf.Nx + conf.Ng],
-                cx, cy, time, it
+                time, it
             )
-            mattflow_post.plotFromDat(time, it, cx, cy)
+            mattflow_post.plotFromDat(time, it)
         elif not conf.DAT_WRITING_MODE:
             # Append current frame to the list, to be animated at post-processing
             if not (it - 1) % 3:
@@ -107,7 +97,7 @@ def main():
         utils.delete_memmap()
 
     # Post-processing
-    mattflow_post.createAnimation(U_array, cx, cy, time_array)
+    mattflow_post.createAnimation(U_array, time_array)
 
     # Close the log file
     logger.close()

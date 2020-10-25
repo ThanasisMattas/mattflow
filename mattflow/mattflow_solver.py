@@ -25,17 +25,13 @@ from mattflow import logger
 from mattflow import mattflow_post
 
 
-def solve(U, dx, cx, dy, cy, delta_t, it, drops_count):
+def solve(U, delta_t, it, drops_count):
     """evaluates the state variables (h, hu, hv) at a new time-step
 
     it can be used in a for/while loop, iterating through each time-step
 
     Args:
         U (3D array)      :  the state variables, populating a x,y grid
-        dx (float)        :  spatial discretization step on x axis
-        cx (array)        :  cell centers on x axis
-        dy (float)        :  spatial discretization step on y axis
-        cy (array)        :  cell centers on y axis
         delta_t (float)   :  time discretization step
         it (int)          :  current iteration
         drops_count (int) :  number of drops been generated
@@ -43,6 +39,12 @@ def solve(U, dx, cx, dy, cy, delta_t, it, drops_count):
     Returns:
         U, drops
     """
+    # Retrieve the mesh
+    Ng = conf.Ng
+    cx = conf.CX
+    cy = conf.CY
+    cellArea = conf.dx * conf.dy
+
     # Simulation mode
     # ---------------
     # 'single drop': handled at the initialization
@@ -57,35 +59,30 @@ def solve(U, dx, cx, dy, cy, delta_t, it, drops_count):
             drop_condition = (it == conf.ITERS_TO_NEXT_DROP[drops_count]
                               and drops_count < conf.N_DROPS)
         if drop_condition:
-            U[0, :, :] = initializer.drop(U[0, :, :], cx, cy, drops_count + 1)
+            U[0, :, :] = initializer.drop(U[0, :, :], drops_count + 1)
             drops_count += 1
     # 'rain': random number of drops are generated at random frequency
     elif conf.MODE == 'rain':
         if it % random.randrange(1, 15) == 0:
             for simultaneous_drops in range(random.randrange(1, 2)):
-                U[0, :, :] = initializer.drop(U[0, :, :], cx, cy)
+                U[0, :, :] = initializer.drop(U[0, :, :])
     else:
         logger.log("Configure MODE | options: 'single drop', 'drops', 'rain'")
-
-    cellArea = dx * dy
-    Nx = conf.Nx
-    Ny = conf.Ny
-    Ng = conf.Ng
 
     # Numerical scheme
     # flux.flux() returns the total flux entering and leaving each cell
     if conf.SOLVER_TYPE == 'Lax-Friedrichs Riemann':
-        U[:, Ng: -Ng, Ng: -Ng] += delta_t / cellArea * flux.flux(U, dx, dy)
+        U[:, Ng: -Ng, Ng: -Ng] += delta_t / cellArea * flux.flux(U)
     elif conf.SOLVER_TYPE == '2-stage Runge-Kutta':
         # 1st stage
         U_pred = U
-        U_pred[:, Ng: -Ng, Ng: -Ng] += delta_t / cellArea * flux.flux(U, dx, dy)
+        U_pred[:, Ng: -Ng, Ng: -Ng] += delta_t / cellArea * flux.flux(U)
 
         # 2nd stage
         U[:, Ng: -Ng, Ng: -Ng] = \
             0.5 * (U[:, Ng: -Ng, Ng: -Ng]
                    + U_pred[:, Ng: -Ng, Ng: -Ng]
-                   + delta_t / cellArea * flux.flux(U_pred, dx, dy)
+                   + delta_t / cellArea * flux.flux(U_pred)
                    )
     else:
         logger.log("Configure SOLVER_TYPE | Options: 'Lax-Friedrichs Riemann',",
@@ -117,7 +114,7 @@ def solve(U, dx, cx, dy, cy, delta_t, it, drops_count):
     '''
 
 
-def dt(U, dx, dy):
+def dt(U):
     """evaluates the time discretization step of the current iteration
 
     The stability condition of the numerical simulation (Known as
@@ -155,8 +152,6 @@ def dt(U, dx, dy):
 
     Args:
         U (3D array) :  the state variables, populating a x,y grid
-        dx (float)   :  spatial discretization step on x axis
-        dy (float)   :  spatial discretization step on y axis
 
     Returns:
         dt (float)   :  time discretization step
@@ -170,7 +165,7 @@ def dt(U, dx, dy):
     # dt_x = dx / (abs(u) + c)
     # dt_y = dy / (abs(v) + c)
 
-    dt_x = dx / (np.abs(U[1] / U[0]) + np.sqrt(np.abs(9.81 * U[0])))
-    dt_y = dy / (np.abs(U[2] / U[0]) + np.sqrt(np.abs(9.81 * U[0])))
+    dt_x = conf.dx / (np.abs(U[1] / U[0]) + np.sqrt(np.abs(9.81 * U[0])))
+    dt_y = conf.dy / (np.abs(U[2] / U[0]) + np.sqrt(np.abs(9.81 * U[0])))
     dt = 1.0 / (1.0 / dt_x + 1.0 / dt_y)
     return np.min(dt) * conf.COURANT
