@@ -96,3 +96,24 @@ def time_this(f):
         print_duration(start, end, f.__name__)
         return result
     return wrap
+
+
+def preprocessing(Nx, Ny, Ng, max_x, min_x, max_y, min_y):
+    """constructs the mesh
+
+    - dx, dy: Spatial discretization steps (structured/Cartesian mesh)
+    - cy, cy: Cell centers on x and y dimensions
+    """
+    conf.Nx = Nx
+    conf.Ny = Ny
+    conf.Ng = Ng
+    conf.MAX_X = max_x
+    conf.MIN_X = min_x
+    conf.MAX_Y = max_y
+    conf.MIN_Y = min_y
+    conf.dx = (max_x - min_x) / Nx
+    conf.dy = (max_y - min_y) / Ny
+    conf.CX, conf.CY = cell_centers()
+    conf.COURANT = min(0.9, 0.015 / min(conf.dx, conf.dy))
+    conf.drop_x_centers = [x * max_x for x in conf.drop_x_centers]
+    conf.drop_x_centers = [y * max_y for y in conf.drop_y_centers]

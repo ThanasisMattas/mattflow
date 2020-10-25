@@ -36,27 +36,28 @@ from mattflow import utils
 # Pre-processing configuration {
 #
 # Number of cells on x and y axis
-Nx = 120
-Ny = 120
+Nx = None
+Ny = None
 
 # Number of ghost cells (used for applying Boundary Conditions)
 # Depends on the used numerical scheme
-Ng = 1
+Ng = None
 
 # Domain (basin) limits
-MIN_X = -1.4
-MAX_X = 1.4
-MIN_Y = -1.4
-MAX_Y = 1.4
+MIN_X = None
+MAX_X = None
+MIN_Y = None
+MAX_Y = None
 
 # Spatial discretization steps (structured/Cartesian mesh)
-dx = (MAX_X - MIN_X) / Nx
-dy = (MAX_Y - MIN_Y) / Ny
+dx = None
+dy = None
 #
 # }
 
 # cell centers along the x and y axes
-CX, CY = utils.cell_centers()
+CX = None
+CY = None
 
 # Solution configuration {
 #
@@ -87,7 +88,7 @@ MEMMAP_DIR = os.path.join(os.getcwd(), "flux_memmap")
 #     takes to travel for dx.
 #   - dt_sim is the time that the simulation covers dx
 #
-COURANT = min(0.9, 0.015 / min(dx, dy))
+COURANT = None
 
 # Surface level
 SURFACE_LEVEL = 1
@@ -115,9 +116,6 @@ RANODM_DROP_CENTERS = True
 # Define x, y drop centers (normalized to one)
 drop_x_centers = [0, -0.56, 0.28, -0.25, 0.48, -0.42, 0.90, 0.24, -0.78, -0.2, 0.84]
 drop_y_centers = [0, 0.25, 0.48, -0.24, -0.59, -0.64, 0.05, -0.40, 0.63, -0.39, -0.40]
-drop_x_centers = [x * MAX_X for x in drop_x_centers]
-drop_x_centers = [y * MAX_Y for y in drop_y_centers]
-drop_centers = list(zip(drop_x_centers, drop_y_centers))
 
 
 # Boundary conditions
