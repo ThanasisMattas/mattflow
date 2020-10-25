@@ -57,7 +57,7 @@ def _gaussian(variance, drops_count):
     '''
     # random pick of drop center coordinates
     # (mean or expectation of the gaussian distribution)
-    if conf.RANODM_DROP_CENTERS:
+    if conf.RANDOM_DROP_CENTERS:
         DROP_CENTER_X = uniform(conf.MIN_X, conf.MAX_X)
         DROP_CENTER_Y = uniform(conf.MIN_Y, conf.MAX_Y)
     else:

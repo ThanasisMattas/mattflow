@@ -116,7 +116,7 @@ ITERS_BETWEEN_DROPS_MODE = "fixed"
 FIXED_ITERS_TO_NEXT_DROP = 105
 CUSTOM_ITERS_BETWEEN_DROPS = [120, 150, 140, 130, 210, 60, 180, 220, 140, 130]
 
-RANODM_DROP_CENTERS = True
+RANDOM_DROP_CENTERS = True
 # Define x, y drop centers (normalized to one)
 drop_x_centers = [0, -0.56, 0.28, -0.25, 0.48, -0.42, 0.90, 0.24, -0.78, -0.2, 0.84]
 drop_y_centers = [0, 0.25, 0.48, -0.24, -0.59, -0.64, 0.05, -0.40, 0.63, -0.39, -0.40]
