@@ -110,6 +110,13 @@ Currently, you can configure the simulation at the _config_ module
 9. Unstructured mesh
 10. Extent to 3D CFD?
 
+<br />
+<br />
+
+Special thanks to [Marios Mitalidis] for the valuable feedback.
+
+<br />
+
 ***Start the flow!***
 
 >(C) 2019, Athanasios Mattas<br />
@@ -124,3 +131,4 @@ Currently, you can configure the simulation at the _config_ module
 [Lax-Wendroff]: <https://en.wikipedia.org/wiki/Lax%E2%80%93Wendroff_method>
 [MacCormack]: <https://en.wikipedia.org/wiki/MacCormack_method>
 [Colab notebook]: <https://colab.research.google.com/github/ThanasisMattas/mattflow/blob/master/notebooks/mattflow_notebook.ipynb#scrollTo=sqSJYpEwmJN3>
+[Marios Mitalidis]: <https://github.com/mmitalidis>
