@@ -9,7 +9,7 @@
 #
 # (C) 2019 Athanasios Mattas
 # ======================================================================
-"""Configures the simulation"""
+"""Configures the simulation, providing global constants"""
 
 # TODO simple API: configuring options on a small window popup
 
@@ -135,6 +135,9 @@ BOUNDARY_CONDITIONS = 'reflective'
 # 2. '2-stage Runge-Kutta'      : 2nd order in time: O(Δt^2, Δx^2, Δy^2)
 # 3. 'MacCormack experimental'  : 2nd order in time: O(Δt^2, Δx^2, Δy^2)
 SOLVER_TYPE = '2-stage Runge-Kutta'
+
+# Select whether to save a memmap with the simulation data or not
+SAVE_DS_FOR_ML = False
 #
 # }
 

@@ -14,6 +14,7 @@
 # TODO: implement high order schemes
 
 import random
+import os
 
 import numpy as np
 
@@ -202,6 +203,18 @@ def simulate():
     U_array = np.zeros([conf.MAX_ITERS // 3, conf.Nx, conf.Ny])
     U_array[0] = U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
 
+    if conf.SAVE_DS_FOR_ML:
+        dataset_name = "mattflow_data_{0}x{1}x{2}x{3}".format(
+            conf.MAX_ITERS, 3, conf.Nx + 2 * conf.Ng, conf.Ny + 2 * conf.Ng)
+        memmap_file = os.path.join(os.getcwd(), dataset_name)
+        U_dataset = np.memmap(memmap_file, dtype=np.dtype('float64'),
+                              shape=(conf.MAX_ITERS,
+                                     3,
+                                     conf.Nx + 2 * conf.Ng,
+                                     conf.Ny + 2 * conf.Ng),
+                              mode="w+")
+        U_dataset[0] = U
+
     # This will hold the step-wise time for the post-processing animation.
     # (time * 10 is appended, because space is scaled about x10)
     time_array = np.array([0])
@@ -248,11 +261,10 @@ def simulate():
         elif not conf.DAT_WRITING_MODE:
             # Append current frame to the list, to be animated at post-processing
             if not (it - 1) % 3:
-                try:
-                    U_array[(it - 1) // 3] = \
-                        U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
-                except IndexError:
-                    pass
+                U_array[(it - 1) // 3] = \
+                    U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
+            if conf.SAVE_DS_FOR_ML:
+                U_dataset[it] = U
         else:
             logger.log("Configure DAT_WRITING_MODE | Options: True, False")
 
