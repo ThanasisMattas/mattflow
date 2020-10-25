@@ -116,8 +116,8 @@ def preprocessing(Nx, Ny, Ng, max_x, min_x, max_y, min_y):
     conf.dy = (max_y - min_y) / Ny
     conf.CX, conf.CY = cell_centers()
     conf.COURANT = min(0.9, 0.015 / min(conf.dx, conf.dy))
-    conf.drop_x_centers = [x * max_x for x in conf.drop_x_centers]
-    conf.drop_x_centers = [y * max_y for y in conf.drop_y_centers]
+    conf.DROPS_CX = [x * max_x for x in conf.DIMLESS_DCX]
+    conf.DROPS_CY = [y * max_y for y in conf.DIMLESS_DCY]
 
 
 def drop_iters_list():

@@ -58,18 +58,18 @@ def _gaussian(variance, drops_count):
     # random pick of drop center coordinates
     # (mean or expectation of the gaussian distribution)
     if conf.RANDOM_DROP_CENTERS:
-        DROP_CENTER_X = uniform(conf.MIN_X, conf.MAX_X)
-        DROP_CENTER_Y = uniform(conf.MIN_Y, conf.MAX_Y)
+        drop_cx = uniform(conf.MIN_X, conf.MAX_X)
+        drop_cy = uniform(conf.MIN_Y, conf.MAX_Y)
     else:
-        DROP_CENTER_X = conf.drop_x_centers[drops_count]
-        DROP_CENTER_Y = conf.drop_y_centers[drops_count]
+        drop_cx = conf.DROPS_CX[drops_count % 10]
+        drop_cy = conf.DROPS_CY[drops_count % 10]
 
     # grid of the cell centers
     CX, CY = np.meshgrid(conf.CX, conf.CY)
 
     amplitude = 1 / np.sqrt(2 * np.pi * variance)
     exponent = \
-        ((CX - DROP_CENTER_X)**2 + (CY - DROP_CENTER_Y)**2) / (2 * variance)
+        ((CX - drop_cx)**2 + (CY - drop_cy)**2) / (2 * variance)
 
     gaussian_distribution = amplitude * np.exp(-exponent)
     return gaussian_distribution
