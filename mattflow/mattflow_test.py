@@ -17,8 +17,7 @@ import numpy as np
 from numpy.testing import assert_array_almost_equal
 import pytest
 
-from mattflow import config as conf
-from mattflow import initializer
+from mattflow import config as conf, initializer
 
 np.set_printoptions(suppress=True, formatter={"float": "{: 0.6f}".format})
 

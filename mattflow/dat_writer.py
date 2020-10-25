@@ -14,8 +14,7 @@
 # from datetime import datetime
 import os
 
-from mattflow import config as conf
-from mattflow import utils
+from mattflow import config as conf, utils
 
 
 # file_name = str(datetime.now())[:19]

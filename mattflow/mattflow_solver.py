@@ -17,13 +17,13 @@ import random
 
 import numpy as np
 
-from mattflow import boundaryConditionsManager
-from mattflow import config as conf
-from mattflow import dat_writer
-from mattflow import flux
-from mattflow import initializer
-from mattflow import logger
-from mattflow import mattflow_post
+from mattflow import (boundaryConditionsManager,
+                      config as conf,
+                      dat_writer,
+                      flux,
+                      initializer,
+                      logger,
+                      mattflow_post)
 from mattflow.utils import time_this
 
 

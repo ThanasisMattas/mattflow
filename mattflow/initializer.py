@@ -29,8 +29,7 @@ from random import uniform
 
 import numpy as np
 
-from mattflow import config as conf
-from mattflow import dat_writer
+from mattflow import config as conf, dat_writer
 
 
 def _variance(mode):

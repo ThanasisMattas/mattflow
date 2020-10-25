@@ -19,13 +19,13 @@
 
 import numpy as np
 
-from mattflow import config as conf
-from mattflow import dat_writer
-from mattflow import initializer
-from mattflow import logger
-from mattflow import mattflow_post
-from mattflow import mattflow_solver
-from mattflow import utils
+from mattflow import (config as conf,
+                      dat_writer,
+                      initializer,
+                      logger,
+                      mattflow_post,
+                      mattflow_solver,
+                      utils)
 from mattflow.utils import time_this
 
 
