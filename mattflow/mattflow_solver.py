@@ -190,42 +190,20 @@ def dt(U):
 @time_this
 def simulate():
     time = 0
-    dx = conf.dx
-    dy = conf.dy
 
-    # Initialization
-    logger.log('Initialization...')
-    U = initializer.initialize()
+    U, heights_array, time_array, U_dataset = initializer.initialize()
     drops_count = 1
-
-    # This will hold the step-wise solutions for the post-processing animation.
-    # (save a frame every 3 iters)
-    heights_array = np.zeros([conf.MAX_ITERS // 3, conf.Nx, conf.Ny])
-    heights_array[0] = U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
-
-    if conf.SAVE_DS_FOR_ML:
-        dataset_name = "mattflow_data_{0}x{1}x{2}x{3}".format(
-            conf.MAX_ITERS, 3, conf.Nx + 2 * conf.Ng, conf.Ny + 2 * conf.Ng)
-        memmap_file = os.path.join(os.getcwd(), dataset_name)
-        U_dataset = np.memmap(memmap_file, dtype=np.dtype('float64'),
-                              shape=(conf.MAX_ITERS,
-                                     3,
-                                     conf.Nx + 2 * conf.Ng,
-                                     conf.Ny + 2 * conf.Ng),
-                              mode="w+")
-        U_dataset[0] = U
-
-    # This will hold the step-wise time for the post-processing animation.
-    time_array = np.zeros(conf.MAX_ITERS // 3)
+    # idx of the frame saved in heights_array
+    saving_frame_idx = 0
+    # counts up to conf.CONSECUTIVE_FRAMES (1st frame saved at initialization)
+    consecutive_frames_counter = 1
 
     if conf.ITERS_BETWEEN_DROPS_MODE in ["custom", "random"]:
-        # list with the simulation iterationss at which a drop is going to fall
+        # list with the simulation iterations at which a drop is going to fall
         drop_its = utils.drop_iters_list()
         drop_its_iterator = iter(drop_its)
         # the iteration at which the next drop will fall
         next_drop_it = next(drop_its_iterator)
-        # print("drop_its tail(10): " + str(drop_its[-10:]))
-        # print("drop_its length: {}".format(len(drop_its)))
     else:
         drop_its_iterator = None
         next_drop_it = None
@@ -245,32 +223,39 @@ def simulate():
 
         # Numerical iterative scheme
         U, drops_count, drop_its_iterator, next_drop_it = solve(
-            U, delta_t, it, drops_count,
-            drop_its_iterator, next_drop_it
+            U=U,
+            delta_t=delta_t,
+            it=it,
+            drops_count=drops_count,
+            drop_its_iterator=drop_its_iterator,
+            next_drop_it=next_drop_it
         )
 
         # write dat | default: False
-        if conf.DAT_WRITING_MODE:
+        if conf.WRITE_DAT:
             dat_writer.writeDat(
                 U[0, conf.Ng: conf.Ny + conf.Ng, conf.Ng: conf.Nx + conf.Ng],
                 time, it
             )
             mattflow_post.plotFromDat(time, it)
-        elif not conf.DAT_WRITING_MODE:
+        elif not conf.WRITE_DAT:
             # Append current frame to the list, to be animated at post-processing
-            if not (it - 1) % 3:
-                heights_array[(it - 1) // 3] = \
+            if it % conf.FRAME_SAVE_FREQ == 0:
+                # zero the counter, when a perfect devision occurs
+                consecutive_frames_counter = 0
+            if consecutive_frames_counter < conf.CONSECUTIVE_FRAMES:
+                saving_frame_idx += 1
+                heights_array[saving_frame_idx] = \
                     U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
                 # time * 10 is insertd, because space is scaled about x10
-                time_array[(it - 1) // 3] = time * 10
+                time_array[saving_frame_idx] = time * 10
+                consecutive_frames_counter += 1
             if conf.SAVE_DS_FOR_ML:
                 U_dataset[it] = U
         else:
-            logger.log("Configure DAT_WRITING_MODE | Options: True, False")
+            logger.log("Configure WRITE_DAT | Options: True, False")
 
         logger.log_timestep(it, time)
-    #
-    # }
 
     # clean-up memap
     if conf.DUMP_MEMMAP and conf.WORKERS > 1:

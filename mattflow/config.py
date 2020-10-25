@@ -63,7 +63,13 @@ CY = None
 #
 # Ending conditions of the simulation
 STOPPING_TIME = 3
-MAX_ITERS = 640
+MAX_ITERS = 650
+
+# Solution configuration {
+#
+# saving <CONSECUTIVE_FRAMES> frames every <FRAME_SAVE_FREQ> iters
+FRAME_SAVE_FREQ = 3
+CONSECUTIVE_FRAMES = 1
 
 # Number of workers for multiprocessing
 WORKERS = 1
@@ -188,6 +194,6 @@ VID_FORMAT = 'mp4'
 # Writing dat files mode
 # ----------------------
 # Select whether dat files are generated or not
-DAT_WRITING_MODE = False
+WRITE_DAT = False
 #
 # }

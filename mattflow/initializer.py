@@ -25,11 +25,12 @@
 #        9 G G G G G G G G G G
 
 
+import os
 from random import uniform
 
 import numpy as np
 
-from mattflow import config as conf, dat_writer
+from mattflow import config as conf, dat_writer, logger
 
 
 def _variance(mode):
@@ -101,32 +102,87 @@ def drop(heights_list, drops_count=None):
     return heights_list
 
 
-def initialize():
-    """creates and initializes the state-variables-3D-matrix, U
-
-    U[0]:  state varables [h, hu, hv], populating the x,y grid
-    U[1]:  y dimention (rows)
-    U[2]:  x dimention (columns)
-
-    Returns
-        U (3D array) :  state-variables-3D-matrix
-    """
-
+def _init_U():
+    """creates and initializes the state-variables 3D matrix, U"""
+    cx = conf.CX
+    cy = conf.CY
     U = np.zeros(((3,
                    conf.Ny + 2 * conf.Ng,
                    conf.Nx + 2 * conf.Ng)))
-
     # 1st drop
     U[0, :, :] = conf.SURFACE_LEVEL + drop(U[0, :, :], drops_count=1)
-
     # write dat | default: False
-    if conf.DAT_WRITING_MODE:
+    if conf.WRITE_DAT:
         dat_writer.writeDat(U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng],
                             time=0, it=0)
         from mattflow import mattflow_post
         mattflow_post.plotFromDat(time=0, it=0)
-    elif not conf.DAT_WRITING_MODE:
+    elif not conf.WRITE_DAT:
         pass
     else:
-        print("Configure DAT_WRITING_MODE | Options: True, False")
+        print("Configure WRITE_DAT | Options: True, False")
     return U
+
+
+def _init_heights_array(U):
+    """creates and initializes heights_array
+
+    - holds the states of the fluid for post-processing
+    -saving <CONSECUTIVE_FRAMES> frames every <FRAME_SAVE_FREQ> iters
+    """
+    # number of integer divisions with the freq, times the consecutive frames,
+    # plus the consecutive frames that we can take from the remainder of the
+    # division
+    num_states_to_save = (
+        conf.MAX_ITERS
+        // conf.FRAME_SAVE_FREQ
+        * conf.CONSECUTIVE_FRAMES
+        + min(conf.MAX_ITERS % conf.FRAME_SAVE_FREQ, conf.CONSECUTIVE_FRAMES)
+    )
+    heights_array = np.zeros((num_states_to_save, conf.Nx, conf.Ny))
+    heights_array[0] = U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
+    return heights_array
+
+
+def _init_U_dataset(U):
+    dataset_name = "mattflow_data_{0}x{1}x{2}x{3}".format(
+        conf.MAX_ITERS, 3, conf.Nx + 2 * conf.Ng, conf.Ny + 2 * conf.Ng)
+    memmap_file = os.path.join(os.getcwd(), dataset_name)
+    U_dataset = np.memmap(memmap_file, dtype=np.dtype('float64'),
+                          shape=(conf.MAX_ITERS,
+                                 3,
+                                 conf.Nx + 2 * conf.Ng,
+                                 conf.Ny + 2 * conf.Ng),
+                          mode="w+")
+    U_dataset[0] = U
+    return U_dataset
+
+
+def initialize():
+    """wraper that initializes and returns all necessary data_structures
+
+    Returns
+        U (3D array)          :  the state-variables-3D-matrix (populating a
+                                 x,y grid)
+                                 - shape: (3, Nx + 2 * Ng, Ny + 2 * Ng)
+                                 - U[0] : state varables [h, hu, hv]
+                                 - U[1] : y dimention (rows)
+                                 - U[2] : x dimention (columns)
+        heights_array (array) :  holds the step-wise height solutions for the
+                                 post-processing animation
+        time_array (array)    :  holds the step-wise times for the post-
+                                 processing animation
+        U_dataset (memmap)    :  holds the state-variables 3D matrix data for
+                                 all the timesteps
+                                 (conf.MAX_ITERS, 3, Nx + 2 * Ng, Ny + 2 * Ng)
+    """
+    logger.log('Initialization...')
+
+    U = _init_U()
+    heights_array = _init_heights_array(U)
+    time_array = time_array = np.zeros(len(heights_array))
+    if conf.SAVE_DS_FOR_ML:
+        U_dataset = _init_U_dataset(U)
+    else:
+        U_dataset = None
+    return U, heights_array, time_array, U_dataset
