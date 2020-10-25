@@ -63,7 +63,7 @@ CY = None
 #
 # Ending conditions of the simulation
 STOPPING_TIME = 3
-MAX_ITERS = 700
+MAX_ITERS = 640
 
 # Number of workers for multiprocessing
 WORKERS = 1
