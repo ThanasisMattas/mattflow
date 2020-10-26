@@ -39,7 +39,7 @@ def delete_logs_dats_images_videos():
     working_dir = os.getcwd()
     directories = [os.path.join(working_dir, "data_files/"),
                    os.path.join(working_dir, "session/")]
-    extensions = (".dat", ".log", ".png", ".gif", ".mp4")
+    extensions = (".dat", ".log", ".png", ".gif", ".mp4", ".npy")
     for f in os.listdir(working_dir):
         if f.endswith(extensions):
             os.remove(f)
