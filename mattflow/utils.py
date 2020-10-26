@@ -137,6 +137,12 @@ def drop_iters_list():
     else:
         logger.log("Configure ITERS_BETWEEN_DROPS_MODE | options:"
                    " 'fixed', 'custom', 'random'")
-    # Max number of drops
+    # Overwrite max number of drops
     conf.MAX_N_DROPS = len(drop_iters)
+
+    if conf.SAVE_DS_FOR_ML:
+        # It is needed to retrieve the new drop frames, because these frames
+        # cannot be used as labels (the previous frame cannot know when and
+        # where a new drop will fall).
+        np.save(os.path.join(os.getcwd(), "drops_iters_list.npy"), drop_iters)
     return drop_iters
