@@ -32,7 +32,7 @@ from mattflow.utils import time_this
 @time_this
 def main():
     # Uncomment this to delete previous log, dat and png files (for debugging)
-    utils.delete_logs_dats_images_videos()
+    # utils.delete_logs_dats_images_videos()
 
     # Pre-processing (mesh construction)
     utils.preprocessing(Nx=120, Ny=120, Ng=1,
@@ -40,7 +40,7 @@ def main():
                         max_y=1.4, min_y=-1.4)
 
     # Solution
-    heights_array, time_array = mattflow_solver.simulate()
+    heights_array, time_array, U_dataset = mattflow_solver.simulate()
 
     # Post-processing
     mattflow_post.createAnimation(heights_array, time_array)

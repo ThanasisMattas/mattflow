@@ -261,4 +261,4 @@ def simulate():
     if conf.DUMP_MEMMAP and conf.WORKERS > 1:
         utils.delete_memmap()
 
-    return heights_array, time_array
+    return heights_array, time_array, U_dataset
