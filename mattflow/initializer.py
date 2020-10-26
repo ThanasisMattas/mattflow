@@ -26,7 +26,7 @@
 
 
 import os
-from random import uniform
+from random import randint, uniform
 
 import numpy as np
 
@@ -37,8 +37,8 @@ def _variance(mode):
     """use small variance to make the distribution steep and sharp, for a
     better representation of a drop"""
     variance = {
-        "single drop": 0.0009,
-        "drops": 0.0009,
+        "single drop": randint(4, 7) / 10000,
+        "drops": randint(4, 7) / 10000,
         "rain": 0.0001
     }
     return variance[mode]
@@ -92,8 +92,9 @@ def drop(heights_list, drops_count=None):
     #          with 1 / 5 for a water drop with a considerable momentum build
     #          with 1 / 8 for a soft water drop
     if conf.MODE == 'single drop' or conf.MODE == 'drops':
-        variance = _variance("single drop")
-        heights_list += 3 / 2 * _gaussian(variance, drops_count)
+        variance = _variance(conf.MODE)
+        factor = randint(6, 12) / 10
+        heights_list += factor * _gaussian(variance, drops_count)
     elif conf.MODE == 'rain':
         variance = _variance("rain")
         heights_list += 1 / 8 * _gaussian(variance, drops_count)
