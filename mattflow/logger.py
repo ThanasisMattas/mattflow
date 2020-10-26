@@ -73,9 +73,7 @@ def log_timestep(it, time):
     spaces = (6 - len(str(it))) * ' '  # for vertical printing alignment
     if (it == 1) | (it % 15 == 0):
         log("  iter     time")
-        log(spaces + str(it) + "    {:0.3f}".format(time))
-    else:
-        log(spaces + str(it) + "    {:0.3f}".format(time))
+    log(f"{it: >{6}d}    {time:0.3f}")
 
 
 def find_log():
