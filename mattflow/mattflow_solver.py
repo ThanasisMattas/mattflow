@@ -63,6 +63,7 @@ def solve(U,
     # 'single drop': handled at the initialization
     if conf.MODE == 'single drop':
         pass
+
     # 'drops': specified number of drops are generated at specified frequency
     elif conf.MODE == 'drops':
         if conf.ITERS_BETWEEN_DROPS_MODE == "fixed":
@@ -77,6 +78,7 @@ def solve(U,
             drops_count += 1
             if conf.ITERS_BETWEEN_DROPS_MODE in ["custom", "random"]:
                 next_drop_it = next(drop_its_iterator)
+
     # 'rain': random number of drops are generated at random frequency
     elif conf.MODE == 'rain':
         if it % random.randrange(1, 15) == 0:
@@ -231,7 +233,6 @@ def simulate():
             next_drop_it=next_drop_it
         )
 
-        # write dat | default: False
         if conf.WRITE_DAT:
             dat_writer.writeDat(
                 U[0, conf.Ng: conf.Ny + conf.Ng, conf.Ng: conf.Nx + conf.Ng],

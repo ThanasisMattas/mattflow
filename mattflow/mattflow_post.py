@@ -124,7 +124,7 @@ def plotFromDat(time, it):
 
     fig.gca().set_zlim([-0.5, 4])
     plt.title("time: {0:.3f}    iter: {1}".format(time, it),
-              y=0.8, fontsize=20)
+              y=0.8, fontsize=18)
     sub.title.set_position([0.49, 0.80])
     plt.rcParams.update({'font.size': 20})
     plt.axis('off')
@@ -210,9 +210,9 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
         plot[0].remove()
         if conf.ROTATION:
             # rotate the domain:
-            # horizontally every 8 frames and vetically every 5 frames
-            horizontal_rotate = 45 + frame_number / 8
-            vertical_rotate = 55 - frame_number / 5
+            # horizontally every 2 frames and vetically every 4 frames
+            horizontal_rotate = 45 + frame_number / 2
+            vertical_rotate = 55 - frame_number / 4
             sub.view_init(vertical_rotate, horizontal_rotate)
         plot[0] = sub.plot_surface(X, Y, Z[frame_number],
                                    rstride=1, cstride=1, linewidth=0,
@@ -234,8 +234,8 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
         plot[0].remove()
         if conf.ROTATION:
             # rotate the domain:
-            # horizontally every 3 frames and vetically every 4 frames
-            horizontal_rotate = 45 + frame_number / 3
+            # horizontally every 3 frames and vetically every 2 frames
+            horizontal_rotate = 45 + frame_number / 2
             vertical_rotate = 55 - frame_number / 4
             sub.view_init(vertical_rotate, horizontal_rotate)
         plot[0] = sub.plot_wireframe(X, Y, Z[frame_number],
@@ -250,10 +250,10 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
 
     # frame title
     if time_array is None:
-        plt.title(ani_title, y=0.8, fontsize=20)
+        plt.title(ani_title, y=0.8, fontsize=18)
     else:
         plt.title(ani_title.format(time_array[frame_number], it),
-                  y=0.8, fontsize=20)
+                  y=0.8, fontsize=18)
     sub.title.set_position([0.49, 0.80])
 
 
@@ -293,7 +293,7 @@ def createAnimation(heights_array, time_array=None):
         plt.title(ani_title)
     else:
         ani_title = "time: {0:.3f}    iter: {1}"
-        plt.title(ani_title.format(time_array[0], 0), y=0.8, fontsize=20)
+        plt.title(ani_title.format(time_array[0], 0), y=0.8, fontsize=18)
     sub.title.set_position([0.49, 0.80])
     plt.rcParams.update({'font.size': 20})
 

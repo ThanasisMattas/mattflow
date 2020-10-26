@@ -28,10 +28,6 @@
 
 import os
 
-import numpy as np
-
-from mattflow import utils
-
 
 # Pre-processing configuration {
 #
@@ -62,7 +58,7 @@ CY = None
 # Solution configuration {
 #
 # Ending conditions of the simulation
-STOPPING_TIME = 3
+STOPPING_TIME = 30000
 MAX_ITERS = 650
 
 # Solution configuration {
@@ -108,16 +104,16 @@ SURFACE_LEVEL = 1
 MODE = 'drops'
 
 # Default max number of drops
-# (it will be overwriten if ITERS_BETWEEN_DROPS_MODE in ["random", "custom"])
+# (it will be overwritten if ITERS_BETWEEN_DROPS_MODE in ["random", "custom"])
 MAX_N_DROPS = 5
 
 # Number of iterations between drops
 # ----------------------------------
 # Options:
-# 1. 'fixed'  : fixed every 105 iters (default)
+# 1. 'fixed'  : fixed every 105 iters
 # 2. 'custom' : periodically selected from a list of 10 custom iter intervals
 # 3. 'random' : between 50 - 200 iters
-ITERS_BETWEEN_DROPS_MODE = "fixed"
+ITERS_BETWEEN_DROPS_MODE = "custom"
 
 FIXED_ITERS_BETWEEN_DROPS = 105
 CUSTOM_ITERS_BETWEEN_DROPS = [120, 150, 140, 130, 210, 60, 180, 220, 140, 130]
@@ -156,9 +152,9 @@ SAVE_DS_FOR_ML = False
 PLOTTING_STYLE = 'wireframe'
 
 # frames per sec
-FPS = 20
+FPS = 18
 # dots per inch
-DPI = 60
+DPI = 80
 # figure size in inches
 # golden ratio: 1.618
 FIGSIZE = (10 * 1.618, 10)
