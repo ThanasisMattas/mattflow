@@ -32,7 +32,7 @@ from mattflow.utils import time_this
 @time_this
 def main():
     # Uncomment this to delete previous log, dat and png files (for debugging)
-    utils.delete_logs_dats_images_videos()
+    # utils.delete_prev_runs_data()
 
     # Pre-processing (mesh construction)
     utils.preprocessing(Nx=90, Ny=90, Ng=1,

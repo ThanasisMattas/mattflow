@@ -34,7 +34,7 @@ def cell_centers():
     return cx, cy
 
 
-def delete_logs_dats_images_videos():
+def delete_prev_runs_data():
     """deletes previous log, dat and png files (for debugging)"""
     working_dir = os.getcwd()
     directories = [os.path.join(working_dir, "data_files/"),
