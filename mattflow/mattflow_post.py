@@ -125,7 +125,7 @@ def plotFromDat(time, it):
     fig.gca().set_zlim([-0.5, 4])
     plt.title("time: {0:.3f}    iter: {1}".format(time, it),
               y=0.8, fontsize=18)
-    sub.title.set_position([0.49, 0.80])
+    sub.title.set_position([0.51, 0.80])
     plt.rcParams.update({'font.size': 20})
     plt.axis('off')
 
@@ -252,9 +252,10 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
     if time_array is None:
         plt.title(ani_title, y=0.8, fontsize=18)
     else:
-        plt.title(ani_title.format(time_array[frame_number], it),
+        plt.title(ani_title.format(t=time_array[frame_number], t_width=6,
+                                   i=it, i_width=5),
                   y=0.8, fontsize=18)
-    sub.title.set_position([0.49, 0.80])
+    sub.title.set_position([0.51, 0.80])
 
 
 @time_this
@@ -292,9 +293,11 @@ def createAnimation(heights_array, time_array=None):
                      + conf.SOLVER_TYPE)
         plt.title(ani_title)
     else:
-        ani_title = "time: {0:.3f}    iter: {1}"
-        plt.title(ani_title.format(time_array[0], 0), y=0.8, fontsize=18)
-    sub.title.set_position([0.49, 0.80])
+        ani_title = "time: {t:0>{t_width}.3f}    iter :{i:0>{i_width}d}"
+        plt.title(ani_title.format(t=time_array[0], t_width=6,
+                                   i=0, i_width=5),
+                  y=0.8, fontsize=18)
+    sub.title.set_position([0.51, 0.80])
     plt.rcParams.update({'font.size': 20})
 
     # initialization plot
