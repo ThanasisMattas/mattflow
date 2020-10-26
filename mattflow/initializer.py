@@ -33,16 +33,16 @@ import numpy as np
 from mattflow import config as conf, dat_writer, logger
 
 
-def _variance(mode):
+def _variance():
     """use small variance to make the distribution steep and sharp, for a
     better representation of a drop"""
     # > 0.0004
     variance = {
         "single drop": randint(5, 8) / 10000,
         "drops": randint(5, 8) / 10000,
-        "rain": 0.0001
+        "rain": 0.0002
     }
-    return variance[mode]
+    return variance[conf.MODE]
 
 
 def _gaussian(variance, drops_count):
@@ -77,6 +77,28 @@ def _gaussian(variance, drops_count):
     return gaussian_distribution
 
 
+def drop_heights_correction(drop_heights):
+    """subtracts the fluid volume that the drop adds to the domain
+
+    For a few thousands of iterations the fluid level rises quite subtly, but
+    after a point the volume adds up to be significant.
+
+    Args:
+        drop_heights (2D array) :  the gaussian distribution modeling the drop
+
+    Returns:
+        drop_correction (2D array) :  the extra fluid volume of the drop,
+                                      distributed to the whole domain, divided
+                                      by a divisor for a smoother transition
+                                      to the next time_step
+    """
+    divisor = 3
+    drop_correction = np.empty_like(drop_heights)
+    drop_heights_sum = drop_heights.sum()
+    drop_correction.fill(drop_heights_sum / drop_heights.size / divisor)
+    return drop_correction
+
+
 def drop(heights_list, drops_count=None):
     """Generates a drop
 
@@ -87,20 +109,21 @@ def drop(heights_list, drops_count=None):
         drops_count(int)       :  drop counter
 
     Returns:
-        heights_list(2D array) : drop is added to the input heights_list
+        heights_list(2D array) :  drop is added to the input heights_list
     """
     # multiply with 3 / 2 for a small stone droping
     #          with 1 / 5 for a water drop with a considerable momentum build
     #          with 1 / 8 for a soft water drop
     if conf.MODE == 'single drop' or conf.MODE == 'drops':
-        variance = _variance(conf.MODE)
         factor = randint(6, 12) / 10
-        heights_list += factor * _gaussian(variance, drops_count)
     elif conf.MODE == 'rain':
-        variance = _variance("rain")
-        heights_list += 1 / 8 * _gaussian(variance, drops_count)
+        factor = 1 / 6
     else:
         print("Configure MODE | options: 'single drop', 'drops', 'rain'")
+    variance = _variance()
+    drop_heights = factor * _gaussian(variance, drops_count)
+    drop_correction = drop_heights_correction(drop_heights)
+    heights_list += drop_heights - drop_correction
     return heights_list
 
 
