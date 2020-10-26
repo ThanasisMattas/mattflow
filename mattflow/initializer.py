@@ -36,9 +36,10 @@ from mattflow import config as conf, dat_writer, logger
 def _variance(mode):
     """use small variance to make the distribution steep and sharp, for a
     better representation of a drop"""
+    # > 0.0004
     variance = {
-        "single drop": randint(4, 7) / 10000,
-        "drops": randint(4, 7) / 10000,
+        "single drop": randint(5, 8) / 10000,
+        "drops": randint(5, 8) / 10000,
         "rain": 0.0001
     }
     return variance[mode]
