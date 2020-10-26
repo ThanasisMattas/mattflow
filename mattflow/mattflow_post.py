@@ -89,7 +89,6 @@ def plotFromDat(time, it):
     # plot {
     #
     fig = plt.figure(figsize=(9.6, 6.4), dpi=112)  # 1080x720
-    plt.rcParams.update({'font.size': 8})
     sub = fig.add_subplot(111, projection="3d")
     plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0, hspace=0)
 
@@ -107,7 +106,7 @@ def plotFromDat(time, it):
                          color=(0.251, 0.643, 0.875, 0.95),
                          shade=True, antialiased=False)
     elif conf.PLOTTING_STYLE == 'contour':
-        sub.view_init(50, 45)
+        sub.view_init(45, 55)
         sub.contour3D(X, Y, Z, 140, cmap='plasma', vmin=0.6, vmax=1.4)
     elif conf.PLOTTING_STYLE == 'wireframe':
         if conf.ROTATION:
@@ -124,10 +123,11 @@ def plotFromDat(time, it):
                    "'wireframe'")
 
     fig.gca().set_zlim([-0.5, 4])
-    plt.title('time: {0:.3f}'.format(time))
+    plt.title("time: {0:.3f}    iter: {1}".format(time, it),
+              y=0.8, fontsize=20)
     sub.title.set_position([0.49, 0.80])
+    plt.rcParams.update({'font.size': 20})
     plt.axis('off')
-    # sub.view_init(50, 45)
 
     # render the basin that contains the fluid
     _plotBasin(sub)
@@ -214,8 +214,6 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
             horizontal_rotate = 45 + frame_number / 8
             vertical_rotate = 55 - frame_number / 5
             sub.view_init(vertical_rotate, horizontal_rotate)
-        else:
-            sub.view_init(45, 55)
         plot[0] = sub.plot_surface(X, Y, Z[frame_number],
                                    rstride=1, cstride=1, linewidth=0,
                                    color=(0.251, 0.643, 0.875, 0.95),
@@ -225,7 +223,7 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
         # attributes are not artists), so the subplot has to be re-built.
         # That's why fig is passed.
         sub.clear()
-        sub.view_init(50, 45)
+        sub.view_init(45, 55)
         plt.subplots_adjust(left=0, bottom=0, right=1, top=1,
                             wspace=0, hspace=0)
         fig.gca().set_zlim([-0.5, 4])
@@ -240,8 +238,6 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
             horizontal_rotate = 45 + frame_number / 3
             vertical_rotate = 55 - frame_number / 4
             sub.view_init(vertical_rotate, horizontal_rotate)
-        else:
-            sub.view_init(45, 55)
         plot[0] = sub.plot_wireframe(X, Y, Z[frame_number],
                                      rstride=2, cstride=2, linewidth=1)
 
@@ -287,7 +283,7 @@ def createAnimation(heights_array, time_array=None):
     # plot configuration
     fig = plt.figure(figsize=figsize, dpi=dpi)
     sub = fig.add_subplot(111, projection="3d")
-    sub.view_init(55, 45)
+    sub.view_init(45, 55)
     plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0, hspace=0)
     fig.gca().set_zlim([-0.5, 4])
     plt.axis('off')
