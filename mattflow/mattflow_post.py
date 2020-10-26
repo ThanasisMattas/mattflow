@@ -123,8 +123,7 @@ def plotFromDat(time, it):
                    "'wireframe'")
 
     fig.gca().set_zlim([-0.5, 4])
-    plt.title("time: {0:.3f}    iter: {1}".format(time, it),
-              y=0.8, fontsize=18)
+    plt.title(f"time: {time: >{6}.3f}\titer: {it: >{4}d}", y=0.8, fontsize=18)
     sub.title.set_position([0.51, 0.80])
     plt.rcParams.update({'font.size': 20})
     plt.axis('off')
@@ -133,9 +132,8 @@ def plotFromDat(time, it):
     _plotBasin(sub)
 
     # save
-    zeros_left = (4 - len(str(it))) * '0'
     # fig.tight_layout()
-    fig_file = os.path.join("session", "iter_" + zeros_left + str(it) + ".png")
+    fig_file = os.path.join("session", f"iter_{it:0>{4}}.png")
     plt.savefig(fig_file)
     plt.close()
     #
@@ -249,12 +247,10 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
     )
 
     # frame title
-    if time_array is None:
-        plt.title(ani_title, y=0.8, fontsize=18)
-    else:
-        plt.title(ani_title.format(t=time_array[frame_number], t_width=6,
-                                   i=it, i_width=5),
-                  y=0.8, fontsize=18)
+    if time_array is not None:
+        ani_title = \
+            f"time: {time_array[frame_number]: >{6}.3f}    iter: {it: >{4}d}"
+    plt.title(ani_title, y=0.8, fontsize=18)
     sub.title.set_position([0.51, 0.80])
 
 
@@ -289,14 +285,10 @@ def createAnimation(heights_array, time_array=None):
     fig.gca().set_zlim([-0.5, 4])
     plt.axis('off')
     if time_array is None:
-        ani_title = ("mesh: {0}x{1}\tsolver: ".format(conf.Nx, conf.Ny)
-                     + conf.SOLVER_TYPE)
-        plt.title(ani_title)
+        ani_title = f"mesh: {conf.Nx}x{conf.Ny}    solver: {conf.SOLVER_TYPE}"
     else:
-        ani_title = "time: {t:0>{t_width}.3f}    iter :{i:0>{i_width}d}"
-        plt.title(ani_title.format(t=time_array[0], t_width=6,
-                                   i=0, i_width=5),
-                  y=0.8, fontsize=18)
+        ani_title = f"time: {time_array[0]: >{6}.3f}    iter: {0: >{5}d}"
+    plt.title(ani_title, y=0.8, fontsize=18)
     sub.title.set_position([0.51, 0.80])
     plt.rcParams.update({'font.size': 20})
 
