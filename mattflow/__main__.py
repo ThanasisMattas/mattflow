@@ -45,9 +45,9 @@ def main():
     # Post-processing
     mattflow_post.createAnimation(heights_array, time_array)
 
-    # Close the log file
-    logger.close()
-
 
 if __name__ == "__main__":
     main()
+
+    # Close the log file
+    logger.close()
