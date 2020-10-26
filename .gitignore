@@ -21,6 +21,7 @@
 *.log
 *.dat
 *.csv
+*.npy
 
 *.mp4
 *.gif
