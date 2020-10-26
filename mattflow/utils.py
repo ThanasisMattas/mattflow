@@ -122,7 +122,7 @@ def preprocessing(Nx, Ny, Ng, max_x, min_x, max_y, min_y):
 
 def drop_iters_list():
     """list with the simulation iters at which a drop is going to fall"""
-    drop_iters = []
+    drop_iters = [0]
     iters_cumsum = 0
     i = 0
     if conf.ITERS_BETWEEN_DROPS_MODE == "custom":

@@ -203,7 +203,8 @@ def simulate():
     if conf.ITERS_BETWEEN_DROPS_MODE in ["custom", "random"]:
         # list with the simulation iterations at which a drop is going to fall
         drop_its = utils.drop_iters_list()
-        drop_its_iterator = iter(drop_its)
+        # drop the 0th drop
+        drop_its_iterator = iter(drop_its[1:])
         # the iteration at which the next drop will fall
         next_drop_it = next(drop_its_iterator)
     else:
