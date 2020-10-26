@@ -191,5 +191,9 @@ VID_FORMAT = 'mp4'
 # ----------------------
 # Select whether dat files are generated or not
 WRITE_DAT = False
+
+
+# Select whether a .log file will be generateo or not
+LOGGING_MODE = False
 #
 # }

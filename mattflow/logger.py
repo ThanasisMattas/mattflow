@@ -34,6 +34,8 @@ def log(state):
     Args:
         state (str) :  the string to be logged
     """
+    if not conf.LOGGING_MODE:
+        return
     # log file object, if there is one
     # False , if ther isn't
     log_file = find_log()
@@ -70,7 +72,8 @@ def log(state):
 
 def log_timestep(it, time):
     """appends timestep info to the log file"""
-    spaces = (6 - len(str(it))) * ' '  # for vertical printing alignment
+    if not conf.LOGGING_MODE:
+        return
     if (it == 1) | (it % 15 == 0):
         log("  iter     time")
     log(f"{it: >{6}d}    {time:0.3f}")
@@ -97,6 +100,8 @@ def find_log():
 
 def close():
     """closes the log file, appending '_done' to the file name"""
+    if not conf.LOGGING_MODE:
+        return
     try:
         log_file = find_log()
         if log_file:
