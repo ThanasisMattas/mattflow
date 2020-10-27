@@ -18,7 +18,7 @@ import os
 
 import numpy as np
 
-from mattflow import (boundaryConditionsManager,
+from mattflow import (bcmanager,
                       config as conf,
                       dat_writer,
                       flux,
@@ -119,7 +119,7 @@ def solve(U,
             - delta_t / dy * (flux.G(U[:, Ng + 1: Ny + Ng + 1, Ng: -Ng]) \
                               - flux.G(U[:, Ng: -Ng, Ng: -Ng]))
 
-        U_pred = boundaryConditionsManager.updateGhostCells(U_pred)
+        U_pred = bcmanager.updateGhostCells(U_pred)
         delta_t = dt(U_pred, dx, dy)
 
         # 2nd step: correction (BTBS)
@@ -222,7 +222,7 @@ def simulate():
             break
 
         # Apply boundary conditions (reflective)
-        U = boundaryConditionsManager.updateGhostCells(U)
+        U = bcmanager.updateGhostCells(U)
 
         # Numerical iterative scheme
         U, drops_count, drop_its_iterator, next_drop_it = solve(
