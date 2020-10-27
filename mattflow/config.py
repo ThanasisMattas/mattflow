@@ -152,7 +152,7 @@ SAVE_DS_FOR_ML = False
 PLOTTING_STYLE = 'wireframe'
 
 # frames per sec
-FPS = 18
+FPS = 20
 # dots per inch
 DPI = 80
 # figure size in inches
