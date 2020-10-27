@@ -158,8 +158,14 @@ def is_mattflow_log(log_file):
 
 
 def log_duration(start, end, process):
-  """logs the duration of a process"""
-  dashes = (19 - len(process)) * '-'
-  log(process.capitalize() + " duration"
-      + dashes
-      + str(timedelta(seconds=end - start))[:10])
+    """logs the duration of a process"""
+    process_name = {
+        "main": "Total",
+        "simulate": "Solution",
+        "createAnimation": "Post-processing"
+    }
+    if process in process_name:
+        process = process_name[process]
+    prefix = f"{process.capitalize()} duration"
+    duration = timedelta(seconds=end - start)
+    log(f"{prefix:-<30}{duration}"[:40])

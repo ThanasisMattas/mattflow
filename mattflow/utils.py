@@ -150,5 +150,7 @@ def drop_iters_list():
         # It is needed to retrieve the new drop frames, because these frames
         # cannot be used as labels (the previous frame cannot know when and
         # where a new drop will fall).
-        np.save(os.path.join(os.getcwd(), "drops_iters_list.npy"), drop_iters)
+        dss = (conf.MAX_ITERS, 3, conf.Nx + 2 * conf.Ng, conf.Ny + 2 * conf.Ng)
+        file_name = f"drop_iters_list_{dss[0]}x{dss[1]}x{dss[2]}x{dss[3]}.npy"
+        np.save(os.path.join(os.getcwd(), file_name), drop_iters)
     return drop_iters
