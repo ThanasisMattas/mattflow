@@ -20,7 +20,7 @@ from mattflow import config as conf, utils
 # file_name = str(datetime.now())[:19]
 # file_name = file_name[:10] + '_' + file_name[11:] + '.dat'
 
-def writeDat(hights_list, time, it):
+def write_dat(hights_list, time, it):
     """writes solution data to a dat file
 
     Args:

@@ -30,7 +30,7 @@ import numpy as np
 from mattflow import config as conf
 
 
-def updateGhostCells(U):
+def update_ghost_cells(U):
     """implements boundary conditions
 
     reflective boundary conditions:

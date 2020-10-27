@@ -23,7 +23,7 @@ from mattflow import config as conf, logger, utils
 from mattflow.utils import time_this
 
 
-def _plotBasin(sub):
+def _plot_basin(sub):
     """plots the basin that contains the fluid
 
     Args:
@@ -50,7 +50,7 @@ def _plotBasin(sub):
         logger.log("Configure SHOW_BASIN. Options: True, False")
 
 
-def _dataFromDat(it):
+def _data_from_dat(it):
     """pulls solution data from a dat file"""
     zeros_left = (4 - len(str(it))) * '0'
     file_name = 'solution' + zeros_left + str(it) + '.dat'
@@ -73,7 +73,7 @@ def _dataFromDat(it):
     return X, Y, Z, Nx, Ny
 
 
-def plotFromDat(time, it):
+def plot_from_dat(time, it):
     """creates and saves a frame as png, reading data from a dat file
 
     Args:
@@ -84,7 +84,7 @@ def plotFromDat(time, it):
     utils.create_child_dir("session")
 
     # extract data from dat
-    X, Y, Z, Nx, Ny = _dataFromDat(it)
+    X, Y, Z, Nx, Ny = _data_from_dat(it)
 
     # plot {
     #
@@ -129,7 +129,7 @@ def plotFromDat(time, it):
     plt.axis('off')
 
     # render the basin that contains the fluid
-    _plotBasin(sub)
+    _plot_basin(sub)
 
     # save
     # fig.tight_layout()
@@ -140,7 +140,7 @@ def plotFromDat(time, it):
     # }
 
 
-def _saveAni(ani, fps, dpi):
+def _save_ani(ani, fps, dpi):
     """saves the animation
 
     Args:
@@ -255,7 +255,7 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
 
 
 @time_this
-def createAnimation(heights_array, time_array=None):
+def animate(heights_array, time_array=None):
     """generates and saves a timelapse of the simulation
 
         heights_array (list) :  list of iter-wise heights solutions
@@ -308,7 +308,7 @@ def createAnimation(heights_array, time_array=None):
         logger.log("Configure PLOTTING_STYLE | options: 'water', 'contour',",
                    "'wireframe'")
     # render the basin that contains the fluid
-    _plotBasin(sub)
+    _plot_basin(sub)
 
     # generate the animation
     ani = animation.FuncAnimation(
@@ -319,7 +319,7 @@ def createAnimation(heights_array, time_array=None):
     )
 
     # save the animation
-    _saveAni(ani, fps, dpi)
+    _save_ani(ani, fps, dpi)
 
     # Play the animation
     if conf.SHOW_ANIMATION is True:

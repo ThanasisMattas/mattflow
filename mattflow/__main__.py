@@ -43,7 +43,7 @@ def main():
     heights_array, time_array, U_dataset = mattflow_solver.simulate()
 
     # Post-processing
-    mattflow_post.createAnimation(heights_array, time_array)
+    mattflow_post.animate(heights_array, time_array)
 
 
 if __name__ == "__main__":

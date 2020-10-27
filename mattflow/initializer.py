@@ -77,7 +77,7 @@ def _gaussian(variance, drops_count):
     return gaussian_distribution
 
 
-def drop_heights_correction(drop_heights):
+def _drop_heights_correction(drop_heights):
     """subtracts the fluid volume that the drop adds to the domain
 
     For a few thousands of iterations the fluid level rises quite subtly, but
@@ -122,7 +122,7 @@ def drop(heights_list, drops_count=None):
         print("Configure MODE | options: 'single drop', 'drops', 'rain'")
     variance = _variance()
     drop_heights = factor * _gaussian(variance, drops_count)
-    drop_correction = drop_heights_correction(drop_heights)
+    drop_correction = _drop_heights_correction(drop_heights)
     heights_list += drop_heights - drop_correction
     return heights_list
 

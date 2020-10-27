@@ -21,7 +21,7 @@ from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 # disabled
 
 
-def deepWater_cmap():
+def deep_water_cmap():
     """Creates a deep water color-map out of shades of blue, adding
     transparency to colors that lie at greater hights (water drops)
     """
@@ -38,16 +38,16 @@ def deepWater_cmap():
     # make last 100 (ligher) colors an interpolation between indices 156 to 176
     water_colors[156:, 1] \
         = np.linspace(water_colors[156, 1], water_colors[176, 1], 100)
-    mattDeepWater = ListedColormap(water_colors)
+    matt_deepwater = ListedColormap(water_colors)
     '''
     water_colors = np.array([[ 0,  71, 114, 255],
                              ...
                              [12 ,164, 255, 255]]) / 255
     '''
-    return mattDeepWater
+    return matt_deepwater
 
 
-def shallowWater_cmap():
+def shallow_water_cmap():
     """Creates a shallow water color-map out of shades of blue, adding
     transparency to colors that lie at greater hights (water drops)
     """
@@ -61,10 +61,10 @@ def shallowWater_cmap():
         np.ones(136),
         np.ones(120) * np.linspace(0.9, 0.3, 120)
     )                                                                # a
-    mattShallowWater = ListedColormap(water_colors)
+    matt_shallowwater = ListedColormap(water_colors)
     '''
     water_colors = np.array([[ 0, 119, 190, 255],
                              ...
                              [12, 164, 255, 255]]) / 255
     '''
-    return mattShallowWater
+    return matt_shallowwater
