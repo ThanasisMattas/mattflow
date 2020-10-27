@@ -190,7 +190,7 @@ def _save_ani(ani, fps, dpi):
         logger.log("Configure SAVE_ANIMATION | Options: True, False")
 
 
-def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
+def _update_plot(frame_number, X, Y, Z, plot, fig, sub, t_hist, ani_title):
     """plots a single frame
 
     used from FuncAnimation to iteratively create a timelapse animation
@@ -201,7 +201,7 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
         plot (list)         : list holding current plot
         fig (figure)        : activated plt.figure
         sub (subplot)       : Axes3D subplot object
-        time_array (list)   : holds the iter-wise times
+        t_hist (list)   : holds the iter-wise times
         ani_title (str)     : to be formated with the frame_number
     """
     if conf.PLOTTING_STYLE == 'water':
@@ -247,19 +247,19 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, time_array, ani_title):
     )
 
     # frame title
-    if time_array is not None:
+    if t_hist is not None:
         ani_title = \
-            f"time: {time_array[frame_number]: >{6}.3f}    iter: {it: >{4}d}"
+            f"time: {t_hist[frame_number]: >{6}.3f}    iter: {it: >{4}d}"
     plt.title(ani_title, y=0.8, fontsize=18)
     sub.title.set_position([0.51, 0.80])
 
 
 @time_this
-def animate(heights_array, time_array=None):
+def animate(h_hist, t_hist=None):
     """generates and saves a timelapse of the simulation
 
-        heights_array (list) :  list of iter-wise heights solutions
-        time_array (list)    :  holds the iter-wise times
+        h_hist (array) :  array of iter-wise heights solutions
+        t_hist (array) :  holds the iter-wise times
     """
     # resolution = figsize * dpi
     # --------------------------
@@ -271,11 +271,11 @@ def animate(heights_array, time_array=None):
     figsize = conf.FIGSIZE
 
     # total frames
-    frames = len(heights_array)
+    frames = len(h_hist)
 
     # X, Y, Z
     X, Y = np.meshgrid(conf.CX[conf.Ng: -conf.Ng], conf.CY[conf.Ng: -conf.Ng])
-    Z = heights_array
+    Z = h_hist
 
     # plot configuration
     fig = plt.figure(figsize=figsize, dpi=dpi)
@@ -284,10 +284,10 @@ def animate(heights_array, time_array=None):
     plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0, hspace=0)
     fig.gca().set_zlim([-0.5, 4])
     plt.axis('off')
-    if time_array is None:
+    if t_hist is None:
         ani_title = f"mesh: {conf.Nx}x{conf.Ny}    solver: {conf.SOLVER_TYPE}"
     else:
-        ani_title = f"time: {time_array[0]: >{6}.3f}    iter: {0: >{5}d}"
+        ani_title = f"time: {t_hist[0]: >{6}.3f}    iter: {0: >{5}d}"
     plt.title(ani_title, y=0.8, fontsize=18)
     sub.title.set_position([0.51, 0.80])
     plt.rcParams.update({'font.size': 20})
@@ -313,7 +313,7 @@ def animate(heights_array, time_array=None):
     # generate the animation
     ani = animation.FuncAnimation(
         fig, _update_plot, frames,
-        fargs=(X, Y, Z, plot, fig, sub, time_array, ani_title),
+        fargs=(X, Y, Z, plot, fig, sub, t_hist, ani_title),
         interval=1000 / fps,
         repeat=True
     )

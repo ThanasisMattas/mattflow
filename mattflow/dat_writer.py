@@ -20,13 +20,13 @@ from mattflow import config as conf, utils
 # file_name = str(datetime.now())[:19]
 # file_name = file_name[:10] + '_' + file_name[11:] + '.dat'
 
-def write_dat(hights_list, time, it):
+def write_dat(h_hist, time, it):
     """writes solution data to a dat file
 
     Args:
-        hights_list (array)  : the 0th state variable, U[0, :, :]
-        time (float)         : current time
-        it (int)             : current iteration
+        h_hist (array)  :  the 0th state variable, U[0, :, :]
+        time (float)    :  current time
+        it (int)        :  current iteration
     """
     utils.create_child_dir("data_files")
     try:
@@ -38,8 +38,8 @@ def write_dat(hights_list, time, it):
                  + 'ghostCells: ' + str(conf.Ng) + '\n'
                  + 'time: ' + "{0:.3f}".format(time) + '\n')
 
-        for j in range(len(hights_list)):
-            for i in range(len(hights_list[0])):
+        for j in range(len(h_hist)):
+            for i in range(len(h_hist[0])):
                 # if-else used for comumn-wise alignment
                 fw.write(
                     ("{0:.15f}".format(conf.CX[i + conf.Ng])
@@ -50,9 +50,9 @@ def write_dat(hights_list, time, it):
                        if conf.CY[j + conf.Ng] < 0
                        else ' ' + "{0:.15f}".format(conf.CY[j + conf.Ng])) + ' '
 
-                    + ("{0:.15f}".format(hights_list[j, i])
-                       if hights_list[j, i] < 0
-                       else ' ' + "{0:.15f}".format(hights_list[j, i])) + ' '
+                    + ("{0:.15f}".format(h_hist[j, i])
+                       if h_hist[j, i] < 0
+                       else ' ' + "{0:.15f}".format(h_hist[j, i])) + ' '
                     # In case the whole U (3D array) is passed and you need
                     # to write all 3 state variables, use the following:
                     # + ("{0:.15f}".format(U[0, j, i]) if U[0, j, i] < 0 \

@@ -193,9 +193,9 @@ def dt(U):
 def simulate():
     time = 0
 
-    U, heights_array, time_array, U_dataset = initializer.initialize()
+    U, h_hist, t_hist, U_ds = initializer.initialize()
     drops_count = 1
-    # idx of the frame saved in heights_array
+    # idx of the frame saved in h_hist
     saving_frame_idx = 0
     # counts up to conf.CONSECUTIVE_FRAMES (1st frame saved at initialization)
     consecutive_frames_counter = 1
@@ -222,7 +222,7 @@ def simulate():
             break
 
         # Apply boundary conditions (reflective)
-        U = bcmanager.updateGhostCells(U)
+        U = bcmanager.update_ghost_cells(U)
 
         # Numerical iterative scheme
         U, drops_count, drop_its_iterator, next_drop_it = solve(
@@ -247,13 +247,13 @@ def simulate():
                 consecutive_frames_counter = 0
             if consecutive_frames_counter < conf.CONSECUTIVE_FRAMES:
                 saving_frame_idx += 1
-                heights_array[saving_frame_idx] = \
+                h_hist[saving_frame_idx] = \
                     U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
                 # time * 10 is insertd, because space is scaled about x10
-                time_array[saving_frame_idx] = time * 10
+                t_hist[saving_frame_idx] = time * 10
                 consecutive_frames_counter += 1
             if conf.SAVE_DS_FOR_ML:
-                U_dataset[it] = U
+                U_ds[it] = U
         else:
             logger.log("Configure WRITE_DAT | Options: True, False")
 
@@ -263,4 +263,4 @@ def simulate():
     if conf.DUMP_MEMMAP and conf.WORKERS > 1:
         utils.delete_memmap()
 
-    return heights_array, time_array, U_dataset
+    return h_hist, t_hist, U_ds

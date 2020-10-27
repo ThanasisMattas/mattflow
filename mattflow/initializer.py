@@ -149,8 +149,8 @@ def _init_U():
     return U
 
 
-def _init_heights_array(U):
-    """creates and initializes heights_array
+def _init_h_hist(U):
+    """creates and initializes h_hist
 
     - holds the states of the fluid for post-processing
     -saving <CONSECUTIVE_FRAMES> frames every <FRAME_SAVE_FREQ> iters
@@ -164,50 +164,49 @@ def _init_heights_array(U):
         * conf.CONSECUTIVE_FRAMES
         + min(conf.MAX_ITERS % conf.FRAME_SAVE_FREQ, conf.CONSECUTIVE_FRAMES)
     )
-    heights_array = np.zeros((num_states_to_save, conf.Nx, conf.Ny))
-    heights_array[0] = U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
-    return heights_array
+    h_hist = np.zeros((num_states_to_save, conf.Nx, conf.Ny))
+    h_hist[0] = U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
+    return h_hist
 
 
-def _init_U_dataset(U):
-    dataset_name = "mattflow_data_{0}x{1}x{2}x{3}".format(
+def _init_U_ds(U):
+    ds_name = "mattflow_data_{0}x{1}x{2}x{3}".format(
         conf.MAX_ITERS, 3, conf.Nx + 2 * conf.Ng, conf.Ny + 2 * conf.Ng)
-    memmap_file = os.path.join(os.getcwd(), dataset_name)
-    U_dataset = np.memmap(memmap_file, dtype=np.dtype('float64'),
-                          shape=(conf.MAX_ITERS,
-                                 3,
-                                 conf.Nx + 2 * conf.Ng,
-                                 conf.Ny + 2 * conf.Ng),
-                          mode="w+")
-    U_dataset[0] = U
-    return U_dataset
+    memmap_file = os.path.join(os.getcwd(), ds_name)
+    U_ds = np.memmap(memmap_file, dtype=np.dtype('float64'),
+                     shape=(conf.MAX_ITERS,
+                            3,
+                            conf.Nx + 2 * conf.Ng,
+                            conf.Ny + 2 * conf.Ng),
+                     mode="w+")
+    U_ds[0] = U
+    return U_ds
 
 
 def initialize():
     """wraper that initializes and returns all necessary data_structures
 
     Returns
-        U (3D array)          :  the state-variables-3D-matrix (populating a
-                                 x,y grid)
-                                 - shape: (3, Nx + 2 * Ng, Ny + 2 * Ng)
-                                 - U[0] : state varables [h, hu, hv]
-                                 - U[1] : y dimention (rows)
-                                 - U[2] : x dimention (columns)
-        heights_array (array) :  holds the step-wise height solutions for the
+        U (3D array)   :  the state-variables-3D-matrix (populating a x,y grid)
+                          - shape: (3, Nx + 2 * Ng, Ny + 2 * Ng)
+                          - U[0] : state varables [h, hu, hv]
+                          - U[1] : y dimention (rows)
+                          - U[2] : x dimention (columns)
+        h_hist (array) :  holds the step-wise height solutions for the
                                  post-processing animation
-        time_array (array)    :  holds the step-wise times for the post-
-                                 processing animation
-        U_dataset (memmap)    :  holds the state-variables 3D matrix data for
-                                 all the timesteps
-                                 (conf.MAX_ITERS, 3, Nx + 2 * Ng, Ny + 2 * Ng)
+        t_hist (array) :  holds the step-wise times for the post-
+                          processing animation
+        U_ds (memmap)  :  holds the state-variables 3D matrix data for all
+                          the timesteps
+                          (conf.MAX_ITERS, 3, Nx + 2 * Ng, Ny + 2 * Ng)
     """
     logger.log('Initialization...')
 
     U = _init_U()
-    heights_array = _init_heights_array(U)
-    time_array = time_array = np.zeros(len(heights_array))
+    h_hist = _init_h_hist(U)
+    t_hist = t_hist = np.zeros(len(h_hist))
     if conf.SAVE_DS_FOR_ML:
-        U_dataset = _init_U_dataset(U)
+        U_ds = _init_U_ds(U)
     else:
-        U_dataset = None
-    return U, heights_array, time_array, U_dataset
+        U_ds = None
+    return U, h_hist, t_hist, U_ds

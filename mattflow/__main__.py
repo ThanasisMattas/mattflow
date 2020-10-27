@@ -40,10 +40,10 @@ def main():
                         max_y=0.7, min_y=-0.7)
 
     # Solution
-    heights_array, time_array, U_dataset = mattflow_solver.simulate()
+    h_hist, t_hist, U_ds = mattflow_solver.simulate()
 
     # Post-processing
-    mattflow_post.animate(heights_array, time_array)
+    mattflow_post.animate(h_hist, t_hist)
 
 
 if __name__ == "__main__":
