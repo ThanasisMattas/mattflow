@@ -48,6 +48,10 @@ def delete_prev_runs_data():
             shutil.rmtree(dir)
 
 
+def U_shape():
+    return (3, conf.Nx + 2 * conf.Ng, conf.Ny + 2 * conf.Ng)
+
+
 def delete_memmap():
     try:
         shutil.rmtree(conf.MEMMAP_DIR)
@@ -150,7 +154,8 @@ def drop_iters_list():
         # It is needed to retrieve the new drop frames, because these frames
         # cannot be used as labels (the previous frame cannot know when and
         # where a new drop will fall).
-        dss = (conf.MAX_ITERS, 3, conf.Nx + 2 * conf.Ng, conf.Ny + 2 * conf.Ng)
+        # ds_shape
+        dss = (conf.MAX_ITERS,) + U_shape()
         file_name = f"drop_iters_list_{dss[0]}x{dss[1]}x{dss[2]}x{dss[3]}.npy"
         np.save(os.path.join(os.getcwd(), file_name), drop_iters)
     return drop_iters

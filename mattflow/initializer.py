@@ -30,7 +30,7 @@ from random import randint, uniform
 
 import numpy as np
 
-from mattflow import config as conf, dat_writer, logger
+from mattflow import config as conf, dat_writer, logger, utils
 
 
 def _variance():
@@ -99,17 +99,17 @@ def _drop_heights_correction(drop_heights):
     return drop_correction
 
 
-def drop(heights_list, drops_count=None):
+def drop(h_hist, drops_count=None):
     """Generates a drop
 
     Drop is modeled as a gaussian distribution
 
     Args:
-        heights_list (array)   :  the 0th state variable, U[0, :, :]
-        drops_count(int)       :  drop counter
+        h_hist (array)   :  the 0th state variable, U[0, :, :]
+        drops_count(int) :  drop counter
 
     Returns:
-        heights_list(2D array) :  drop is added to the input heights_list
+        h_hist(2D array) :  drop is added to the input h_hist
     """
     # multiply with 3 / 2 for a small stone droping
     #          with 1 / 5 for a water drop with a considerable momentum build
@@ -123,17 +123,15 @@ def drop(heights_list, drops_count=None):
     variance = _variance()
     drop_heights = factor * _gaussian(variance, drops_count)
     drop_correction = _drop_heights_correction(drop_heights)
-    heights_list += drop_heights - drop_correction
-    return heights_list
+    h_hist += drop_heights - drop_correction
+    return h_hist
 
 
 def _init_U():
     """creates and initializes the state-variables 3D matrix, U"""
     cx = conf.CX
     cy = conf.CY
-    U = np.zeros(((3,
-                   conf.Ny + 2 * conf.Ng,
-                   conf.Nx + 2 * conf.Ng)))
+    U = np.zeros((utils.U_shape()))
     # 1st drop
     U[0, :, :] = conf.SURFACE_LEVEL + drop(U[0, :, :], drops_count=1)
     # write dat | default: False
@@ -170,14 +168,11 @@ def _init_h_hist(U):
 
 
 def _init_U_ds(U):
-    ds_name = "mattflow_data_{0}x{1}x{2}x{3}".format(
-        conf.MAX_ITERS, 3, conf.Nx + 2 * conf.Ng, conf.Ny + 2 * conf.Ng)
+    dss = (conf.MAX_ITERS,) + utils.U_shape()
+    ds_name = f"mattflow_data_{dss[0]}x{dss[1]}x{dss[2]}x{dss[3]}"
     memmap_file = os.path.join(os.getcwd(), ds_name)
     U_ds = np.memmap(memmap_file, dtype=np.dtype('float64'),
-                     shape=(conf.MAX_ITERS,
-                            3,
-                            conf.Nx + 2 * conf.Ng,
-                            conf.Ny + 2 * conf.Ng),
+                     shape=dss,
                      mode="w+")
     U_ds[0] = U
     return U_ds
