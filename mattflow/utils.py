@@ -56,22 +56,28 @@ def delete_memmap():
 
 
 def print_duration(start, end, process):
-  """prints the duration of a process"""
-  dashes = (19 - len(process)) * '-'
-  print(process.capitalize() + " duration"
-        + dashes
-        + str(timedelta(seconds=end - start))[:10])
+    """prints the duration of a process"""
+    process_name = {
+        "main": "Total",
+        "simulate": "Solution",
+        "createAnimation": "Post-processing"
+    }
+    if process in process_name:
+        process = process_name[process]
+    prefix = f"{process.capitalize()} duration"
+    duration = timedelta(seconds=end - start)
+    print(f"{prefix:-<30}{duration}"[:40])
 
 
 def create_child_dir(dirname):
-  """create a directory under the current working directory"""
-  try:
-      if os.path.isdir(os.path.join(os.getcwd(), dirname)):
-          pass
-      else:
-          os.mkdir(os.path.join(os.getcwd(), dirname))
-  except OSError:
-      print("Unable to create ./" + dirname + " directory")
+    """create a directory under the current working directory"""
+    try:
+        if os.path.isdir(os.path.join(os.getcwd(), dirname)):
+            pass
+        else:
+            os.mkdir(os.path.join(os.getcwd(), dirname))
+    except OSError:
+        print("Unable to create ./" + dirname + " directory")
 
 
 def time_this(f):
