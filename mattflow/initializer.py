@@ -29,6 +29,7 @@ import os
 from random import randint, uniform
 
 import numpy as np
+from numpy.lib.format import open_memmap
 
 from mattflow import config as conf, dat_writer, logger, utils
 
@@ -169,11 +170,10 @@ def _init_h_hist(U):
 
 def _init_U_ds(U):
     dss = (conf.MAX_ITERS,) + utils.U_shape()
-    ds_name = f"mattflow_data_{dss[0]}x{dss[1]}x{dss[2]}x{dss[3]}"
-    memmap_file = os.path.join(os.getcwd(), ds_name)
-    U_ds = np.memmap(memmap_file, dtype=np.dtype('float64'),
-                     shape=dss,
-                     mode="w+")
+    ds_name = f"mattflow_data_{dss[0]}x{dss[1]}x{dss[2]}x{dss[3]}.npy"
+    U_ds = open_memmap(os.path.join(os.getcwd(), ds_name),
+                       dtype=np.dtype('float64'),
+                       shape=dss)
     U_ds[0] = U
     return U_ds
 
