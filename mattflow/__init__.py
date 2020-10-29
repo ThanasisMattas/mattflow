@@ -13,7 +13,7 @@
 
 
 __name__ = 'mattflow'
-__version__ = '1.3.3'
+__version__ = '1.3.4'
 __author__ = 'Athanasios Mattas'
 __author_email__ = 'thanasismatt@gmail.com'
 __description__ = 'A CFD python package for the shallow water equations'
