@@ -52,6 +52,10 @@ def U_shape():
     return (3, conf.Nx + 2 * conf.Ng, conf.Ny + 2 * conf.Ng)
 
 
+def ds_shape():
+    return (conf.MAX_ITERS, 3, conf.Nx, conf.Ny)
+
+
 def delete_memmap():
     try:
         shutil.rmtree(conf.MEMMAP_DIR)
@@ -142,7 +146,7 @@ def drop_iters_list():
             i += 1
     elif conf.ITERS_BETWEEN_DROPS_MODE == "random":
         while iters_cumsum <= conf.MAX_ITERS:
-            iters_cumsum += random.randint(50, 200)
+            iters_cumsum += random.randint(50, 150)
             drop_iters.append(iters_cumsum)
     else:
         logger.log("Configure ITERS_BETWEEN_DROPS_MODE | options:"
@@ -155,7 +159,7 @@ def drop_iters_list():
         # cannot be used as labels (the previous frame cannot know when and
         # where a new drop will fall).
         # ds_shape
-        dss = (conf.MAX_ITERS,) + U_shape()
+        dss = ds_shape()
         file_name = f"drop_iters_list_{dss[0]}x{dss[1]}x{dss[2]}x{dss[3]}.npy"
         np.save(os.path.join(os.getcwd(), file_name), drop_iters)
     return drop_iters

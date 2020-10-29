@@ -29,12 +29,12 @@ from mattflow import (bcmanager,
 from mattflow.utils import time_this
 
 
-def solve(U,
-          delta_t,
-          it,
-          drops_count,
-          drop_its_iterator,
-          next_drop_it):
+def _solve(U,
+           delta_t,
+           it,
+           drops_count,
+           drop_its_iterator,
+           next_drop_it):
     """evaluates the state variables (h, hu, hv) at a new time-step
 
     it can be used in a for/while loop, iterating through each time-step
@@ -225,7 +225,7 @@ def simulate():
         U = bcmanager.update_ghost_cells(U)
 
         # Numerical iterative scheme
-        U, drops_count, drop_its_iterator, next_drop_it = solve(
+        U, drops_count, drop_its_iterator, next_drop_it = _solve(
             U=U,
             delta_t=delta_t,
             it=it,
@@ -243,7 +243,7 @@ def simulate():
         elif not conf.WRITE_DAT:
             # Append current frame to the list, to be animated at post-processing
             if it % conf.FRAME_SAVE_FREQ == 0:
-                # zero the counter, when a perfect devision occurs
+                # zero the counter, when a perfect division occurs
                 consecutive_frames_counter = 0
             if consecutive_frames_counter < conf.CONSECUTIVE_FRAMES:
                 saving_frame_idx += 1
@@ -253,13 +253,13 @@ def simulate():
                 t_hist[saving_frame_idx] = time * 10
                 consecutive_frames_counter += 1
             if conf.SAVE_DS_FOR_ML:
-                U_ds[it] = U
+                U_ds[it] = U[:, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
         else:
             logger.log("Configure WRITE_DAT | Options: True, False")
 
         logger.log_timestep(it, time)
 
-    # clean-up memap
+    # clean-up memmap
     if conf.DUMP_MEMMAP and conf.WORKERS > 1:
         utils.delete_memmap()
 
