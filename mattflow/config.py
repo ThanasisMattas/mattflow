@@ -64,6 +64,9 @@ MAX_ITERS = 650
 # Solution configuration {
 #
 # saving <CONSECUTIVE_FRAMES> frames every <FRAME_SAVE_FREQ> iters
+# - resulting to a lighter animation (less fps)
+# - visualizing and debugging long simulations
+#   e.g. MAX_ITERS = 10000, FREQ = 500, CONSECUTIVE_FRAMES = 25
 FRAME_SAVE_FREQ = 3
 CONSECUTIVE_FRAMES = 1
 
@@ -112,8 +115,8 @@ MAX_N_DROPS = 5
 # Options:
 # 1. 'fixed'  : fixed every 105 iters
 # 2. 'custom' : periodically selected from a list of 10 custom iter intervals
-# 3. 'random' : between 50 - 200 iters
-ITERS_BETWEEN_DROPS_MODE = "custom"
+# 3. 'random' : between 60 - 120 iters
+ITERS_BETWEEN_DROPS_MODE = "random"
 
 FIXED_ITERS_BETWEEN_DROPS = 105
 CUSTOM_ITERS_BETWEEN_DROPS = [120, 150, 140, 130, 210, 60, 180, 220, 140, 130]

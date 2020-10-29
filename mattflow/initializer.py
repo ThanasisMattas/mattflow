@@ -93,7 +93,7 @@ def _drop_heights_correction(drop_heights):
                                       by a divisor for a smoother transition
                                       to the next time_step
     """
-    divisor = 3
+    divisor = 2
     drop_correction = np.empty_like(drop_heights)
     drop_heights_sum = drop_heights.sum()
     drop_correction.fill(drop_heights_sum / drop_heights.size / divisor)

@@ -286,7 +286,7 @@ def flux(U):
         return _flux_batch(U, parallel=False)
 
     # slice the column dimention (x) to the number of workers
-    # (devide-ceil)
+    # (divide-ceil)
     window = -(-(Nx + 2 * Ng) // workers)
 
     # the extra cells at the two ends are required by the numerical scheme
