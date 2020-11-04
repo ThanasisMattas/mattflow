@@ -132,7 +132,7 @@ def _solve(U,
     '''
 
 
-def dt(U):
+def dt(U, epsilon=1e-6):
     """evaluates the time discretization step of the current iteration
 
     The stability condition of the numerical simulation (Known as
@@ -169,24 +169,26 @@ def dt(U):
     cells and, eventually the simulation (literally) blows up.
 
     Args:
-        U (3D array) :  the state variables, populating a x,y grid
+        U (3D array)   :  the state variables, populating a x,y grid
+        epsilon (float):  small number added to the denominator, to avoid
+                          dividing with zero (default: 1e-6)
 
     Returns:
         dt (float)   :  time discretization step
     """
-    # h = U[0]
-    # u = U[1] / h
-    # v = U[2] / h
-    # g = 9.81
-    # c = np.sqrt(abs(g * h))
+    h = U[0]
+    u = U[1] / (h + epsilon)
+    v = U[2] / (h + epsilon)
+    __import__('ipdb').set_trace(context=9)
+    g = 9.81
+    c = np.sqrt(np.abs(g * h))
 
-    # dt_x = dx / (abs(u) + c)
-    # dt_y = dy / (abs(v) + c)
+    dt_x = conf.dx / (np.abs(u) + c + epsilon)
+    dt_y = conf.dy / (np.abs(v) + c + epsilon)
 
-    dt_x = conf.dx / (np.abs(U[1] / U[0]) + np.sqrt(np.abs(9.81 * U[0])))
-    dt_y = conf.dy / (np.abs(U[2] / U[0]) + np.sqrt(np.abs(9.81 * U[0])))
     dt = 1.0 / (1.0 / dt_x + 1.0 / dt_y)
-    return np.min(dt) * conf.COURANT
+    dt_final = np.min(dt) * conf.COURANT
+    return dt_final
 
 
 @time_this
