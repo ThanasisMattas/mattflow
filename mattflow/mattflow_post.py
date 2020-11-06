@@ -31,16 +31,16 @@ def _plot_basin(sub):
     if conf.SHOW_BASIN is True:
         # make basin a bit wider, because water appears to be out of the basin
         # because of the perspective mode
-        X_bas, Y_bas = np.meshgrid(conf.CX[conf.Ng - 1: conf.Nx + 2],
-                                   conf.CY[conf.Ng - 1: conf.Ny + 2])
+        X_bas, Y_bas = np.meshgrid(conf.CX[conf.Ng - 1: conf.Nx + conf.Ng + 1],
+                                   conf.CY[conf.Ng - 1: conf.Ny + conf.Ng + 1])
         # BASIN
-        BASIN = np.zeros((conf.Ny + 2 * conf.Ng, conf.Nx + 2 * conf.Ng))
+        BASIN = np.zeros((conf.Ny + 2, conf.Nx + 2))
         # left-right walls
         BASIN[:, 0] = 2.5
-        BASIN[:, conf.Nx + 2 * conf.Ng - 1] = 2.5
+        BASIN[:, conf.Nx + 1] = 2.5
         # top-bottom walls
         BASIN[0, :] = 2.5
-        BASIN[conf.Ny + 2 * conf.Ng - 1, :] = 2.5
+        BASIN[conf.Ny + 1, :] = 2.5
         sub.plot_surface(X_bas, Y_bas, BASIN, rstride=2, cstride=2, linewidth=0,
                          color=(0.4, 0.4, 0.5, 0.1))
     elif conf.SHOW_BASIN is False:
