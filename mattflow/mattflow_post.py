@@ -17,7 +17,6 @@ import os
 import numpy as np
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 from mattflow import config as conf, logger, utils
 from mattflow.utils import time_this

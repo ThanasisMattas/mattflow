@@ -14,7 +14,6 @@
 # TODO: implement high order schemes
 
 import random
-import os
 
 import numpy as np
 
@@ -179,7 +178,6 @@ def dt(U, epsilon=1e-6):
     h = U[0]
     u = U[1] / (h + epsilon)
     v = U[2] / (h + epsilon)
-    __import__('ipdb').set_trace(context=9)
     g = 9.81
     c = np.sqrt(np.abs(g * h))
 

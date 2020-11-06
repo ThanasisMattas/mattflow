@@ -11,14 +11,8 @@
 # ======================================================================
 """Saves the step-wise solution at a .dat file"""
 
-# from datetime import datetime
-import os
-
 from mattflow import config as conf, utils
 
-
-# file_name = str(datetime.now())[:19]
-# file_name = file_name[:10] + '_' + file_name[11:] + '.dat'
 
 def write_dat(h_hist, time, it):
     """writes solution data to a dat file
