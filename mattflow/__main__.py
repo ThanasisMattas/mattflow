@@ -17,12 +17,7 @@
                         """
 
 
-import numpy as np
-
-from mattflow import (config as conf,
-                      dat_writer,
-                      initializer,
-                      logger,
+from mattflow import (logger,
                       mattflow_post,
                       mattflow_solver,
                       utils)
