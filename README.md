@@ -63,8 +63,7 @@ _ρ_ : density<br />
 _g_ : gravity acceleration
 
 ## MattFlow structure
-
-**More details at this [Colab notebook]**
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ThanasisMattas/mattflow/blob/master/notebooks/mattflow_notebook.ipynb)
 
 0. configuration of the simulation via a config file
 1. pre-process<br />
@@ -130,5 +129,4 @@ Special thanks to [Marios Mitalidis] for the valuable feedback.
 [Runge-Kutta]: <https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods>
 [Lax-Wendroff]: <https://en.wikipedia.org/wiki/Lax%E2%80%93Wendroff_method>
 [MacCormack]: <https://en.wikipedia.org/wiki/MacCormack_method>
-[Colab notebook]: <https://colab.research.google.com/github/ThanasisMattas/mattflow/blob/master/notebooks/mattflow_notebook.ipynb#scrollTo=sqSJYpEwmJN3>
 [Marios Mitalidis]: <https://github.com/mmitalidis>

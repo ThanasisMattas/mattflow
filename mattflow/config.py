@@ -61,8 +61,6 @@ CY = None
 STOPPING_TIME = 30000
 MAX_ITERS = 650
 
-# Solution configuration {
-#
 # saving <CONSECUTIVE_FRAMES> frames every <FRAME_SAVE_FREQ> iters
 # - resulting to a lighter animation (less fps)
 # - visualizing and debugging long simulations
