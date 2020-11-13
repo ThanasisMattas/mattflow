@@ -1,0 +1,39 @@
+{% set name = "mattflow" %}
+{% set version = "1.3.4" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  git_url: https://github.com/ThanasisMattas/mattflow.git
+
+build:
+  noarch: python
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+  entry_points:
+    - mattflow=mattflow.__main__:main
+  include_recipe: False
+
+requirements:
+  host:
+    - python >=3.6
+    - pip
+  run:
+    - python >=3.6
+    - numpy >=1.19.2
+    - matplotlib >=3.3.2
+    - joblib >=0.13.2
+    - numba >=0.51.2
+
+about:
+  home: https://github.com/ThanasisMattas/mattflow.git
+  license: GNU General Public License v3 or later (LGPLv3+)
+  license_family: LGPL
+  license_file: COPYING
+  summary: A DL solver of the Shallow Water Equations
+
+extra:
+  maintainers:
+    - ThanasisMattas
