@@ -48,12 +48,12 @@ MAX_Y = None
 # Spatial discretization steps (structured/Cartesian mesh)
 dx = None
 dy = None
-#
-# }
 
 # cell centers along the x and y axes
 CX = None
 CY = None
+#
+# }
 
 # Solution configuration {
 #

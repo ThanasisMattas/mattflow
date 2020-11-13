@@ -172,9 +172,10 @@ def _init_U_ds(U):
     dss = utils.ds_shape()
     ds_name = f"mattflow_data_{dss[0]}x{dss[1]}x{dss[2]}x{dss[3]}.npy"
     U_ds = open_memmap(os.path.join(os.getcwd(), ds_name),
+                       mode='w+',
                        dtype=np.dtype('float64'),
                        shape=dss)
-    U_ds[0] = U
+    U_ds[0] = U[:, conf.Ng: - conf.Ng, conf.Ng: - conf.Ng]
     return U_ds
 
 
