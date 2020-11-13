@@ -170,7 +170,7 @@ def dt(U, epsilon=1e-6):
     Args:
         U (3D array)   :  the state variables, populating a x,y grid
         epsilon (float):  small number added to the denominator, to avoid
-                          dividing with zero (default: 1e-6)
+                          dividing by zero (default: 1e-6)
 
     Returns:
         dt (float)   :  time discretization step
