@@ -19,30 +19,14 @@ ___
 
 ## How to install & run MattFlow
 
-1. anaconda environment (recommended)
 
 ```bash
-$ conda create --name mattflow python=3 numba
+$ conda create --name mattflow -y
 $ conda activate mattflow
-$ pip install mattflow
+$ conda install -c mattasa mattflow
 $ mattflow
 ```
 
-2. venv (python>=3.3)
-
-```bash
-$ python3 -m venv mattflow_env
-$ source mattflow_env/bin/activate
-$ pip install mattflow
-$ mattflow
-```
-
-3. pip
-
-```bash
-$ pip install --user mattflow
-$ mattflow
-```
 
 ## Swallow Water Equations
 
