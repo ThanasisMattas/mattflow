@@ -235,11 +235,11 @@ def simulate():
         )
 
         if conf.WRITE_DAT:
-            dat_writer.writeDat(
+            dat_writer.write_dat(
                 U[0, conf.Ng: conf.Ny + conf.Ng, conf.Ng: conf.Nx + conf.Ng],
                 time, it
             )
-            mattflow_post.plotFromDat(time, it)
+            mattflow_post.plot_from_dat(time, it)
         elif not conf.WRITE_DAT:
             # Append current frame to the list, to be animated at post-processing
             if it % conf.FRAME_SAVE_FREQ == 0:

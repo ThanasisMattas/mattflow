@@ -29,7 +29,7 @@ setup(
     version=about['__version__'],
     author=about['__author__'],
     author_email=about['__author_email__'],
-    licence='GNU GPL3',
+    license='GNU GPL3',
     description=about['__description__'],
     long_description=long_description,
     long_description_content_type='text/markdown',

@@ -276,8 +276,6 @@ def flux(U):
     Nx = conf.Nx
     Ny = conf.Ny
     Ng = conf.Ng
-    dx = conf.dx
-    dy = conf.dy
     workers = conf.WORKERS
 
     # Although joblib.Parallel can work single-processing, passing the whole
