@@ -11,7 +11,7 @@ ___
 | requirements         | os        |
 | -------------------- | --------- |
 | python3              | GNU/Linux |
-| numpy >= 1.19.2      | Windows   |
+| numpy >= 1.18.5      | Windows   |
 | matplotlib >= 3.3.2  |           |
 | numba >= 0.51.2      |           |
 | joblib >= 0.13.2     |           |

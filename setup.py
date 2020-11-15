@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 import os
 
 
-REQUIRED = ['numpy>=1.19.2',
+REQUIRED = ['numpy>=1.18.5',
             'matplotlib>=3.3.2',
             'joblib>=0.13.2']
 
