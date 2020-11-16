@@ -1,7 +1,7 @@
 #!/bin/bash
-# script: pypi_to_conda.sh
+# script: pypi_to_conda
 # ------------------------
-# Uploads a package to anaconda cloud, if it is already on pypi.org.
+# Uploads a package to the anaconda cloud, if it is already on pypi.org.
 #
 # You can pass 1 argument with the name of the package, as it is on pypi.org.
 #
@@ -10,9 +10,9 @@
 #
 # Examples:
 # $ anaconda login
-# $ pypi_to_conda.sh
-# $ pypi_to_conda.sh <pkg>
-# $ pypi_to_conda.sh "<pkg> --version <version>"
+# $ source pypi_to_conda
+# $ source pypi_to_conda <pkg>
+# $ source pypi_to_conda "<pkg> --version <version>"
 if [ $# -eq 0 ]; then
   # default
   pkg="mattflow"
@@ -44,14 +44,14 @@ fi
 output_tar=$(conda build $pkg --no-test --output)
 conda convert --platform all $output_tar -o output_dir/
 
-# Upload platformwise packages to anaconda cloud
+# Upload platformwise packages to the anaconda cloud
 for arch_dir in output_dir/*; do
   for arch_tar in $arch_dir/*.tar.bz2; do
     anaconda upload $arch_tar
   done
 done
 
-# clean the tars created
+# Clean the tars created
 conda build purge
 # Remove the build folder
 cd ../

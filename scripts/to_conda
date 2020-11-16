@@ -1,16 +1,15 @@
 #!/bin/bash
-# script: to_conda.sh
+# script: to_conda
 # ------------------------
-# Uploads a package to anaconda cloud, using as recipe a meta.yaml file.
+# Uploads a package to the anaconda cloud, using as recipe a meta.yaml file.
 # NOTE: Currently meta.yaml lies in the repository directory.
-#
 #
 # How to install prerequisites:
 # $ conda install conda-build anaconda-client -y
 #
 # Examples:
 # $ anaconda login
-# $ source to_conda.sh
+# $ source to_conda
 
 python_versions=(3.7 3.8 3.9)
 
@@ -18,6 +17,7 @@ mkdir build
 cd build
 
 # Build for all specified python versions.
+# conda build ../../. --no-test
 for v in ${python_versions[@]}; do
   conda build --python $v ../../. --no-test
 done

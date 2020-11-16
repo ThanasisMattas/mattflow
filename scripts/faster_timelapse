@@ -9,8 +9,8 @@
 # the new video as a portion of the duration of the old video (default: 0.6).
 #
 # examples:
-# $ faster_timelapse
-# $ faster_timelapse 0.5
+# $ source faster_timelapse
+# $ source faster_timelapse 0.5
 
 # check if an argument is passed: portion of previous video duration (0.0 - 1.0)
 if [ $# -eq 0 ]; then
@@ -47,4 +47,4 @@ ffmpeg -i "$old_file_name" -filter:v "setpts=${portion}*PTS" -q 1 -loglevel pani
 # create gif
 ffmpeg -i "$new_file_name" -vf \
 	"scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" \
-	-loop 0 -loglevel panic "$gif_name" 
+	-loop 0 -loglevel panic "$gif_name"

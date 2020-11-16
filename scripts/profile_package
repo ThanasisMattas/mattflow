@@ -1,0 +1,32 @@
+#!/bin/bash
+# script: profile_package
+# ------------------------
+# Profiles a python package, using rkern's line_profiler.
+#
+# You can pass 1 argument with the name of the package.
+#
+# Prerequisites:
+# 1. $ pip install line_profiler
+# 2. Manually planting @profile above each function to be profiled.
+#
+# Examples:
+# $ source profile_package
+# $ source profile_package <pkg>
+if [ $# -eq 0 ]; then
+  # default
+  pkg="mattflow"
+else
+  pkg=$1
+fi
+
+if [ -d $PWD/$pkg ]; then
+  export PYTHONPATH="${PYTHONPATH}:${PWD}/${pkg}"
+  kernprof -lv mattflow/__main__.py
+else
+  cwd=$PWD
+  cd ..
+  export PYTHONPATH="${PYTHONPATH}:${PWD}/${pkg}"
+  kernprof -lv mattflow/__main__.py
+  cd $cwd
+fi
+
