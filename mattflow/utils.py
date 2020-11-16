@@ -100,8 +100,10 @@ def time_this(f):
         f(funtion)      : the function to be decorated
 
     Returns:
-        wrap (function) : returns the result of the decorated function
+        wrap (callable) : returns the result of the decorated function
     """
+    assert callable(f)
+
     @wraps(f)
     def wrap(*args, **kwargs):
         start = timer()
