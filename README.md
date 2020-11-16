@@ -1,7 +1,6 @@
 # MattFlow
 
-![Conda](https://img.shields.io/conda/v/mattasa/mattflow)
-![GitHub](https://img.shields.io/github/license/ThanasisMattas/mattflow)
+![Conda] ![Lincense]
 
 A CFD python package for the shallow water equations.
 
@@ -20,8 +19,7 @@ ___
 | joblib >= 0.13.2     |           |
 | ffmpeg (optional)    |           |
 
-## How to install & run MattFlow
-
+## Install & Run
 
 ```bash
 $ conda create --name mattflow -y
@@ -29,7 +27,6 @@ $ conda activate mattflow
 $ conda install -c mattasa mattflow
 $ mattflow
 ```
-
 
 ## Swallow Water Equations
 
@@ -49,7 +46,7 @@ _υ_ : velocity along the y axis<br />
 _ρ_ : density<br />
 _g_ : gravity acceleration
 
-## MattFlow structure
+## Structure
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ThanasisMattas/mattflow/blob/master/notebooks/mattflow_notebook.ipynb)
 
 0. configuration of the simulation via a config file
@@ -68,7 +65,7 @@ structured/cartesian mesh
 3. post-processing<br />
    matplotlib animation
 
-## Additional configurations
+## Configuration options
 
 - mesh sizing
 - domain sizing
@@ -79,23 +76,26 @@ structured/cartesian mesh
 - plotting style
 - animation options
 
-Currently, you can configure the simulation at the _config_ module
+Currently, the simulation can be configured at the ```config.py``` module.
 
 ## TODO
 
 1. CI
 2. API (TUI-GUI)
-3. Optimization: Moving core to C++ or Cython, Numba
+3. Consider Cythonizing or moving to C++
 4. Higher order schemes
-5. Addition of source terms
-6. Addition of viscous models
+5. Include source terms
+6. Include viscous models
 7. Algorithm that converts every computational second to a real-time second,
-   playing with the fps<br /> at the post-processing timelapse, because each
-   iteration uses different time-step (CFL condition)
+   modifying the fps at<br />the post-processing animation, because each
+   iteration uses different time-step (CFL condition).
 8. Moving objects inside the domain
 9. Unstructured mesh
-10. Extent to 3D CFD?
+10. 3D CFD
 
+
+## License
+[GNU General Public License v3.0]
 <br />
 <br />
 
@@ -105,15 +105,20 @@ Special thanks to [Marios Mitalidis] for the valuable feedback.
 
 ***Start the flow!***
 
+
 >(C) 2019, Athanasios Mattas<br />
 >thanasismatt@gmail.com
 
 
 [//]: # "links"
 
+
+[Conda]: <https://img.shields.io/conda/v/mattasa/mattflow>
+[Lincense]: <https://img.shields.io/github/license/ThanasisMattas/mattflow>
 [wiki]: <https://en.wikipedia.org/wiki/Shallow_water_equations>
 [Lax-Friedrichs]: <https://en.wikipedia.org/wiki/Lax%E2%80%93Friedrichs_method>
 [Runge-Kutta]: <https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods>
 [Lax-Wendroff]: <https://en.wikipedia.org/wiki/Lax%E2%80%93Wendroff_method>
 [MacCormack]: <https://en.wikipedia.org/wiki/MacCormack_method>
+[GNU General Public License v3.0]: <https://github.com/ThanasisMattas/mattflow/blob/master/COPYING>
 [Marios Mitalidis]: <https://github.com/mmitalidis>
