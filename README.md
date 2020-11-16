@@ -1,5 +1,8 @@
 # MattFlow
 
+![Conda](https://img.shields.io/conda/v/mattasa/mattflow)
+![GitHub](https://img.shields.io/github/license/ThanasisMattas/mattflow)
+
 A CFD python package for the shallow water equations.
 
 MattFlow simulates the surface of the water after any initial conditions, such as drops or stones falling on.
