@@ -14,7 +14,7 @@ ___
 | -------------------- | --------- |
 | python3              | GNU/Linux |
 | numpy >= 1.18.5      | Windows   |
-| matplotlib >= 3.3.2  |           |
+| matplotlib >= 3.3.1  | OSX       |
 | numba >= 0.51.2      |           |
 | joblib >= 0.13.2     |           |
 | ffmpeg (optional)    |           |
