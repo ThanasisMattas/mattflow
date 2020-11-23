@@ -302,7 +302,7 @@ def flux(U):
         except FileExistsError:
             pass
         memmap_file = os.path.join(conf.MEMMAP_DIR, "flux_memmap")
-        flux_out = np.memmap(memmap_file, dtype=np.dtype('float64'),
+        flux_out = np.memmap(memmap_file, dtype=np.dtype('float32'),
                              shape=(len(slices), 3, Ny, window),
                              mode="w+")
 
