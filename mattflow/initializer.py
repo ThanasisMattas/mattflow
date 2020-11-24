@@ -9,7 +9,7 @@
 #
 # (C) 2019 Athanasios Mattas
 # ======================================================================
-"""Handles the initialization of the simulation"""
+"""Handles the initialization of the simulation."""
 
 #                  x
 #          0 1 2 3 4 5 6 7 8 9
@@ -35,9 +35,11 @@ from mattflow import config as conf, dat_writer, logger, utils
 
 
 def _variance():
-    """use small variance to make the distribution steep and sharp, for a
-    better representation of a drop"""
-    # > 0.0004
+    """Returns the drop-variance used at the different simulation modes.
+
+    Use small variance (but > 0.0004) to make the distribution steep and sharp,
+    for a better representation of a drop.
+    """
     variance = {
         "single drop": randint(5, 8) / 10000,
         "drops": randint(5, 8) / 10000,
@@ -47,13 +49,14 @@ def _variance():
 
 
 def _gaussian(variance, drops_count):
-    '''produces a bivariate gaussian distribution of a certain variance
+    '''Populates the mesh with a bivariate gaussian distribution of a certain
+    variance.
 
     formula: amplitude * np.exp(-exponent)
 
     Args:
-        variance (float) :  target variance of the distribution
-        drops_count(int) :  drop counter
+        variance (float) : target variance of the distribution
+        drops_count(int) : drop counter
 
     Returs:
         gaussian_distribution (2D array)
@@ -79,19 +82,19 @@ def _gaussian(variance, drops_count):
 
 
 def _drop_heights_correction(drop_heights):
-    """subtracts the fluid volume that the drop adds to the domain
+    """Subtracts the fluid volume that the drop adds to the domain.
 
     For a few thousands of iterations the fluid level rises quite subtly, but
     after a point the volume adds up to be significant.
 
     Args:
-        drop_heights (2D array) :  the gaussian distribution modeling the drop
+        drop_heights (2D array) : the gaussian distribution modeling the drop
 
     Returns:
-        drop_correction (2D array) :  the extra fluid volume of the drop,
-                                      distributed to the whole domain, divided
-                                      by a divisor for a smoother transition
-                                      to the next time_step
+        drop_correction (2D array) : the extra fluid volume of the drop,
+                                     distributed to the whole domain, divided
+                                     by a divisor for a smoother transition
+                                     to the next time_step
     """
     divisor = 2
     drop_correction = np.empty_like(drop_heights)
@@ -101,20 +104,20 @@ def _drop_heights_correction(drop_heights):
 
 
 def drop(h_hist, drops_count=None):
-    """Generates a drop
+    """Generates a drop.
 
-    Drop is modeled as a gaussian distribution
+    Drop is modeled as a bivariate gaussian distribution.
 
     Args:
-        h_hist (array)   :  the 0th state variable, U[0, :, :]
-        drops_count(int) :  drop counter
+        h_hist (array)   : the 0th state variable, U[0, :, :]
+        drops_count(int) : drop counter
 
     Returns:
-        h_hist(2D array) :  drop is added to the input h_hist
+        h_hist(2D array) : drop is added to the input h_hist
     """
-    # multiply with 3 / 2 for a small stone droping
-    #          with 1 / 5 for a water drop with a considerable momentum build
-    #          with 1 / 8 for a soft water drop
+    # multiply with 4 / 3 for a small stone droping
+    #          with 1 / 4 for a water drop with a considerable momentum build
+    #          with 1 / 6 for a soft water drop
     if conf.MODE == 'single drop' or conf.MODE == 'drops':
         factor = randint(6, 12) / 10
     elif conf.MODE == 'rain':
@@ -129,13 +132,13 @@ def drop(h_hist, drops_count=None):
 
 
 def _init_U():
-    """creates and initializes the state-variables 3D matrix, U"""
+    """Creates and initializes the state-variables 3D matrix, U."""
     cx = conf.CX
     cy = conf.CY
     U = np.zeros((utils.U_shape()))
     # 1st drop
     U[0, :, :] = conf.SURFACE_LEVEL + drop(U[0, :, :], drops_count=1)
-    # write dat | default: False
+    # Write a .dat file (default: False)
     if conf.WRITE_DAT:
         dat_writer.writeDat(U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng],
                             time=0, it=0)
@@ -149,14 +152,14 @@ def _init_U():
 
 
 def _init_h_hist(U):
-    """creates and initializes h_hist
+    """Creates and initializes h_hist, which holds the stepwise height data.
 
     - holds the states of the fluid for post-processing
-    -saving <CONSECUTIVE_FRAMES> frames every <FRAME_SAVE_FREQ> iters
+    - saving <CONSECUTIVE_FRAMES> frames every <FRAME_SAVE_FREQ> iters
     """
-    # number of integer divisions with the freq, times the consecutive frames,
+    # Number of integer divisions with the freq, times the consecutive frames,
     # plus the consecutive frames that we can take from the remainder of the
-    # division
+    # division.
     num_states_to_save = (
         conf.MAX_ITERS
         // conf.FRAME_SAVE_FREQ
@@ -169,6 +172,7 @@ def _init_h_hist(U):
 
 
 def _init_U_ds(U):
+    """Creates and initializes U_ds, which holds stepwise data for ML."""
     dss = utils.ds_shape()
     ds_name = f"mattflow_data_{dss[0]}x{dss[1]}x{dss[2]}x{dss[3]}.npy"
     U_ds = open_memmap(os.path.join(os.getcwd(), ds_name),
@@ -180,7 +184,7 @@ def _init_U_ds(U):
 
 
 def initialize():
-    """wraper that initializes and returns all necessary data_structures
+    """Wrapper that initializes all necessary data structures.
 
     Returns
         U (3D array)   :  the state-variables-3D-matrix (populating a x,y grid)

@@ -9,7 +9,7 @@
 #
 # (C) 2019 Athanasios Mattas
 # ======================================================================
-"""Handles the post-processing of the simulation"""
+"""Handles the post-processing of the simulation."""
 
 from datetime import datetime
 import os
@@ -23,14 +23,14 @@ from mattflow.utils import time_this
 
 
 def _plot_basin(sub):
-    """plots the basin that contains the fluid
+    """Plots the basin that contains the fluid.
 
     Args:
-        sub (subplot) : Axes3D subplot object
+        sub (axes.SubplotBase) : Axes3D subplot object
     """
     if conf.SHOW_BASIN is True:
-        # make basin a bit wider, because water appears to be out of the basin
-        # because of the perspective mode
+        # Make the basin a bit wider, because water appears to be out of the
+        # basin because of the perspective mode.
         X_bas, Y_bas = np.meshgrid(conf.CX[conf.Ng - 1: conf.Nx + conf.Ng + 1],
                                    conf.CY[conf.Ng - 1: conf.Ny + conf.Ng + 1])
         # BASIN
@@ -50,7 +50,7 @@ def _plot_basin(sub):
 
 
 def _data_from_dat(it):
-    """pulls solution data from a dat file"""
+    """Pulls solution data from a .dat file."""
     zeros_left = (4 - len(str(it))) * '0'
     file_name = 'solution' + zeros_left + str(it) + '.dat'
 
@@ -61,11 +61,11 @@ def _data_from_dat(it):
         # Ng = int(fr.readline().split(":")[1])
         time = float(fr.readline().split(":")[1])
 
-    # hu and hv are not written in the dat file, to reduce the overhead
+    # hu and hv are not written in the dat file, to reduce the overhead.
     # x, y, h, hu, hv = np.loadtxt('./data_files/' + file_name, skiprows = 4,
     #                              unpack = True)
     x, y, h = np.loadtxt('./data_files/' + file_name, skiprows=4, unpack=True)
-    # unpack the row-major vectors into matrices
+    # Unpack the row-major vectors into matrices.
     X = x.reshape(Ny, Nx)
     Y = y.reshape(Ny, Nx)
     Z = h.reshape(Ny, Nx)
@@ -73,16 +73,16 @@ def _data_from_dat(it):
 
 
 def plot_from_dat(time, it):
-    """creates and saves a frame as png, reading data from a dat file
+    """Creates and saves a frame as .png, reading data from a .dat file.
 
     Args:
         time (float) : current time
         it (int)     : current itereration
     """
-    # create ./session directory for saving the results
+    # Create ./session directory for saving the results.
     utils.create_child_dir("session")
 
-    # extract data from dat
+    # Extract data from dat.
     X, Y, Z, Nx, Ny = _data_from_dat(it)
 
     # plot {
@@ -93,8 +93,8 @@ def plot_from_dat(time, it):
 
     if conf.PLOTTING_STYLE == 'water':
         if conf.ROTATION:
-            # rotate the domain:
-            # horizontally every 8 frames and vetically every 20 frames
+            # Rotate the domain horizontally every 8 frames and vetically
+            # every 20 frames.
             horizontal_rotate = 45 + it / 8
             vertical_rotate = 55 - it / 20
             sub.view_init(vertical_rotate, horizontal_rotate)
@@ -109,8 +109,8 @@ def plot_from_dat(time, it):
         sub.contour3D(X, Y, Z, 140, cmap='plasma', vmin=0.6, vmax=1.4)
     elif conf.PLOTTING_STYLE == 'wireframe':
         if conf.ROTATION:
-            # rotate the domain:
-            # horizontally every 3 frames and vetically every 4 frames
+            # Rotate the domain horizontally every 3 frames and vetically
+            # every 4 frames.
             horizontal_rotate = 45 + it / 3
             vertical_rotate = 55 - it / 4
             sub.view_init(vertical_rotate, horizontal_rotate)
@@ -118,8 +118,8 @@ def plot_from_dat(time, it):
             sub.view_init(45, 55)
         sub.plot_wireframe(X, Y, Z, rstride=2, cstride=2, linewidth=1,)
     else:
-        logger.log("Configure PLOTTING_STYLE | options: 'water', 'contour',",
-                   "'wireframe'")
+        styles = ['water', 'contour', 'wireframe']
+        logger.log(f"Configure PLOTTING_STYLE | options: {styles}")
 
     fig.gca().set_zlim([-0.5, 4])
     plt.title(f"time: {time: >{6}.3f}\titer: {it: >{4}d}", y=0.8, fontsize=18)
@@ -127,7 +127,7 @@ def plot_from_dat(time, it):
     plt.rcParams.update({'font.size': 20})
     plt.axis('off')
 
-    # render the basin that contains the fluid
+    # Render the basin that contains the fluid.
     _plot_basin(sub)
 
     # save
@@ -140,7 +140,7 @@ def plot_from_dat(time, it):
 
 
 def _save_ani(ani, fps, dpi):
-    """saves the animation
+    """Saves the animation in .mp4 and .gif formats.
 
     Args:
         ani (obj) : animation.FuncAnimation() object
@@ -150,11 +150,11 @@ def _save_ani(ani, fps, dpi):
     if conf.SAVE_ANIMATION is True:
         # file name
         date_n_time = str(datetime.now())[:19]
-        # replace : with - for windows file name format
+        # Replace ':' with '-' for compatibility with windows file formating.
         date_n_time = date_n_time.replace(':', '-').replace(' ', '_')
         file_name = conf.MODE + '_animation_' + date_n_time
 
-        # configure the writer
+        # Configure the writer
         plt.rcParams['animation.ffmpeg_path'] = conf.PATH_TO_FFMPEG
         FFwriter = animation.FFMpegWriter(
             fps=fps, bitrate=-1,
@@ -162,7 +162,7 @@ def _save_ani(ani, fps, dpi):
                         'libx264', '-qscale:v', '1']
         )
 
-        # save
+        # Save
         try:
             ani.save(file_name + '.' + conf.VID_FORMAT,
                      writer=FFwriter, dpi=dpi)
@@ -190,9 +190,9 @@ def _save_ani(ani, fps, dpi):
 
 
 def _update_plot(frame_number, X, Y, Z, plot, fig, sub, t_hist, ani_title):
-    """plots a single frame
+    """Plots a single frame.
 
-    used from FuncAnimation to iteratively create a timelapse animation
+    It is used from FuncAnimation to iteratively create an animation.
 
     Args:
         frame_number (int)  : current frame
@@ -200,14 +200,14 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, t_hist, ani_title):
         plot (list)         : list holding current plot
         fig (figure)        : activated plt.figure
         sub (subplot)       : Axes3D subplot object
-        t_hist (list)   : holds the iter-wise times
+        t_hist (list)       : holds the iter-wise times
         ani_title (str)     : to be formated with the frame_number
     """
     if conf.PLOTTING_STYLE == 'water':
         plot[0].remove()
         if conf.ROTATION:
-            # rotate the domain:
-            # horizontally every 2 frames and vetically every 4 frames
+            # Rotate the domain horizontally every 2 frames and vetically
+            # every 4 frames.
             horizontal_rotate = 45 + frame_number / 2
             vertical_rotate = 55 - frame_number / 4
             sub.view_init(vertical_rotate, horizontal_rotate)
@@ -218,7 +218,7 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, t_hist, ani_title):
     elif conf.PLOTTING_STYLE == 'contour':
         # Bliting with contour is not supported (because the corresponding
         # attributes are not artists), so the subplot has to be re-built.
-        # That's why fig is passed.
+        # That's why fig is passed (matplotlib==3.3.1).
         sub.clear()
         sub.view_init(45, 55)
         plt.subplots_adjust(left=0, bottom=0, right=1, top=1,
@@ -230,22 +230,22 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, t_hist, ani_title):
     elif conf.PLOTTING_STYLE == 'wireframe':
         plot[0].remove()
         if conf.ROTATION:
-            # rotate the domain:
-            # horizontally every 3 frames and vetically every 2 frames
+            # Rotate the domain horizontally every 3 frames and vetically
+            # every 2 frames.
             horizontal_rotate = 45 + frame_number / 2
             vertical_rotate = 55 - frame_number / 4
             sub.view_init(vertical_rotate, horizontal_rotate)
         plot[0] = sub.plot_wireframe(X, Y, Z[frame_number],
                                      rstride=2, cstride=2, linewidth=1)
 
-    # reverse engineer the iteration
+    # Reverse engineer the iteration.
     it = (
         frame_number
         + ((frame_number // conf.CONSECUTIVE_FRAMES)
            * (conf.FRAME_SAVE_FREQ - conf.CONSECUTIVE_FRAMES))
     )
 
-    # frame title
+    # Frame title
     if t_hist is not None:
         ani_title = \
             f"time: {t_hist[frame_number]: >{6}.3f}    iter: {it: >{4}d}"
@@ -255,10 +255,14 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, t_hist, ani_title):
 
 @time_this
 def animate(h_hist, t_hist=None):
-    """generates and saves a timelapse of the simulation
+    """Generates and saves an animation of the simulation.
 
+    Args:
         h_hist (array) :  array of iter-wise heights solutions
         t_hist (array) :  holds the iter-wise times
+
+    Returns:
+        ani (animation.FuncAnimation) : It is returned in case of ipython
     """
     # resolution = figsize * dpi
     # --------------------------
@@ -276,7 +280,7 @@ def animate(h_hist, t_hist=None):
     X, Y = np.meshgrid(conf.CX[conf.Ng: -conf.Ng], conf.CY[conf.Ng: -conf.Ng])
     Z = h_hist
 
-    # plot configuration
+    # Plot configuration
     fig = plt.figure(figsize=figsize, dpi=dpi)
     sub = fig.add_subplot(111, projection="3d")
     sub.view_init(45, 55)
@@ -291,7 +295,7 @@ def animate(h_hist, t_hist=None):
     sub.title.set_position([0.51, 0.80])
     plt.rcParams.update({'font.size': 20})
 
-    # initialization plot
+    # Plot initialization
     if conf.PLOTTING_STYLE == 'water':
         plot = [sub.plot_surface(X, Y, Z[0],
                                  rstride=1, cstride=1, linewidth=0,
@@ -306,10 +310,10 @@ def animate(h_hist, t_hist=None):
     else:
         logger.log("Configure PLOTTING_STYLE | options: 'water', 'contour',",
                    "'wireframe'")
-    # render the basin that contains the fluid
+    # Render the basin that contains the fluid.
     _plot_basin(sub)
 
-    # generate the animation
+    # Generate the animation.
     ani = animation.FuncAnimation(
         fig, _update_plot, frames,
         fargs=(X, Y, Z, plot, fig, sub, t_hist, ani_title),
@@ -317,15 +321,16 @@ def animate(h_hist, t_hist=None):
         repeat=True
     )
 
-    # save the animation
+    # Save the animation.
     _save_ani(ani, fps, dpi)
 
-    # Play the animation
+    # Play the animation.
     if conf.SHOW_ANIMATION is True:
         logger.log('Playing animation...')
         try:
             # In case of jupyter notebook, don't run plt.show(), to prevent
-            # displaying a static figure. Instead, return the ani object.
+            # displaying a static figure. Instead, return the Funcanimation
+            # object.
             get_ipython()
             return ani
         except NameError:

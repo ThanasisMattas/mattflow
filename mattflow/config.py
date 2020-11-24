@@ -9,7 +9,7 @@
 #
 # (C) 2019 Athanasios Mattas
 # ======================================================================
-"""Configures the simulation, providing global constants"""
+"""Configures the simulation, providing some global constants."""
 
 # TODO simple API: configuring options on a small window popup
 
@@ -27,6 +27,10 @@
 #        9 G G G G G G G G G G
 
 import os
+
+
+# Select whether a .log file will be generated or not.
+LOGGING_MODE = False
 
 
 # Pre-processing configuration {
@@ -49,11 +53,12 @@ MAX_Y = None
 dx = None
 dy = None
 
-# cell centers along the x and y axes
+# Cell centers along the x and y axes
 CX = None
 CY = None
 #
 # }
+
 
 # Solution configuration {
 #
@@ -61,7 +66,7 @@ CY = None
 STOPPING_TIME = 30000
 MAX_ITERS = 650
 
-# saving <CONSECUTIVE_FRAMES> frames every <FRAME_SAVE_FREQ> iters
+# Saving <CONSECUTIVE_FRAMES> frames every <FRAME_SAVE_FREQ> iters.
 # - resulting to a lighter animation (less fps)
 # - visualizing and debugging long simulations
 #   e.g. MAX_ITERS = 10000, FREQ = 500, CONSECUTIVE_FRAMES = 25
@@ -71,7 +76,7 @@ CONSECUTIVE_FRAMES = 1
 # Number of workers for multiprocessing
 WORKERS = 1
 
-# Pre-allocate and dump a binary memmap, used by all the workers
+# Pre-allocate and dump a binary memmap, used by all the workers.
 DUMP_MEMMAP = False
 MEMMAP_DIR = os.path.join(os.getcwd(), "flux_memmap")
 
@@ -91,6 +96,7 @@ MEMMAP_DIR = os.path.join(os.getcwd(), "flux_memmap")
 #     takes to travel for dx.
 #   - dt_sim is the time that the simulation covers dx
 #
+# More on mattflow_solver.dt() documentation.
 COURANT = None
 
 # Surface level
@@ -105,7 +111,7 @@ SURFACE_LEVEL = 1
 MODE = 'drops'
 
 # Default max number of drops
-# (it will be overwritten if ITERS_BETWEEN_DROPS_MODE in ["random", "custom"])
+# (It will be overwritten if ITERS_BETWEEN_DROPS_MODE in ["random", "custom"].)
 MAX_N_DROPS = 5
 
 # Number of iterations between drops
@@ -140,7 +146,7 @@ BOUNDARY_CONDITIONS = 'reflective'
 # 3. 'MacCormack experimental'  : 2nd order in time: O(Δt^2, Δx^2, Δy^2)
 SOLVER_TYPE = '2-stage Runge-Kutta'
 
-# Select whether to save a memmap with the simulation data or not
+# Select whether to save a memmap with the simulation data or not (for ML).
 SAVE_DS_FOR_ML = False
 #
 # }
@@ -166,16 +172,16 @@ FIGSIZE = (10 * 1.618, 10)
 # figsize = (9.6, 5.4), dpi=200
 # resolution: 1920x1080 (1920/200=9.6)
 
-# Rotate the domain at each frame
+# Rotate the domain at each frame.
 ROTATION = True
 
-# Render the basin that contains the fluid
+# Render the basin that contains the fluid.
 SHOW_BASIN = False
 
-# Show the animation
+# Show the animation.
 SHOW_ANIMATION = True
 
-# Saving the animation
+# Save the animation.
 SAVE_ANIMATION = False
 
 # Path to ffmpeg
@@ -190,11 +196,7 @@ VID_FORMAT = 'mp4'
 
 # Writing dat files mode
 # ----------------------
-# Select whether dat files are generated or not
+# Select whether dat files are generated or not.
 WRITE_DAT = False
-
-
-# Select whether a .log file will be generateo or not
-LOGGING_MODE = False
 #
 # }

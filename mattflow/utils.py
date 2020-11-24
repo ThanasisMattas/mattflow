@@ -9,7 +9,7 @@
 #
 # (C) 2019 Athanasios Mattas
 # ======================================================================
-"""Provides some helper functions"""
+"""Provides some helper functions."""
 
 from datetime import timedelta
 from functools import wraps
@@ -24,7 +24,7 @@ from mattflow import config as conf, logger
 
 
 def cell_centers():
-    """generates the cell centers along the x and y axes"""
+    """Generates the cell centers along the x and y axes."""
     cx = np.arange(conf.MIN_X + (0.5 - conf.Ng) * conf.dx,
                    conf.MAX_X + conf.Ng * conf.dx,
                    conf.dx)
@@ -35,7 +35,7 @@ def cell_centers():
 
 
 def delete_prev_runs_data():
-    """deletes previous log, dat and png files (for debugging)"""
+    """Deletes previous log, dat and png files (for debugging)."""
     working_dir = os.getcwd()
     directories = [os.path.join(working_dir, "data_files/"),
                    os.path.join(working_dir, "session/")]
@@ -60,11 +60,11 @@ def delete_memmap():
     try:
         shutil.rmtree(conf.MEMMAP_DIR)
     except FileNotFoundError:
-        print("Could not clean-up the memmap folder")
+        print("Could not clean-up the memmap folder.")
 
 
 def print_duration(start, end, process):
-    """prints the duration of a process"""
+    """Prints the duration of a process."""
     process_name = {
         "main": "Total",
         "simulate": "Solution",
@@ -78,7 +78,7 @@ def print_duration(start, end, process):
 
 
 def create_child_dir(dirname):
-    """create a directory under the current working directory"""
+    """Create a directory under the current working directory."""
     try:
         if os.path.isdir(os.path.join(os.getcwd(), dirname)):
             pass
@@ -116,7 +116,7 @@ def time_this(f):
 
 
 def preprocessing(Nx, Ny, Ng, max_x, min_x, max_y, min_y):
-    """constructs the mesh
+    """constructs the mesh.
 
     - dx, dy: Spatial discretization steps (structured/Cartesian mesh)
     - cy, cy: Cell centers on x and y dimensions
@@ -137,7 +137,7 @@ def preprocessing(Nx, Ny, Ng, max_x, min_x, max_y, min_y):
 
 
 def drop_iters_list():
-    """list with the simulation iters at which a drop is going to fall"""
+    """list with the simulation iters at which a drop is going to fall."""
     drop_iters = [0]
     iters_cumsum = 0
     i = 0
@@ -153,7 +153,7 @@ def drop_iters_list():
     else:
         logger.log("Configure ITERS_BETWEEN_DROPS_MODE | options:"
                    " 'fixed', 'custom', 'random'")
-    # Overwrite max number of drops
+    # Overwrite max number of drops.
     conf.MAX_N_DROPS = len(drop_iters)
 
     if conf.SAVE_DS_FOR_ML:

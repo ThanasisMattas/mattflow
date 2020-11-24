@@ -9,18 +9,18 @@
 #
 # (C) 2019 Athanasios Mattas
 # ======================================================================
-"""Saves the step-wise solution at a .dat file"""
+"""Saves the step-wise solution at a .dat file."""
 
 from mattflow import config as conf, utils
 
 
 def write_dat(h_hist, time, it):
-    """writes solution data to a dat file
+    """Writes the solution data into a dat file.
 
     Args:
-        h_hist (array)  :  the 0th state variable, U[0, :, :]
-        time (float)    :  current time
-        it (int)        :  current iteration
+        h_hist (array) : the 0th state variable, U[0, :, :]
+        time (float)   : current time
+        it (int)       : current iteration
     """
     utils.create_child_dir("data_files")
     try:

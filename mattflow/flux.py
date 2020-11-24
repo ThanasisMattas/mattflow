@@ -9,7 +9,7 @@
 #
 # (C) 2019 Athanasios Mattas
 # ======================================================================
-"""Evaluates the total flux entering or leaving a cell"""
+"""Evaluates the total flux entering or leaving a cell."""
 
 #                  x
 #          0 1 2 3 4 5 6 7 8 9
@@ -93,38 +93,34 @@ def _max_vertical_speed(U, Ny, Ng, parallel=True):
 
 
 def _F(U):
-    """evaluates the x-dimention-fluxes-vector, F
+    """Evaluates the x-dimention-fluxes-vector, F.
+
     Args:
         U (3D array) : the state variables 3D matrix
     """
+    # h = U[0]
+    # u = U[1] / h
+    # v = U[2] / h
 
-    '''
-    h = U[0]
-    u = U[1] / h
-    v = U[2] / h
-
-    # 0.5 * g = 0.5 * 9.81 = 4.905
-    return np.array([h * u, h * u**2 + 4.905 * h**2, h * u * v])
-    '''
+    # # 0.5 * g = 0.5 * 9.81 = 4.905
+    # return np.array([h * u, h * u**2 + 4.905 * h**2, h * u * v])
     return np.array([U[1],
                      U[1]**2 / U[0] + 4.905 * U[0]**2,
                      U[1] * U[2] / U[0]])
 
 
 def _G(U):
-    """evaluates the y-dimention-fluxes-vector, G
+    """Evaluates the y-dimention-fluxes-vector, G.
+
     Args:
         U (3D array) : the state variables 3D matrix
     """
+    # h = U[0]
+    # u = U[1] / h
+    # v = U[2] / h
 
-    '''
-    h = U[0]
-    u = U[1] / h
-    v = U[2] / h
-
-    # 0.5 * g = 0.5 * 9.81 = 4.905
-    return np.array([h * v, h * u * v, h * v**2 + 4.905 * h**2])
-    '''
+    # # 0.5 * g = 0.5 * 9.81 = 4.905
+    # return np.array([h * v, h * u * v, h * v**2 + 4.905 * h**2])
     return np.array([U[2],
                      U[1] * U[2] / U[0],
                      U[2]**2 / U[0] + 4.905 * U[0]**2])
@@ -174,11 +170,11 @@ def _vertical_flux(U, Ny, Ng, dx, maxVerticalSpeed, parallel=True):
 
 def _flux_batch(U, window=None, slicing_obj=None,
                 flux_out=None, idx=None, parallel=True):
-    """evaluates the total flux that enters or leaves a cell, using the \
-    Lax-Friedrichs scheme
+    """Evaluates the total flux that enters or leaves a cell, using the \
+    Lax-Friedrichs scheme.
 
-    It runs by each joblib worker on a slice of the domain
-    (the horizontal [x] axis is sliced)
+    It runs on each joblib worker on a slice of the domain.
+    (The horizontal axis, x, is sliced.)
 
     Args:
         U (3D array)        : the state variables 3D matrix
@@ -219,11 +215,11 @@ def _flux_batch(U, window=None, slicing_obj=None,
 
     # Lax-Friedrichs scheme
     # flux = 0.5 * (F_left + F_right) - 0.5 * maxSpeed * (U_right - U_left)
-    # flux is calculated on each interface
+    # flux is calculated on each interface.
     horizontalFlux = _horizontal_flux(U_batch, Nx, Ng, dy, maxHorizontalSpeed,
                                       parallel=parallel)
 
-    # horizontalFlux is subtracted from the left and added to the right cells
+    # horizontalFlux is subtracted from the left and added to the right cells.
     if parallel:
         total_flux[:, Ng: -Ng, 0: U_batch.shape[2] - 1] -= horizontalFlux
         total_flux[:, Ng: -Ng, 1: U_batch.shape[2]] += horizontalFlux
@@ -234,7 +230,7 @@ def _flux_batch(U, window=None, slicing_obj=None,
 
     # Horizontal interfaces - Vertical flux {
     #
-    # Max vertical speed between top and bottom cells for every interface
+    # Max vertical speed between top and bottom cells for every interface.
     # (for the vertical calculations the extra horizontal cells are not needed)
     maxVerticalSpeed = _max_vertical_speed(U_batch, Ny, Ng, parallel=parallel)
 
@@ -243,7 +239,7 @@ def _flux_batch(U, window=None, slicing_obj=None,
     verticalFlux = _vertical_flux(U_batch, Ny, Ng, dx, maxVerticalSpeed,
                                   parallel=parallel)
 
-    # verticalFlux is subtracted from the top and added to the bottom cells
+    # verticalFlux is subtracted from the top and added to the bottom cells.
     if parallel:
         total_flux[:, Ng - 1: -Ng, 1: U_batch.shape[2] - 1] -= verticalFlux
         total_flux[:, Ng: Ny + Ng + 1, 1: U_batch.shape[2] - 1] += verticalFlux
@@ -254,7 +250,7 @@ def _flux_batch(U, window=None, slicing_obj=None,
 
     # No need to keep ghost cells --> removes 2*(Nx + Ny) operations stepwise
     # Also, 1st and last nodes of each column are removed (they were only
-    # needed from the numerical scheme, to calculate the others)
+    # needed from the numerical scheme, to calculate the other nodes).
     if flux_out is not None:
         flux_out[idx] = total_flux[:, Ng: -Ng, x_limit: -x_limit]
     else:
@@ -262,13 +258,13 @@ def _flux_batch(U, window=None, slicing_obj=None,
 
 
 def flux(U):
-    """evaluates the total flux that enters or leaves a cell, using the \
-    Lax-Friedrichs scheme
+    """Evaluates the total flux that enters or leaves a cell, using the \
+    Lax-Friedrichs scheme.
 
-    parallel implementation
+    - Parallel implementation
 
     Args:
-        U (3D array)   : the state variables 3D matrix
+        U (3D array) : the state variables 3D matrix
 
     Returns:
         total_flux (3D array)
@@ -279,24 +275,24 @@ def flux(U):
     workers = conf.WORKERS
 
     # Although joblib.Parallel can work single-processing, passing the whole
-    # state-matrix directly to _flux_batch() is much faster
+    # state-matrix directly to _flux_batch() is much faster.
     if workers == 1:
         return _flux_batch(U, parallel=False)
 
-    # slice the column dimention (x) to the number of workers
+    # Slice the column dimention, x, to the number of workers.
     # (divide-ceil)
     window = -(-(Nx + 2 * Ng) // workers)
 
-    # the extra cells at the two ends are required by the numerical scheme
+    # The extra cells at the two ends are required by the numerical scheme.
     #
-    # say Ng = 2, window = 30:
-    # slices = [slice(1, 33, slice(31, 63), slice(61, 63), ...]
+    # Example: Ng = 2, window = 30:
+    #          slices = [slice(1, 33, slice(31, 63), slice(61, 63), ...]
     slices = [slice(start - 1, start + window + 1)
               for start in range(Ng, Nx + 2 * Ng, window)]
 
     if conf.DUMP_MEMMAP:
-        # pre-allocate a writeable shared memory map as a container for the
-        # results of the parallel computation, to be shared by all workers
+        # Pre-allocate a writeable shared memory map as a container for the
+        # results of the parallel computation, shared by all the workers.
         try:
             os.mkdir(conf.MEMMAP_DIR)
         except FileExistsError:
@@ -321,5 +317,5 @@ def flux(U):
     total_flux = np.concatenate(flux_out, axis=2)
 
     # Ghost cells are not needed for the calculations.
-    # Also, last slice appended some extra columns that must be left out.
+    # Also, if last slice, appended some extra columns that must be left out.
     return total_flux[:, :, : Nx]

@@ -9,7 +9,7 @@
 #
 # (C) 2019 Athanasios Mattas
 # ======================================================================
-"""Creates some color maps (currently unused)"""
+"""Creates some color maps (currently unused)."""
 
 import numpy as np
 
@@ -23,19 +23,21 @@ from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
 def deep_water_cmap():
     """Creates a deep water color-map out of shades of blue, adding
-    transparency to colors that lie at greater hights (water drops)
+    transparency to colors that lie at greater hights (water drops).
     """
-    # deep water color-map (darker)
+    # Deep water color-map (darker)
     water_colors = np.zeros((256, 4))
     water_colors[:, 0] = np.append(np.zeros(255), [12], 0) / 255     # r
     water_colors[:, 1] = np.linspace(71, 164, 256) / 255             # g
     water_colors[:, 2] = np.linspace(114, 255, 256) / 255            # b
-    # make last 120 (lighter) transparent (a water drop is transparent)
+    # Make the last 120 (lighter) colors transparent (a water drop is
+    # transparent).
     water_colors[:, 3] = np.append(
         np.ones(136),
         np.ones(120) * np.linspace(0.9, 0.3, 120)
     )                                                                # a
-    # make last 100 (ligher) colors an interpolation between indices 156 to 176
+    # Make the last 100 (lighter) colors an interpolation between indices 156
+    # to 176.
     water_colors[156:, 1] \
         = np.linspace(water_colors[156, 1], water_colors[176, 1], 100)
     matt_deepwater = ListedColormap(water_colors)
@@ -49,14 +51,15 @@ def deep_water_cmap():
 
 def shallow_water_cmap():
     """Creates a shallow water color-map out of shades of blue, adding
-    transparency to colors that lie at greater hights (water drops)
+    transparency to colors that lie at greater hights (water drops).
     """
-    # shallow water color-map (lighter)
+    # Shallow water color-map (lighter)
     water_colors = np.zeros((256, 4))
     water_colors[:, 0] = np.append(np.zeros(255), [12], 0) / 255     # r
     water_colors[:, 1] = np.linspace(103, 164, 256) / 255            # g
     water_colors[:, 2] = np.linspace(165, 255, 256) / 255            # b
-    # make last 120 (lighter) transparent (a water drop is transparent)
+    # Make the last 120 (lighter) colors transparent (a water drop is
+    # transparent).
     water_colors[:, 3] = np.append(
         np.ones(136),
         np.ones(120) * np.linspace(0.9, 0.3, 120)

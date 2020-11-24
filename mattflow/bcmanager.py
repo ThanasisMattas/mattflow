@@ -9,7 +9,7 @@
 #
 # (C) 2019 Athanasios Mattas
 # ======================================================================
-"""Handles the boundary conditions"""
+"""Handles the boundary conditions."""
 
 #                  x
 #          0 1 2 3 4 5 6 7 8 9
@@ -31,7 +31,7 @@ from mattflow import config as conf
 
 
 def update_ghost_cells(U):
-    """implements boundary conditions
+    """Implements the boundary conditions.
 
     reflective boundary conditions:
 

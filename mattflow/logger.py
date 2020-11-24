@@ -9,7 +9,7 @@
 #
 # (C) 2019 Athanasios Mattas
 # ======================================================================
-"""Handles the logging precess"""
+"""Handles the logging precess."""
 
 from datetime import datetime, timedelta
 import os
@@ -19,7 +19,7 @@ from mattflow import __version__, __author__, __license__
 
 
 file_name = str(datetime.now())[:19]
-# replace : with - for windows file name format
+# Replace ':' with '-' for compatibility with windows file formating.
 file_name = file_name.replace(':', '-').replace(' ', '_') + ".log"
 version_msg = 'MattFlow v' + __version__
 author_msg = 'Author: ' + __author__ + ', 2019'
@@ -27,29 +27,23 @@ license_msg = __license__
 
 
 def log(state):
-    """appends a state-message at a new line of the log file
+    """Appends a state-message at a new line of the log file.
 
     If a log file does not exist, it creates one, printing the simulation info.
 
     Args:
-        state (str) :  the string to be logged
+        state (str) : the string to be logged
     """
     if not conf.LOGGING_MODE:
         return
-    # log file object, if there is one
-    # False , if ther isn't
-    log_file = find_log()
+    open_log = find_open_log()
 
-    # check if a log file is already created or if the log file is from previous
-    # simulation
-    if log_file:
-        # append the state
-        with open(log_file, 'a') as fa:
+    if open_log:
+        # Append the state.
+        with open(open_log, 'a') as fa:
             fa.write(state + '\n')
-        # rename log to current time
-        os.rename(log_file, file_name)
-
-    # if a log file isn't created yet
+        # Update log name with the current time.
+        os.rename(open_log, file_name)
     else:
         fw = open(file_name, 'w')
         fw.write(
@@ -71,7 +65,7 @@ def log(state):
 
 
 def log_timestep(it, time):
-    """appends timestep info to the log file"""
+    """Appends timestep info to the log file."""
     if not conf.LOGGING_MODE:
         return
     if (it == 1) | (it % 15 == 0):
@@ -79,14 +73,10 @@ def log_timestep(it, time):
     log(f"{it: >{6}d}    {time:0.3f}")
 
 
-def find_log():
-    """finds an open log file, if any, at the working directory
-    (1st encountered)
+def find_open_log():
+    """Returns the 1st encountered open log file (False if there isn't one).
 
-    it is used by logger.log(state) to identify the log file, if any, of the
-    ongoing simulation
-
-    returns the log file object, if there is one, or False, if there isn't
+    An open log file is a mattflow log that does not end with '_done.log'.
     """
     working_dir = os.getcwd()
     files_list = []
@@ -94,71 +84,54 @@ def find_log():
                   if f.endswith(".log") and is_open(f) and is_mattflow_log(f)]
     if files_list:
         return files_list[0]
-    else:
-        return False
+    return False
 
 
 def close():
-    """closes the log file, appending '_done' to the file name"""
+    """Closes the log file, appending '_done' to the file name."""
     if not conf.LOGGING_MODE:
         return
     try:
-        log_file = find_log()
-        if log_file:
+        open_log = find_open_log()
+        if open_log:
             # append blank line
-            with open(log_file, 'a') as fa:
+            with open(open_log, 'a') as fa:
                 fa.write('\n')
             # append '_done' at the file name
-            os.rename(log_file, file_name[:-4] + '_done'
+            os.rename(open_log, file_name[:-4] + '_done'
                       + file_name[-4:])
         else:
             fw = open(file_name, 'w')
             fw.write('Trying to close a log file that does not exist...\n\n')
-            os.rename(log_file, file_name[:-4] + '_errored'
+            os.rename(open_log, file_name[:-4] + '_errored'
                       + file_name[-4:])
             fw.close()
     except TypeError:
         fw = open(file_name, 'w')
         fw.write('Trying to close a log file that does not exist...\n\n')
-        os.rename(log_file, file_name[:-4] + '_errored'
+        os.rename(open_log, file_name[:-4] + '_errored'
                   + file_name[-4:])
         fw.close()
 
 
-def is_open(log_file):
-    """checks whether a log file object is open or not
-
-    Args:
-        log_file
-
-    Returns:
-        (boolean)
-    """
-    if log_file[-9:-4] != '_done':
+def is_open(log_file: str):
+    """Checks whether a log file object is open or not."""
+    if log_file[-9:] != '_done.log':
         return True
-    else:
-        return False
+    return False
 
 
-def is_mattflow_log(log_file):
-    """checks whether a log file was generated from mattflow or not
-
-    Args:
-        log_file
-
-    Returns:
-        (boolean)
-    """
+def is_mattflow_log(log_file: str):
+    """Checks whether a log file was generated from MattFlow or not."""
     with open(log_file, 'r') as fr:
         first_word = fr.read(8)
     if first_word == 'MattFlow':
         return True
-    else:
-        return False
+    return False
 
 
 def log_duration(start, end, process):
-    """logs the duration of a process"""
+    """Logs the duration of a process."""
     process_name = {
         "main": "Total",
         "simulate": "Solution",
