@@ -9,7 +9,7 @@
 #
 # (C) 2019 Athanasios Mattas
 # ======================================================================
-"""Some special variables lie here"""
+"""Special project variables"""
 
 
 __name__ = 'mattflow'

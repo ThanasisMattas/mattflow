@@ -9,7 +9,7 @@
 #
 # (C) 2019 Athanasios Mattas
 # ======================================================================
-"""Handles the solution of the simulation"""
+"""Handles the solution of the simulation."""
 
 # TODO: implement high order schemes
 
@@ -34,9 +34,9 @@ def _solve(U,
            drops_count,
            drop_its_iterator,
            next_drop_it):
-    """evaluates the state variables (h, hu, hv) at a new time-step
+    """Evaluates the state variables (h, hu, hv) at a new time-step.
 
-    it can be used in a for/while loop, iterating through each time-step
+    It can be used in a for/while loop, iterating through each time-step.
 
     Args:
         U (3D array)       :  the state variables, populating a x,y grid
@@ -84,10 +84,11 @@ def _solve(U,
             for simultaneous_drops in range(random.randrange(1, 2)):
                 U[0, :, :] = initializer.drop(U[0, :, :])
     else:
-        logger.log("Configure MODE | options: 'single drop', 'drops', 'rain'")
+        modes = ['single drop', 'drops', 'rain']
+        logger.log(f"Configure MODE | options: {modes}")
 
     # Numerical scheme
-    # flux.flux() returns the total flux entering and leaving each cell
+    # flux.flux() returns the total flux entering and leaving each cell.
     if conf.SOLVER_TYPE == 'Lax-Friedrichs Riemann':
         U[:, Ng: -Ng, Ng: -Ng] += delta_t / cellArea * flux.flux(U)
     elif conf.SOLVER_TYPE == '2-stage Runge-Kutta':
@@ -102,8 +103,8 @@ def _solve(U,
                    + delta_t / cellArea * flux.flux(U_pred)
                    )
     else:
-        logger.log("Configure SOLVER_TYPE | Options: 'Lax-Friedrichs Riemann',",
-                   "' 2-stage Runge-Kutta'")
+        solver_types = ['Lax-Friedrichs Riemann', '2-stage Runge-Kutta']
+        logger.log(f"Configure SOLVER_TYPE | Options: {solver_types}")
     return U, drops_count, drop_its_iterator, next_drop_it
 
     '''
@@ -131,8 +132,8 @@ def _solve(U,
     '''
 
 
-def dt(U, epsilon=1e-6):
-    """evaluates the time discretization step of the current iteration
+def dt(U, epsilon=1e-5):
+    """Evaluates the time discretization step of the current iteration.
 
     The stability condition of the numerical simulation (Known as
     Courant–Friedrichs–Lewy or CFL condition) describes that the solution
@@ -197,15 +198,15 @@ def simulate():
     drops_count = 1
     # idx of the frame saved in h_hist
     saving_frame_idx = 0
-    # counts up to conf.CONSECUTIVE_FRAMES (1st frame saved at initialization)
+    # Counts up to conf.CONSECUTIVE_FRAMES (1st frame saved at initialization).
     consecutive_frames_counter = 1
 
     if conf.ITERS_BETWEEN_DROPS_MODE in ["custom", "random"]:
-        # list with the simulation iterations at which a drop is going to fall
+        # List with the simulation iterations at which a drop is going to fall
         drop_its = utils.drop_iters_list()
-        # drop the 0th drop
+        # Drop the 0th drop
         drop_its_iterator = iter(drop_its[1:])
-        # the iteration at which the next drop will fall
+        # The iteration at which the next drop will fall
         next_drop_it = next(drop_its_iterator)
     else:
         drop_its_iterator = None
@@ -241,15 +242,16 @@ def simulate():
             )
             mattflow_post.plot_from_dat(time, it)
         elif not conf.WRITE_DAT:
-            # Append current frame to the list, to be animated at post-processing
+            # Append current frame to the list, to be animated at
+            # post-processing.
             if it % conf.FRAME_SAVE_FREQ == 0:
-                # zero the counter, when a perfect division occurs
+                # Zero the counter, when a perfect division occurs.
                 consecutive_frames_counter = 0
             if consecutive_frames_counter < conf.CONSECUTIVE_FRAMES:
                 saving_frame_idx += 1
                 h_hist[saving_frame_idx] = \
                     U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
-                # time * 10 is insertd, because space is scaled about x10
+                # time * 10 is insertd, because space is scaled about x10.
                 t_hist[saving_frame_idx] = time * 10
                 consecutive_frames_counter += 1
             if conf.SAVE_DS_FOR_ML:
@@ -259,7 +261,7 @@ def simulate():
 
         logger.log_timestep(it, time)
 
-    # clean-up memmap
+    # Clean-up the memmap
     if conf.DUMP_MEMMAP and conf.WORKERS > 1:
         utils.delete_memmap()
 

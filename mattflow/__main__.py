@@ -9,13 +9,7 @@
 #
 # (C) 2019 Athanasios Mattas
 # ======================================================================
-"""Executes pre-processing, solution and post-processing"""
-
-
-"""
-    Welcome to MattFlow!
-                        """
-
+"""Executes pre-processing, solution and post-processing."""
 
 from mattflow import (logger,
                       mattflow_post,
@@ -26,7 +20,7 @@ from mattflow.utils import time_this
 
 @time_this
 def main():
-    # Uncomment this to delete previous log, dat and png files (for debugging)
+    # Uncomment this to delete previous log, dat and png files (for debugging).
     # utils.delete_prev_runs_data()
 
     # Pre-processing (mesh construction)
