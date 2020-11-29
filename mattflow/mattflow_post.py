@@ -241,8 +241,8 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, t_hist, ani_title):
     # Reverse engineer the iteration.
     it = (
         frame_number
-        + ((frame_number // conf.CONSECUTIVE_FRAMES)
-           * (conf.FRAME_SAVE_FREQ - conf.CONSECUTIVE_FRAMES))
+        + ((frame_number // conf.FRAMES_PER_PERIOD)
+           * (conf.FRAME_SAVE_FREQ - conf.FRAMES_PER_PERIOD))
     )
 
     # Frame title

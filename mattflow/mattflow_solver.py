@@ -198,7 +198,7 @@ def simulate():
     drops_count = 1
     # idx of the frame saved in h_hist
     saving_frame_idx = 0
-    # Counts up to conf.CONSECUTIVE_FRAMES (1st frame saved at initialization).
+    # Counts up to conf.FRAMES_PER_PERIOD (1st frame saved at initialization).
     consecutive_frames_counter = 1
 
     if conf.ITERS_BETWEEN_DROPS_MODE in ["custom", "random"]:
@@ -247,7 +247,7 @@ def simulate():
             if it % conf.FRAME_SAVE_FREQ == 0:
                 # Zero the counter, when a perfect division occurs.
                 consecutive_frames_counter = 0
-            if consecutive_frames_counter < conf.CONSECUTIVE_FRAMES:
+            if consecutive_frames_counter < conf.FRAMES_PER_PERIOD:
                 saving_frame_idx += 1
                 h_hist[saving_frame_idx] = \
                     U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]

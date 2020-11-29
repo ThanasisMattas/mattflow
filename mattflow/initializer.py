@@ -155,7 +155,7 @@ def _init_h_hist(U):
     """Creates and initializes h_hist, which holds the stepwise height data.
 
     - holds the states of the fluid for post-processing
-    - saving <CONSECUTIVE_FRAMES> frames every <FRAME_SAVE_FREQ> iters
+    - saving <FRAMES_PER_PERIOD> frames every <FRAME_SAVE_FREQ> iters
     """
     # Number of integer divisions with the freq, times the consecutive frames,
     # plus the consecutive frames that we can take from the remainder of the
@@ -163,8 +163,8 @@ def _init_h_hist(U):
     num_states_to_save = (
         conf.MAX_ITERS
         // conf.FRAME_SAVE_FREQ
-        * conf.CONSECUTIVE_FRAMES
-        + min(conf.MAX_ITERS % conf.FRAME_SAVE_FREQ, conf.CONSECUTIVE_FRAMES)
+        * conf.FRAMES_PER_PERIOD
+        + min(conf.MAX_ITERS % conf.FRAME_SAVE_FREQ, conf.FRAMES_PER_PERIOD)
     )
     h_hist = np.zeros((num_states_to_save, conf.Nx, conf.Ny))
     h_hist[0] = U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]

@@ -66,12 +66,12 @@ CY = None
 STOPPING_TIME = 30000
 MAX_ITERS = 650
 
-# Saving <CONSECUTIVE_FRAMES> frames every <FRAME_SAVE_FREQ> iters.
+# Saving <FRAMES_PER_PERIOD> frames every <FRAME_SAVE_FREQ> iters.
 # - resulting to a lighter animation (less fps)
 # - visualizing and debugging long simulations
-#   e.g. MAX_ITERS = 10000, FREQ = 500, CONSECUTIVE_FRAMES = 25
+#   e.g. MAX_ITERS = 10000, FREQ = 500, FRAMES_PER_PERIOD = 25
 FRAME_SAVE_FREQ = 3
-CONSECUTIVE_FRAMES = 1
+FRAMES_PER_PERIOD = 1
 
 # Number of workers for multiprocessing
 WORKERS = 1
