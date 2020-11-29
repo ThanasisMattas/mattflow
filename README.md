@@ -2,7 +2,7 @@
 
 ![Conda] ![Lincense]
 
-A CFD python package for the shallow water equations.
+A CFD python package for the Shallow Water Equations
 
 MattFlow simulates the surface of the water after any initial conditions, such as drops or stones falling on.
 

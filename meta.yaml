@@ -32,7 +32,7 @@ about:
   license: GNU General Public License v3 or later (LGPLv3+)
   license_family: LGPL
   license_file: COPYING
-  summary: A DL solver of the Shallow Water Equations
+  summary: A CFD python package for the Shallow Water Equations
 
 extra:
   maintainers:

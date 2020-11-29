@@ -68,7 +68,7 @@ def print_duration(start, end, process):
     process_name = {
         "main": "Total",
         "simulate": "Solution",
-        "createAnimation": "Post-processing"
+        "animate": "Animating"
     }
     if process in process_name:
         process = process_name[process]
