@@ -18,7 +18,7 @@ import numpy as np
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 
-from mattflow import config as conf, logger, utils
+from mattflow import config as conf, logger, utils, __version__
 from mattflow.utils import time_this
 
 
@@ -294,6 +294,8 @@ def animate(h_hist, t_hist=None):
     plt.title(ani_title, y=0.8, fontsize=18)
     sub.title.set_position([0.51, 0.80])
     plt.rcParams.update({'font.size': 20})
+    # Program name and version text
+    fig.text(0.85, 0.06, s=f"MattFlow v{__version__}", fontsize=16, c='navy')
 
     # Plot initialization
     if conf.PLOTTING_STYLE == 'water':
