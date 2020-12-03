@@ -168,7 +168,7 @@ def _save_ani(ani, fps, dpi):
                      writer=FFwriter, dpi=dpi)
 
             # log only if a log file is already initialzed
-            if logger.find_log() and logger.is_open(logger.find_log()):
+            if isinstance(logger.find_open_log(), str):
                 logger.log('Animation saved as: ' + file_name + '.'
                            + conf.VID_FORMAT + ' | fps: ' + str(fps))
 
@@ -178,7 +178,7 @@ def _save_ani(ani, fps, dpi):
                   '[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -hide_banner' \
                   ' -loglevel panic -loop 0 ' + file_name + '.gif'
             os.system(cmd)
-            if logger.find_log() and logger.is_open(logger.find_log()):
+            if isinstance(logger.find_open_log(), str):
                 logger.log('Animation saved as: ' + file_name + '.gif'
                            + ' | fps: ' + str(fps))
         except FileNotFoundError:

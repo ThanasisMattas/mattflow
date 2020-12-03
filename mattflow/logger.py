@@ -116,7 +116,7 @@ def close():
 
 def is_open(log_file: str):
     """Checks whether a log file object is open or not."""
-    if log_file[-9:] != '_done.log':
+    if isinstance(log_file, str) and log_file[-9:] != '_done.log':
         return True
     return False
 
