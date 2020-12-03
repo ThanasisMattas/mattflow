@@ -46,7 +46,7 @@ def _solve(U,
         drop_its_iterator (iterator)
                            :  iterator of the drop_its list (the list with
                               the iters at which a new drop falls)
-        next_drop_it (int) :  the next iteration at which drop will fall
+        next_drop_it (int) :  the next iteration at which a new drop will fall
 
     Returns:
         U, drops_count, drop_its_iterator, next_drop_it
@@ -81,7 +81,8 @@ def _solve(U,
     # 'rain': random number of drops are generated at random frequency
     elif conf.MODE == 'rain':
         if it % random.randrange(1, 15) == 0:
-            for simultaneous_drops in range(random.randrange(1, 2)):
+            simultaneous_drops = range(random.randrange(1, 2))
+            for _ in simultaneous_drops:
                 U[0, :, :] = initializer.drop(U[0, :, :])
     else:
         modes = ['single drop', 'drops', 'rain']
@@ -108,7 +109,7 @@ def _solve(U,
     return U, drops_count, drop_its_iterator, next_drop_it
 
     '''
-    # Experimenting on the finite differences form of the MacCormack solver
+    # Experimenting on the finite differences form of the MacCormack solver.
     # TODO somewhere delta_t/dx becomes the greatest eigenvalue of the jacobian
     elif conf.SOLVER_TYPE == 'MacCormack experimental':
         # 1st step: prediction (FTFS)
@@ -132,7 +133,7 @@ def _solve(U,
     '''
 
 
-def dt(U, epsilon=1e-5):
+def dt(U, epsilon=1e-4):
     """Evaluates the time discretization step of the current iteration.
 
     The stability condition of the numerical simulation (Known as
