@@ -75,7 +75,8 @@ def _solve(U,
         if drop_condition:
             U[0, :, :] = initializer.drop(U[0, :, :], drops_count + 1)
             drops_count += 1
-            if conf.ITERS_BETWEEN_DROPS_MODE in ["custom", "random"]:
+            if (conf.ITERS_BETWEEN_DROPS_MODE in ["custom", "random"]
+                    and drops_count < conf.MAX_N_DROPS):
                 next_drop_it = next(drop_its_iterator)
 
     # 'rain': random number of drops are generated at random frequency

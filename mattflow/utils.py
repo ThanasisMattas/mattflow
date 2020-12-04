@@ -153,6 +153,10 @@ def drop_iters_list():
     else:
         logger.log("Configure ITERS_BETWEEN_DROPS_MODE | options:"
                    " 'fixed', 'custom', 'random'")
+
+    # Remove drop iterations that fall after MAX_ITERS.
+    last_drop_idx = np.searchsorted(drop_iters, conf.MAX_ITERS)
+    drop_iters = drop_iters[:last_drop_idx]
     # Overwrite max number of drops.
     conf.MAX_N_DROPS = len(drop_iters)
 
