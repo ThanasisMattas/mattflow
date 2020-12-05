@@ -48,7 +48,7 @@ def _variance():
     return variance[conf.MODE]
 
 
-def drop_heights_multiplier():
+def _drop_heights_multiplier():
     """Adjusts the size of the drop, regarding the simulation mode."""
     # multiply with 4 / 3 for a small stone droping
     #          with 1 / 4 for a water drop with a considerable momentum build
@@ -130,7 +130,7 @@ def drop(h_hist, drops_count=None):
         h_hist(2D array) : drop is added to the input h_hist
     """
     variance = _variance()
-    drop_heights = drop_heights_multiplier() * _gaussian(variance, drops_count)
+    drop_heights = _drop_heights_multiplier() * _gaussian(variance, drops_count)
     drop_correction = _drop_heights_correction(drop_heights)
     h_hist += drop_heights - drop_correction
     return h_hist
