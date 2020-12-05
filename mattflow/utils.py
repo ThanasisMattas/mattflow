@@ -27,10 +27,12 @@ def cell_centers():
     """Generates the cell centers along the x and y axes."""
     cx = np.arange(conf.MIN_X + (0.5 - conf.Ng) * conf.dx,
                    conf.MAX_X + conf.Ng * conf.dx,
-                   conf.dx)
+                   conf.dx,
+                   dtype=conf.DTYPE)
     cy = np.arange(conf.MIN_Y + (0.5 - conf.Ng) * conf.dy,
                    conf.MAX_Y + conf.Ng * conf.dy,
-                   conf.dy)
+                   conf.dy,
+                   dtype=conf.DTYPE)
     return cx, cy
 
 

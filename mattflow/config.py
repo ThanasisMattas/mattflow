@@ -28,9 +28,12 @@
 
 import os
 
+import numpy as np
+
 
 # Select whether a .log file will be generated or not.
 LOGGING_MODE = False
+DTYPE = np.dtype("float32")
 
 
 # Pre-processing configuration {

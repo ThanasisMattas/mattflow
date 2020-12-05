@@ -191,7 +191,6 @@ def _flux_batch(U, window=None, slicing_obj=None,
     Returns:
         total_flux (3D array)
     """
-    g = 9.81
     Nx = conf.Nx
     Ny = conf.Ny
     Ng = conf.Ng
@@ -201,11 +200,11 @@ def _flux_batch(U, window=None, slicing_obj=None,
     if parallel:
         x_limit = 1
         U_batch = U[:, :, slicing_obj]
-        total_flux = np.zeros(((3, Ny + 2 * Ng, window + 2)))
+        total_flux = np.zeros(((3, Ny + 2 * Ng, window + 2)), dtype=conf.DTYPE)
     else:
         x_limit = Ng
         U_batch = U
-        total_flux = np.zeros(((3, Ny + 2 * Ng, Nx + 2 * Ng)))
+        total_flux = np.zeros(((3, Ny + 2 * Ng, Nx + 2 * Ng)), dtype=conf.DTYPE)
 
     # Vertical interfaces - Horizontal flux {
     #

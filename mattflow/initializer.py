@@ -97,7 +97,7 @@ def _drop_heights_correction(drop_heights):
                                      to the next time_step
     """
     divisor = 2
-    drop_correction = np.empty_like(drop_heights)
+    drop_correction = np.empty_like(drop_heights, dtype=conf.DTYPE)
     drop_heights_sum = drop_heights.sum()
     drop_correction.fill(drop_heights_sum / drop_heights.size / divisor)
     return drop_correction
@@ -135,7 +135,7 @@ def _init_U():
     """Creates and initializes the state-variables 3D matrix, U."""
     cx = conf.CX
     cy = conf.CY
-    U = np.zeros((utils.U_shape()))
+    U = np.zeros((utils.U_shape()), dtype=conf.DTYPE)
     # 1st drop
     U[0, :, :] = conf.SURFACE_LEVEL + drop(U[0, :, :], drops_count=1)
     # Write a .dat file (default: False)
@@ -166,7 +166,7 @@ def _init_h_hist(U):
         * conf.FRAMES_PER_PERIOD
         + min(conf.MAX_ITERS % conf.FRAME_SAVE_FREQ, conf.FRAMES_PER_PERIOD)
     )
-    h_hist = np.zeros((num_states_to_save, conf.Nx, conf.Ny))
+    h_hist = np.zeros((num_states_to_save, conf.Nx, conf.Ny), dtype=conf.DTYPE)
     h_hist[0] = U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
     return h_hist
 
@@ -177,7 +177,7 @@ def _init_U_ds(U):
     ds_name = f"mattflow_data_{dss[0]}x{dss[1]}x{dss[2]}x{dss[3]}.npy"
     U_ds = open_memmap(os.path.join(os.getcwd(), ds_name),
                        mode='w+',
-                       dtype=np.dtype('float32'),
+                       dtype=conf.DTYPE,
                        shape=dss)
     U_ds[0] = U[:, conf.Ng: - conf.Ng, conf.Ng: - conf.Ng]
     return U_ds
@@ -204,7 +204,7 @@ def initialize():
 
     U = _init_U()
     h_hist = _init_h_hist(U)
-    t_hist = t_hist = np.zeros(len(h_hist))
+    t_hist = t_hist = np.zeros(len(h_hist), dtype=conf.DTYPE)
     if conf.SAVE_DS_FOR_ML:
         U_ds = _init_U_ds(U)
     else:
