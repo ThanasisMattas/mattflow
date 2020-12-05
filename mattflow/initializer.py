@@ -48,6 +48,20 @@ def _variance():
     return variance[conf.MODE]
 
 
+def drop_heights_multiplier():
+    """Adjusts the size of the drop, regarding the simulation mode."""
+    # multiply with 4 / 3 for a small stone droping
+    #          with 1 / 4 for a water drop with a considerable momentum build
+    #          with 1 / 6 for a soft water drop
+    if conf.MODE == 'single drop' or conf.MODE == 'drops':
+        factor = randint(6, 12) / 10
+    elif conf.MODE == 'rain':
+        factor = 1 / 6
+    else:
+        print("Configure MODE | options: 'single drop', 'drops', 'rain'")
+    return factor
+
+
 def _gaussian(variance, drops_count):
     '''Populates the mesh with a bivariate gaussian distribution of a certain
     variance.
@@ -115,17 +129,8 @@ def drop(h_hist, drops_count=None):
     Returns:
         h_hist(2D array) : drop is added to the input h_hist
     """
-    # multiply with 4 / 3 for a small stone droping
-    #          with 1 / 4 for a water drop with a considerable momentum build
-    #          with 1 / 6 for a soft water drop
-    if conf.MODE == 'single drop' or conf.MODE == 'drops':
-        factor = randint(6, 12) / 10
-    elif conf.MODE == 'rain':
-        factor = 1 / 6
-    else:
-        print("Configure MODE | options: 'single drop', 'drops', 'rain'")
     variance = _variance()
-    drop_heights = factor * _gaussian(variance, drops_count)
+    drop_heights = drop_heights_multiplier() * _gaussian(variance, drops_count)
     drop_correction = _drop_heights_correction(drop_heights)
     h_hist += drop_heights - drop_correction
     return h_hist
