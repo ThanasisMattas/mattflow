@@ -159,9 +159,9 @@ SAVE_DS_FOR_ML = False
 PLOTTING_STYLE = 'wireframe'
 
 # frames per sec
-FPS = 20
+FPS = 18
 # dots per inch
-DPI = 80
+DPI = 75
 # figure size in inches
 # golden ratio: 1.618
 FIGSIZE = (10 * 1.618, 10)
