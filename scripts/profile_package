@@ -2,6 +2,7 @@
 # script: profile_package
 # ------------------------
 # Profiles a python package, using rkern's line_profiler.
+# [repo](https://github.com/pyutils/line_profiler)
 #
 # You can pass 1 argument with the name of the package.
 #
@@ -21,12 +22,12 @@ fi
 
 if [ -d $PWD/$pkg ]; then
   export PYTHONPATH="${PYTHONPATH}:${PWD}/${pkg}"
-  kernprof -lv mattflow/__main__.py
+  kernprof -lv mattflow/__main__.py.lprof > "${pkg}_profile.txt"
 else
   cwd=$PWD
   cd ..
   export PYTHONPATH="${PYTHONPATH}:${PWD}/${pkg}"
-  kernprof -lv mattflow/__main__.py
+  kernprof -lv mattflow/__main__.py > "${pkg}_profile.txt"
   cd $cwd
 fi
 
