@@ -1,0 +1,760 @@
+Solution duration-------------0:00:17.46
+Animating duration------------0:02:35.57
+Total duration----------------0:02:53.03
+Wrote profile results to __main__.py.lprof
+Timer unit: 1e-06 s
+
+Total time: 1.25051 s
+File: mattflow/bcmanager.py
+Function: update_ghost_cells at line 33
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    33                                           @profile
+    34                                           def update_ghost_cells(U):
+    35                                               """Implements the boundary conditions.
+    36                                           
+    37                                               reflective boundary conditions:
+    38                                           
+    39                                               + vertical walls (x=X_MIN, x=X_max)
+    40                                                   - h : dh/dx = 0 (Neumann)     h_0 = h_-1   (1 ghost cell)
+    41                                                                                 h_1 = h_-2   (2 ghost cells)
+    42                                           
+    43                                                   - u : u = 0    (Dirichlet)    u_0 = -u_-1  (1 ghost cell)
+    44                                                                                 u_1 = -u_-2  (2 ghost cells)
+    45                                           
+    46                                                   - v : dv/dx = 0 (Neumann)     v_0 = v_-1   (1 ghost cell)
+    47                                                                                 v_1 = v_-2   (2 ghost cells)
+    48                                           
+    49                                               + horizontal walls (y=Y_MIN, y=Y_max)
+    50                                                   - h : dh/dy = 0 (Neumann)     h_0 = h_-1   (1 ghost cell)
+    51                                                                                 h_1 = h_-2   (2 ghost cells)
+    52                                           
+    53                                                   - u : du/dy = 0 (Neumann)     u_0 = u_-1   (1 ghost cell)
+    54                                                                                 u_1 = u_-2   (2 ghost cells)
+    55                                           
+    56                                                   - v : v = 0    (Dirichlet)    v_0 = -v_-1  (1 ghost cell)
+    57                                                                                 v_1 = -v_-2  (2 ghost cells)
+    58                                           
+    59                                               Args:
+    60                                                   U (3D array) :  the state variables, populating a x,y grid
+    61                                           
+    62                                               Returns:
+    63                                                   U
+    64                                               """
+    65      9999       6260.0      0.6      0.5      if conf.BOUNDARY_CONDITIONS == 'reflective':
+    66                                                   # left wall (0 <= x < Ng)
+    67      9999     181153.0     18.1     14.5          U[0, :, :conf.Ng] = np.flip(U[0, :, conf.Ng: 2 * conf.Ng], 1)
+    68      9999     140393.0     14.0     11.2          U[1, :, :conf.Ng] = - np.flip(U[1, :, conf.Ng: 2 * conf.Ng], 1)
+    69      9999     103415.0     10.3      8.3          U[2, :, :conf.Ng] = np.flip(U[2, :, conf.Ng: 2 * conf.Ng], 1)
+    70                                           
+    71                                                   # right wall (Nx + Ng <= x < Nx + 2Ng)
+    72                                                   U[0, :, conf.Nx + conf.Ng: conf.Nx + 2 * conf.Ng] \
+    73      9999      95443.0      9.5      7.6              = np.flip(U[0, :, conf.Nx: conf.Nx + conf.Ng], 1)
+    74                                                   U[1, :, conf.Nx + conf.Ng: conf.Nx + 2 * conf.Ng] \
+    75      9999     107004.0     10.7      8.6              = - np.flip(U[1, :, conf.Nx: conf.Nx + conf.Ng], 1)
+    76                                                   U[2, :, conf.Nx + conf.Ng: conf.Nx + 2 * conf.Ng] \
+    77      9999      94755.0      9.5      7.6              = np.flip(U[2, :, conf.Nx: conf.Nx + conf.Ng], 1)
+    78                                           
+    79                                                   # top wall (0 <= y < Ng)
+    80      9999      89410.0      8.9      7.1          U[0, :conf.Ng, :] = np.flip(U[0, conf.Ng: 2 * conf.Ng, :], 0)
+    81      9999      81884.0      8.2      6.5          U[1, :conf.Ng, :] = np.flip(U[1, conf.Ng: 2 * conf.Ng, :], 0)
+    82      9999      90867.0      9.1      7.3          U[2, :conf.Ng, :] = - np.flip(U[2, conf.Ng: 2 * conf.Ng, :], 0)
+    83                                           
+    84                                                   # bottom wall (Ny + Ng <= y < Ny + 2Ng)
+    85                                                   U[0, conf.Ny + conf.Ng: conf.Ny + 2 * conf.Ng, :] \
+    86      9999      85706.0      8.6      6.9              = np.flip(U[0, conf.Ny: conf.Ny + conf.Ng, :], 0)
+    87                                                   U[1, conf.Ny + conf.Ng: conf.Ny + 2 * conf.Ng, :] \
+    88      9999      82271.0      8.2      6.6              = np.flip(U[1, conf.Ny: conf.Ny + conf.Ng, :], 0)
+    89                                                   U[2, conf.Ny + conf.Ng: conf.Ny + 2 * conf.Ng, :] \
+    90      9999      88259.0      8.8      7.1              = - np.flip(U[2, conf.Ny: conf.Ny + conf.Ng, :], 0)
+    91      9999       3694.0      0.4      0.3      return U
+
+Total time: 3.31274 s
+File: mattflow/flux.py
+Function: _horizontal_flux at line 129
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   129                                           @profile
+   130                                           def _horizontal_flux(U, Nx, Ng, dy, maxHorizontalSpeed, parallel=True):
+   131                                               """Lax-Friedrichs scheme (flux is calculated on each vertical interface)
+   132                                           
+   133                                               flux = 0.5 * (F_left + F_right) - 0.5 * maxSpeed * (U_right - U_left)
+   134                                               """
+   135     19998       8153.0      0.4      0.2      if parallel:
+   136                                                   h_flux = (
+   137                                                       0.5 * (_F(U[:, Ng: -Ng, 0: -1]) + _F(U[:, Ng: -Ng, 1:]))
+   138                                                       - 0.5 * maxHorizontalSpeed * (U[:, Ng: -Ng, 1:]
+   139                                                                                     - U[:, Ng: -Ng, 0: -1])
+   140                                                   )
+   141                                               else:
+   142                                                   h_flux = (
+   143     19998     890998.0     44.6     26.9              0.5 * (_F(U[:, Ng: -Ng, Ng - 1: -Ng])
+   144     19998    1018923.0     51.0     30.8                     + _F(U[:, Ng: -Ng, Ng: Nx + Ng + 1]))
+   145     19998     107749.0      5.4      3.3              - 0.5 * maxHorizontalSpeed * (U[:, Ng: -Ng, Ng: Nx + Ng + 1]
+   146     19998    1094995.0     54.8     33.1                                            - U[:, Ng: -Ng, Ng - 1: -Ng])
+   147                                                   )
+   148     19998     184196.0      9.2      5.6      h_flux *= dy
+   149     19998       7730.0      0.4      0.2      return h_flux
+
+Total time: 3.04383 s
+File: mattflow/flux.py
+Function: _vertical_flux at line 152
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   152                                           @profile
+   153                                           def _vertical_flux(U, Ny, Ng, dx, maxVerticalSpeed, parallel=True):
+   154                                               """Lax-Friedrichs scheme (flux is calculated on each horizontal interface)
+   155                                           
+   156                                               flux = 0.5 * (F_top + F_bottom) - 0.5 * maxSpeed * (U_bottom - U_top)
+   157                                               """
+   158     19998       9580.0      0.5      0.3      if parallel:
+   159                                                   x_limit = 1
+   160                                               else:
+   161     19998       6695.0      0.3      0.2          x_limit = Ng
+   162                                           
+   163                                               v_flux = (
+   164     19998     839447.0     42.0     27.6          0.5 * dx * (_G(U[:, Ng - 1: -Ng, x_limit: -x_limit])
+   165     19998    1000464.0     50.0     32.9                      + _G(U[:, Ng: Ny + Ng + 1, x_limit: -x_limit]))
+   166                                                   - 0.5 * dx * maxVerticalSpeed
+   167     19998     109233.0      5.5      3.6              * (U[:, Ng: Ny + Ng + 1, x_limit: -x_limit]
+   168     19998    1069564.0     53.5     35.1                  - U[:, Ng - 1: -Ng, x_limit: -x_limit])
+   169                                               )
+   170     19998       8846.0      0.4      0.3      return v_flux
+
+Total time: 13.4497 s
+File: mattflow/flux.py
+Function: _flux_batch at line 173
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   173                                           @profile
+   174                                           def _flux_batch(U, window=None, slicing_obj=None,
+   175                                                           flux_out=None, idx=None, parallel=True):
+   176                                               """Evaluates the total flux that enters or leaves a cell, using the \
+   177                                               Lax-Friedrichs scheme.
+   178                                           
+   179                                               It runs on each joblib worker on a slice of the domain.
+   180                                               (The horizontal axis, x, is sliced.)
+   181                                           
+   182                                               Args:
+   183                                                   U (3D array)        : the state variables 3D matrix
+   184                                                   window (int)        : the effective width of a slice
+   185                                                                         (default None, in case of single-processing)
+   186                                                   slicing_obj (slice) : slice of the domain (1 + window + 1)
+   187                                                                         (default None, in case of single-processing)
+   188                                                   flux_out (3D array) : container of the results of each worker
+   189                                                                         (default None, in case of single-processing)
+   190                                                   idx (int)           : the index in flux_out of the current results
+   191                                                                         (default None, in case of single-processing)
+   192                                                   parallel (bool)     : multi or single processing
+   193                                           
+   194                                               Returns:
+   195                                                   total_flux (3D array)
+   196                                               """
+   197     19998      14516.0      0.7      0.1      Nx = conf.Nx
+   198     19998      10938.0      0.5      0.1      Ny = conf.Ny
+   199     19998       9753.0      0.5      0.1      Ng = conf.Ng
+   200     19998       9682.0      0.5      0.1      dx = conf.dx
+   201     19998       9633.0      0.5      0.1      dy = conf.dy
+   202                                           
+   203     19998       9520.0      0.5      0.1      if parallel:
+   204                                                   x_limit = 1
+   205                                                   U_batch = U[:, :, slicing_obj]
+   206                                                   total_flux = np.zeros(((3, Ny + 2 * Ng, window + 2)), dtype=conf.DTYPE)
+   207                                               else:
+   208     19998       9369.0      0.5      0.1          x_limit = Ng
+   209     19998       8821.0      0.4      0.1          U_batch = U
+   210     19998     101090.0      5.1      0.8          total_flux = np.zeros(((3, Ny + 2 * Ng, Nx + 2 * Ng)), dtype=conf.DTYPE)
+   211                                           
+   212                                               # Vertical interfaces - Horizontal flux {
+   213                                               #
+   214                                               # Max horizontal speed between left and right cells for every interface
+   215     19998      11296.0      0.6      0.1      maxHorizontalSpeed = _max_horizontal_speed(U_batch, Nx, Ng,
+   216     19998    2492140.0    124.6     18.5                                                 parallel=parallel)
+   217                                           
+   218                                               # Lax-Friedrichs scheme
+   219                                               # flux = 0.5 * (F_left + F_right) - 0.5 * maxSpeed * (U_right - U_left)
+   220                                               # flux is calculated on each interface.
+   221     19998      12713.0      0.6      0.1      horizontalFlux = _horizontal_flux(U_batch, Nx, Ng, dy, maxHorizontalSpeed,
+   222     19998    3434421.0    171.7     25.5                                        parallel=parallel)
+   223                                           
+   224                                               # horizontalFlux is subtracted from the left and added to the right cells.
+   225     19998      11697.0      0.6      0.1      if parallel:
+   226                                                   total_flux[:, Ng: -Ng, 0: U_batch.shape[2] - 1] -= horizontalFlux
+   227                                                   total_flux[:, Ng: -Ng, 1: U_batch.shape[2]] += horizontalFlux
+   228                                               else:
+   229     19998     582528.0     29.1      4.3          total_flux[:, Ng: -Ng, Ng - 1: -Ng] -= horizontalFlux
+   230     19998     551940.0     27.6      4.1          total_flux[:, Ng: -Ng, Ng: Nx + Ng + 1] += horizontalFlux
+   231                                               # }
+   232                                           
+   233                                               # Horizontal interfaces - Vertical flux {
+   234                                               #
+   235                                               # Max vertical speed between top and bottom cells for every interface.
+   236                                               # (for the vertical calculations the extra horizontal cells are not needed)
+   237     19998    1877885.0     93.9     14.0      maxVerticalSpeed = _max_vertical_speed(U_batch, Ny, Ng, parallel=parallel)
+   238                                           
+   239                                               # Lax-Friedrichs scheme
+   240                                               # flux = 0.5 * (F_top + F_bottom) - 0.5 * maxSpeed * (U_bottom - U_top)
+   241     19998      13627.0      0.7      0.1      verticalFlux = _vertical_flux(U_batch, Ny, Ng, dx, maxVerticalSpeed,
+   242     19998    3168367.0    158.4     23.6                                    parallel=parallel)
+   243                                           
+   244                                               # verticalFlux is subtracted from the top and added to the bottom cells.
+   245     19998      11166.0      0.6      0.1      if parallel:
+   246                                                   total_flux[:, Ng - 1: -Ng, 1: U_batch.shape[2] - 1] -= verticalFlux
+   247                                                   total_flux[:, Ng: Ny + Ng + 1, 1: U_batch.shape[2] - 1] += verticalFlux
+   248                                               else:
+   249     19998     545833.0     27.3      4.1          total_flux[:, Ng - 1: -Ng, Ng: -Ng] -= verticalFlux
+   250     19998     519543.0     26.0      3.9          total_flux[:, Ng: Ny + Ng + 1, Ng: -Ng] += verticalFlux
+   251                                               # }
+   252                                           
+   253                                               # No need to keep ghost cells --> removes 2*(Nx + Ny) operations stepwise
+   254                                               # Also, 1st and last nodes of each column are removed (they were only
+   255                                               # needed from the numerical scheme, to calculate the other nodes).
+   256     19998      14719.0      0.7      0.1      if flux_out is not None:
+   257                                                   flux_out[idx] = total_flux[:, Ng: -Ng, x_limit: -x_limit]
+   258                                               else:
+   259     19998      18524.0      0.9      0.1          return total_flux[:, Ng: -Ng, x_limit: -x_limit]
+
+Total time: 0.015862 s
+File: mattflow/initializer.py
+Function: _gaussian at line 65
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    65                                           @profile
+    66                                           def _gaussian(variance, drops_count):
+    67                                               '''Populates the mesh with a bivariate gaussian distribution of a certain
+    68                                               variance.
+    69                                           
+    70                                               formula: amplitude * np.exp(-exponent)
+    71                                           
+    72                                               Args:
+    73                                                   variance (float) : target variance of the distribution
+    74                                                   drops_count(int) : drop counter
+    75                                           
+    76                                               Returs:
+    77                                                   gaussian_distribution (2D array)
+    78                                               '''
+    79                                               # random pick of drop center coordinates
+    80                                               # (mean or expectation of the gaussian distribution)
+    81       110         66.0      0.6      0.4      if conf.RANDOM_DROP_CENTERS:
+    82       110        220.0      2.0      1.4          drop_cx = uniform(conf.MIN_X, conf.MAX_X)
+    83       110        109.0      1.0      0.7          drop_cy = uniform(conf.MIN_Y, conf.MAX_Y)
+    84                                               else:
+    85                                                   drop_cx = conf.DROPS_CX[drops_count % 10]
+    86                                                   drop_cy = conf.DROPS_CY[drops_count % 10]
+    87                                           
+    88                                               # grid of the cell centers
+    89       110       9659.0     87.8     60.9      CX, CY = np.meshgrid(conf.CX, conf.CY)
+    90                                           
+    91       110        578.0      5.3      3.6      amplitude = 1 / np.sqrt(2 * np.pi * variance)
+    92                                               exponent = \
+    93       110       2156.0     19.6     13.6          ((CX - drop_cx)**2 + (CY - drop_cy)**2) / (2 * variance)
+    94                                           
+    95       110       3013.0     27.4     19.0      gaussian_distribution = amplitude * np.exp(-exponent)
+    96       110         61.0      0.6      0.4      return gaussian_distribution
+
+Total time: 0.023531 s
+File: mattflow/initializer.py
+Function: drop at line 121
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   121                                           @profile
+   122                                           def drop(h_hist, drops_count=None):
+   123                                               """Generates a drop.
+   124                                           
+   125                                               Drop is modeled as a bivariate gaussian distribution.
+   126                                           
+   127                                               Args:
+   128                                                   h_hist (array)   : the 0th state variable, U[0, :, :]
+   129                                                   drops_count(int) : drop counter
+   130                                           
+   131                                               Returns:
+   132                                                   h_hist(2D array) : drop is added to the input h_hist
+   133                                               """
+   134       110       1832.0     16.7      7.8      variance = _variance()
+   135       110      18001.0    163.6     76.5      drop_heights = _drop_heights_multiplier() * _gaussian(variance, drops_count)
+   136       110       2828.0     25.7     12.0      drop_correction = _drop_heights_correction(drop_heights)
+   137       110        844.0      7.7      3.6      h_hist += drop_heights - drop_correction
+   138       110         26.0      0.2      0.1      return h_hist
+
+Total time: 0.000576 s
+File: mattflow/initializer.py
+Function: initialize at line 193
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   193                                           @profile
+   194                                           def initialize():
+   195                                               """Wrapper that initializes all necessary data structures.
+   196                                           
+   197                                               Returns
+   198                                                   U (3D array)   :  the state-variables-3D-matrix (populating a x,y grid)
+   199                                                                     - shape: (3, Nx + 2 * Ng, Ny + 2 * Ng)
+   200                                                                     - U[0] : state varables [h, hu, hv]
+   201                                                                     - U[1] : y dimention (rows)
+   202                                                                     - U[2] : x dimention (columns)
+   203                                                   h_hist (array) :  holds the step-wise height solutions for the
+   204                                                                            post-processing animation
+   205                                                   t_hist (array) :  holds the step-wise times for the post-
+   206                                                                     processing animation
+   207                                                   U_ds (memmap)  :  holds the state-variables 3D matrix data for all
+   208                                                                     the timesteps
+   209                                                                     (conf.MAX_ITERS, 3, Nx + 2 * Ng, Ny + 2 * Ng)
+   210                                               """
+   211         1          5.0      5.0      0.9      logger.log('Initialization...')
+   212                                           
+   213         1        528.0    528.0     91.7      U = _init_U()
+   214         1         35.0     35.0      6.1      h_hist = _init_h_hist(U)
+   215         1          6.0      6.0      1.0      t_hist = t_hist = np.zeros(len(h_hist), dtype=conf.DTYPE)
+   216         1          0.0      0.0      0.0      if conf.SAVE_DS_FOR_ML:
+   217                                                   U_ds = _init_U_ds(U)
+   218                                               else:
+   219         1          1.0      1.0      0.2          U_ds = None
+   220         1          1.0      1.0      0.2      return U, h_hist, t_hist, U_ds
+
+Total time: 155.395 s
+File: mattflow/mattflow_post.py
+Function: _save_ani at line 142
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   142                                           @profile
+   143                                           def _save_ani(ani, fps, dpi):
+   144                                               """Saves the animation in .mp4 and .gif formats.
+   145                                           
+   146                                               Args:
+   147                                                   ani (obj) : animation.FuncAnimation() object
+   148                                                   fps (int) : frames per second
+   149                                                   dpi (int) : dots per inch
+   150                                               """
+   151         1          1.0      1.0      0.0      if conf.SAVE_ANIMATION is True:
+   152                                                   # file name
+   153         1         11.0     11.0      0.0          date_n_time = str(datetime.now())[:19]
+   154                                                   # Replace ':' with '-' for compatibility with windows file formating.
+   155         1          3.0      3.0      0.0          date_n_time = date_n_time.replace(':', '-').replace(' ', '_')
+   156         1          1.0      1.0      0.0          file_name = conf.MODE + '_animation_' + date_n_time
+   157                                           
+   158                                                   # Configure the writer
+   159         1          8.0      8.0      0.0          plt.rcParams['animation.ffmpeg_path'] = conf.PATH_TO_FFMPEG
+   160         1          1.0      1.0      0.0          FFwriter = animation.FFMpegWriter(
+   161         1          0.0      0.0      0.0              fps=fps, bitrate=-1,
+   162         1          1.0      1.0      0.0              extra_args=['-r', str(fps), '-pix_fmt', 'yuv420p', '-vcodec',
+   163         1         13.0     13.0      0.0                          'libx264', '-qscale:v', '1']
+   164                                                   )
+   165                                           
+   166                                                   # Save
+   167         1          1.0      1.0      0.0          try:
+   168         1          2.0      2.0      0.0              ani.save(file_name + '.' + conf.VID_FORMAT,
+   169         1  146906648.0 146906648.0     94.5                       writer=FFwriter, dpi=dpi)
+   170                                           
+   171                                                       # log only if a log file is already initialzed
+   172         1         54.0     54.0      0.0              if isinstance(logger.find_open_log(), str):
+   173                                                           logger.log('Animation saved as: ' + file_name + '.'
+   174                                                                      + conf.VID_FORMAT + ' | fps: ' + str(fps))
+   175                                           
+   176                                                       # convert to a lighter gif
+   177                                                       cmd = 'ffmpeg -i ' + file_name + '.' + conf.VID_FORMAT + ' -vf '   \
+   178                                                             '"fps=' + str(fps) + ',scale=240:-1:flags=lanczos,split'     \
+   179                                                             '[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -hide_banner' \
+   180         1          4.0      4.0      0.0                    ' -loglevel panic -loop 0 ' + file_name + '.gif'
+   181         1    8487940.0 8487940.0      5.5              os.system(cmd)
+   182         1         64.0     64.0      0.0              if isinstance(logger.find_open_log(), str):
+   183                                                           logger.log('Animation saved as: ' + file_name + '.gif'
+   184                                                                      + ' | fps: ' + str(fps))
+   185                                                   except FileNotFoundError:
+   186                                                       logger.log('Configure PATH_TO_FFMPEG')
+   187                                               elif conf.SAVE_ANIMATION is False:
+   188                                                   pass
+   189                                               else:
+   190                                                   logger.log("Configure SAVE_ANIMATION | Options: True, False")
+
+Total time: 18.4625 s
+File: mattflow/mattflow_post.py
+Function: _update_plot at line 193
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   193                                           @profile
+   194                                           def _update_plot(frame_number, X, Y, Z, plot, fig, sub, t_hist, ani_title):
+   195                                               """Plots a single frame.
+   196                                           
+   197                                               It is used from FuncAnimation to iteratively create an animation.
+   198                                           
+   199                                               Args:
+   200                                                   frame_number (int)  : current frame
+   201                                                   X, Y, Z (2D arrays) : meshgrid and values
+   202                                                   plot (list)         : list holding current plot
+   203                                                   fig (figure)        : activated plt.figure
+   204                                                   sub (subplot)       : Axes3D subplot object
+   205                                                   t_hist (list)       : holds the iter-wise times
+   206                                                   ani_title (str)     : to be formated with the frame_number
+   207                                               """
+   208      3335      10337.0      3.1      0.1      if conf.PLOTTING_STYLE == 'water':
+   209                                                   plot[0].remove()
+   210                                                   if conf.ROTATION:
+   211                                                       # Rotate the domain horizontally every 2 frames and vetically
+   212                                                       # every 4 frames.
+   213                                                       horizontal_rotate = 45 + frame_number / 2
+   214                                                       vertical_rotate = 55 - frame_number / 4
+   215                                                       sub.view_init(vertical_rotate, horizontal_rotate)
+   216                                                   plot[0] = sub.plot_surface(X, Y, Z[frame_number],
+   217                                                                              rstride=1, cstride=1, linewidth=0,
+   218                                                                              color=(0.251, 0.643, 0.875, 0.95),
+   219                                                                              shade=True, antialiased=False)
+   220      3335       5202.0      1.6      0.0      elif conf.PLOTTING_STYLE == 'contour':
+   221                                                   # Bliting with contour is not supported (because the corresponding
+   222                                                   # attributes are not artists), so the subplot has to be re-built.
+   223                                                   # That's why fig is passed (matplotlib==3.3.1).
+   224                                                   sub.clear()
+   225                                                   sub.view_init(45, 55)
+   226                                                   plt.subplots_adjust(left=0, bottom=0, right=1, top=1,
+   227                                                                       wspace=0, hspace=0)
+   228                                                   fig.gca().set_zlim([-0.5, 4])
+   229                                                   plt.axis('off')
+   230                                                   plot[0] = sub.contour3D(X, Y, Z[frame_number], 120, cmap='ocean',
+   231                                                                           vmin=0.5, vmax=1.5)
+   232      3335       4565.0      1.4      0.0      elif conf.PLOTTING_STYLE == 'wireframe':
+   233      3335      79194.0     23.7      0.4          plot[0].remove()
+   234      3335       5123.0      1.5      0.0          if conf.ROTATION:
+   235                                                       # Rotate the domain horizontally every 3 frames and vetically
+   236                                                       # every 2 frames.
+   237      3335       5425.0      1.6      0.0              horizontal_rotate = 45 + frame_number / 2
+   238      3335       4888.0      1.5      0.0              vertical_rotate = 55 - frame_number / 4
+   239      3335      12896.0      3.9      0.1              sub.view_init(vertical_rotate, horizontal_rotate)
+   240      3335       9791.0      2.9      0.1          plot[0] = sub.plot_wireframe(X, Y, Z[frame_number],
+   241      3335   17145791.0   5141.2     92.9                                       rstride=2, cstride=2, linewidth=1)
+   242                                           
+   243                                               # Reverse engineer the iteration.
+   244                                               it = (
+   245      3335       6962.0      2.1      0.0          frame_number
+   246      3335       7669.0      2.3      0.0          + ((frame_number // conf.FRAMES_PER_PERIOD)
+   247      3335       6245.0      1.9      0.0             * (conf.FRAME_SAVE_FREQ - conf.FRAMES_PER_PERIOD))
+   248                                               )
+   249                                           
+   250                                               # Frame title
+   251      3335       4176.0      1.3      0.0      if t_hist is not None:
+   252                                                   ani_title = \
+   253      3335      36062.0     10.8      0.2              f"time: {t_hist[frame_number]: >{6}.3f}    iter: {it: >{4}d}"
+   254      3335    1063271.0    318.8      5.8      plt.title(ani_title, y=0.8, fontsize=18)
+   255      3335      54892.0     16.5      0.3      sub.title.set_position([0.51, 0.80])
+
+Total time: 155.574 s
+File: mattflow/mattflow_post.py
+Function: animate at line 258
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   258                                           @time_this
+   259                                           @profile
+   260                                           def animate(h_hist, t_hist=None):
+   261                                               """Generates and saves an animation of the simulation.
+   262                                           
+   263                                               Args:
+   264                                                   h_hist (array) :  array of iter-wise heights solutions
+   265                                                   t_hist (array) :  holds the iter-wise times
+   266                                           
+   267                                               Returns:
+   268                                                   ani (animation.FuncAnimation) : It is returned in case of ipython
+   269                                               """
+   270                                               # resolution = figsize * dpi
+   271                                               # --------------------------
+   272                                               # example:
+   273                                               # figsize = (9.6, 5.4), dpi=200
+   274                                               # resolution: 1920x1080 (1920/200=9.6)
+   275         1          3.0      3.0      0.0      fps = conf.FPS
+   276         1          1.0      1.0      0.0      dpi = conf.DPI
+   277         1          2.0      2.0      0.0      figsize = conf.FIGSIZE
+   278                                           
+   279                                               # total frames
+   280         1          1.0      1.0      0.0      frames = len(h_hist)
+   281                                           
+   282                                               # X, Y, Z
+   283         1         93.0     93.0      0.0      X, Y = np.meshgrid(conf.CX[conf.Ng: -conf.Ng], conf.CY[conf.Ng: -conf.Ng])
+   284         1          2.0      2.0      0.0      Z = h_hist
+   285                                           
+   286                                               # Plot configuration
+   287         1      91527.0  91527.0      0.1      fig = plt.figure(figsize=figsize, dpi=dpi)
+   288         1      82963.0  82963.0      0.1      sub = fig.add_subplot(111, projection="3d")
+   289         1          6.0      6.0      0.0      sub.view_init(45, 55)
+   290         1        479.0    479.0      0.0      plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0, hspace=0)
+   291         1        130.0    130.0      0.0      fig.gca().set_zlim([-0.5, 4])
+   292         1         42.0     42.0      0.0      plt.axis('off')
+   293         1          2.0      2.0      0.0      if t_hist is None:
+   294                                                   ani_title = f"mesh: {conf.Nx}x{conf.Ny}    solver: {conf.SOLVER_TYPE}"
+   295                                               else:
+   296         1         11.0     11.0      0.0          ani_title = f"time: {t_hist[0]: >{6}.3f}    iter: {0: >{5}d}"
+   297         1        305.0    305.0      0.0      plt.title(ani_title, y=0.8, fontsize=18)
+   298         1         16.0     16.0      0.0      sub.title.set_position([0.51, 0.80])
+   299         1         24.0     24.0      0.0      plt.rcParams.update({'font.size': 20})
+   300                                               # Program name and version text
+   301         1        174.0    174.0      0.0      fig.text(0.85, 0.06, s=f"MattFlow v{__version__}", fontsize=16, c='navy')
+   302                                           
+   303                                               # Plot initialization
+   304         1          2.0      2.0      0.0      if conf.PLOTTING_STYLE == 'water':
+   305                                                   plot = [sub.plot_surface(X, Y, Z[0],
+   306                                                                            rstride=1, cstride=1, linewidth=0,
+   307                                                                            color=(0.251, 0.643, 0.875, 0.9),
+   308                                                                            shade=True, antialiased=False)]
+   309         1          2.0      2.0      0.0      elif conf.PLOTTING_STYLE == 'contour':
+   310                                                   plot = [sub.contour3D(X, Y, Z[0], 150, cmap='ocean',
+   311                                                                         vmin=0.5, vmax=1.5)]
+   312         1          2.0      2.0      0.0      elif conf.PLOTTING_STYLE == 'wireframe':
+   313         1          3.0      3.0      0.0          plot = [sub.plot_wireframe(X, Y, Z[0], rstride=2, cstride=2,
+   314         1       2876.0   2876.0      0.0                                     linewidth=1)]
+   315                                               else:
+   316                                                   logger.log("Configure PLOTTING_STYLE | options: 'water', 'contour',",
+   317                                                              "'wireframe'")
+   318                                               # Render the basin that contains the fluid.
+   319         1          5.0      5.0      0.0      _plot_basin(sub)
+   320                                           
+   321                                               # Generate the animation.
+   322         1          2.0      2.0      0.0      ani = animation.FuncAnimation(
+   323         1          1.0      1.0      0.0          fig, _update_plot, frames,
+   324         1          2.0      2.0      0.0          fargs=(X, Y, Z, plot, fig, sub, t_hist, ani_title),
+   325         1          2.0      2.0      0.0          interval=1000 / fps,
+   326         1        635.0    635.0      0.0          repeat=True
+   327                                               )
+   328                                           
+   329                                               # Save the animation.
+   330         1  155394819.0 155394819.0     99.9      _save_ani(ani, fps, dpi)
+   331                                           
+   332                                               # Play the animation.
+   333         1          3.0      3.0      0.0      if conf.SHOW_ANIMATION is True:
+   334                                                   logger.log('Playing animation...')
+   335                                                   try:
+   336                                                       # In case of jupyter notebook, don't run plt.show(), to prevent
+   337                                                       # displaying a static figure. Instead, return the Funcanimation
+   338                                                       # object.
+   339                                                       get_ipython()
+   340                                                       return ani
+   341                                                   except NameError:
+   342                                                       plt.show()
+   343         1          2.0      2.0      0.0      elif conf.SHOW_ANIMATION is False:
+   344         1          1.0      1.0      0.0          pass
+   345                                               else:
+   346                                                   logger.log("Configure SHOW_ANIMATION | Options: True, False")
+
+Total time: 14.8754 s
+File: mattflow/mattflow_solver.py
+Function: _solve at line 31
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    31                                           @profile
+    32                                           def _solve(U,
+    33                                                      delta_t,
+    34                                                      it,
+    35                                                      drops_count,
+    36                                                      drop_its_iterator,
+    37                                                      next_drop_it):
+    38                                               """Evaluates the state variables (h, hu, hv) at a new time-step.
+    39                                           
+    40                                               It can be used in a for/while loop, iterating through each time-step.
+    41                                           
+    42                                               Args:
+    43                                                   U (3D array)       :  the state variables, populating a x,y grid
+    44                                                   delta_t (float)    :  time discretization step
+    45                                                   it (int)           :  current iteration
+    46                                                   drops_count (int)  :  number of drops been generated
+    47                                                   drop_its_iterator (iterator)
+    48                                                                      :  iterator of the drop_its list (the list with
+    49                                                                         the iters at which a new drop falls)
+    50                                                   next_drop_it (int) :  the next iteration at which a new drop will fall
+    51                                           
+    52                                               Returns:
+    53                                                   U, drops_count, drop_its_iterator, next_drop_it
+    54                                               """
+    55                                               # Retrieve the mesh
+    56      9999       8850.0      0.9      0.1      Ng = conf.Ng
+    57      9999       6511.0      0.7      0.0      cx = conf.CX
+    58      9999       6156.0      0.6      0.0      cy = conf.CY
+    59      9999       7469.0      0.7      0.1      cellArea = conf.dx * conf.dy
+    60                                           
+    61                                               # Simulation mode
+    62                                               # ---------------
+    63                                               # 'single drop': handled at the initialization
+    64      9999       7207.0      0.7      0.0      if conf.MODE == 'single drop':
+    65                                                   pass
+    66                                           
+    67                                               # 'drops': specified number of drops are generated at specified frequency
+    68      9999       6770.0      0.7      0.0      elif conf.MODE == 'drops':
+    69      9999       6275.0      0.6      0.0          if conf.ITERS_BETWEEN_DROPS_MODE == "fixed":
+    70                                                       drop_condition = (it % conf.FIXED_ITERS_BETWEEN_DROPS == 0
+    71                                                                         and drops_count < conf.MAX_N_DROPS)
+    72                                                   else:  # conf.ITERS_TO_NEXT_DROP_MODE in ["custom", "random"]
+    73      9999       6841.0      0.7      0.0              drop_condition = (it == next_drop_it
+    74       109         81.0      0.7      0.0                                and drops_count < conf.MAX_N_DROPS)
+    75                                           
+    76      9999       6585.0      0.7      0.0          if drop_condition:
+    77       109      23951.0    219.7      0.2              U[0, :, :] = initializer.drop(U[0, :, :], drops_count + 1)
+    78       109         89.0      0.8      0.0              drops_count += 1
+    79       109        116.0      1.1      0.0              if (conf.ITERS_BETWEEN_DROPS_MODE in ["custom", "random"]
+    80       109         87.0      0.8      0.0                      and drops_count < conf.MAX_N_DROPS):
+    81       108        125.0      1.2      0.0                  next_drop_it = next(drop_its_iterator)
+    82                                           
+    83                                               # 'rain': random number of drops are generated at random frequency
+    84                                               elif conf.MODE == 'rain':
+    85                                                   if it % random.randrange(1, 15) == 0:
+    86                                                       simultaneous_drops = range(random.randrange(1, 2))
+    87                                                       for _ in simultaneous_drops:
+    88                                                           U[0, :, :] = initializer.drop(U[0, :, :])
+    89                                               else:
+    90                                                   modes = ['single drop', 'drops', 'rain']
+    91                                                   logger.log(f"Configure MODE | options: {modes}")
+    92                                           
+    93                                               # Numerical scheme
+    94                                               # flux.flux() returns the total flux entering and leaving each cell.
+    95      9999       6290.0      0.6      0.0      if conf.SOLVER_TYPE == 'Lax-Friedrichs Riemann':
+    96                                                   U[:, Ng: -Ng, Ng: -Ng] += delta_t / cellArea * flux.flux(U)
+    97      9999       6756.0      0.7      0.0      elif conf.SOLVER_TYPE == '2-stage Runge-Kutta':
+    98                                                   # 1st stage
+    99      9999       5726.0      0.6      0.0          U_pred = U
+   100      9999    8343193.0    834.4     56.1          U_pred[:, Ng: -Ng, Ng: -Ng] += delta_t / cellArea * flux.flux(U)
+   101                                           
+   102                                                   # 2nd stage
+   103                                                   U[:, Ng: -Ng, Ng: -Ng] = \
+   104      9999       7903.0      0.8      0.1              0.5 * (U[:, Ng: -Ng, Ng: -Ng]
+   105                                                              + U_pred[:, Ng: -Ng, Ng: -Ng]
+   106      9999    6410074.0    641.1     43.1                     + delta_t / cellArea * flux.flux(U_pred)
+   107                                                              )
+   108                                               else:
+   109                                                   solver_types = ['Lax-Friedrichs Riemann', '2-stage Runge-Kutta']
+   110                                                   logger.log(f"Configure SOLVER_TYPE | Options: {solver_types}")
+   111      9999       8393.0      0.8      0.1      return U, drops_count, drop_its_iterator, next_drop_it
+   112                                           
+   113                                               '''
+   114                                               # Experimenting on the finite differences form of the MacCormack solver.
+   115                                               # TODO somewhere delta_t/dx becomes the greatest eigenvalue of the jacobian
+   116                                               elif conf.SOLVER_TYPE == 'MacCormack experimental':
+   117                                                   # 1st step: prediction (FTFS)
+   118                                                   U_pred = U
+   119                                                   U_pred[:, Ng: -Ng, Ng: -Ng] = U[:, Ng: -Ng, Ng: -Ng] \
+   120                                                       - delta_t / dx * (flux.F(U[:, Ng: -Ng, Ng + 1: Nx + Ng + 1]) \
+   121                                                                         - flux.F(U[:, Ng: -Ng, Ng: -Ng])) \
+   122                                                       - delta_t / dy * (flux.G(U[:, Ng + 1: Ny + Ng + 1, Ng: -Ng]) \
+   123                                                                         - flux.G(U[:, Ng: -Ng, Ng: -Ng]))
+   124                                           
+   125                                                   U_pred = bcmanager.updateGhostCells(U_pred)
+   126                                                   delta_t = dt(U_pred, dx, dy)
+   127                                           
+   128                                                   # 2nd step: correction (BTBS)
+   129                                                   U[:, Ng: -Ng, Ng: -Ng] \
+   130                                                       = 0.5 * (U[:, Ng: -Ng, Ng: -Ng] + U_pred[:, Ng: -Ng, Ng: -Ng]) \
+   131                                                       - 0.5 * delta_t / dx * (flux.F(U_pred[:, Ng: -Ng, Ng: -Ng]) \
+   132                                                           - flux.F(U_pred[:, Ng: -Ng, Ng - 1: Nx + Ng - 1])) \
+   133                                                       - 0.5 * delta_t / dy * (flux.G(U_pred[:, Ng: -Ng, Ng: -Ng]) \
+   134                                                           - flux.G(U_pred[:, Ng - 1: Ny + Ng - 1, Ng: -Ng]))
+   135                                               '''
+
+Total time: 17.3242 s
+File: mattflow/mattflow_solver.py
+Function: simulate at line 196
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   196                                           @time_this
+   197                                           @profile
+   198                                           def simulate():
+   199         1          1.0      1.0      0.0      time = 0
+   200                                           
+   201         1        586.0    586.0      0.0      U, h_hist, t_hist, U_ds = initializer.initialize()
+   202         1          1.0      1.0      0.0      drops_count = 1
+   203                                               # idx of the frame saved in h_hist
+   204         1          0.0      0.0      0.0      saving_frame_idx = 0
+   205                                               # Counts up to conf.FRAMES_PER_PERIOD (1st frame saved at initialization).
+   206         1          1.0      1.0      0.0      consecutive_frames_counter = 1
+   207                                           
+   208         1          2.0      2.0      0.0      if conf.ITERS_BETWEEN_DROPS_MODE in ["custom", "random"]:
+   209                                                   # List with the simulation iterations at which a drop is going to fall
+   210         1        687.0    687.0      0.0          drop_its = utils.drop_iters_list()
+   211                                                   # Drop the 0th drop
+   212         1          2.0      2.0      0.0          drop_its_iterator = iter(drop_its[1:])
+   213                                                   # The iteration at which the next drop will fall
+   214         1          2.0      2.0      0.0          next_drop_it = next(drop_its_iterator)
+   215                                               else:
+   216                                                   drop_its_iterator = None
+   217                                                   next_drop_it = None
+   218                                           
+   219     10000       7650.0      0.8      0.0      for it in range(1, conf.MAX_ITERS):
+   220                                           
+   221                                                   # Time discretization step (CFL condition)
+   222      9999     768725.0     76.9      4.4          delta_t = dt(U)
+   223                                           
+   224                                                   # Update current time
+   225      9999      11673.0      1.2      0.1          time += delta_t
+   226      9999      15495.0      1.5      0.1          if time > conf.STOPPING_TIME:
+   227                                                       break
+   228                                           
+   229                                                   # Apply boundary conditions (reflective)
+   230      9999    1329108.0    132.9      7.7          U = bcmanager.update_ghost_cells(U)
+   231                                           
+   232                                                   # Numerical iterative scheme
+   233      9999       6848.0      0.7      0.0          U, drops_count, drop_its_iterator, next_drop_it = _solve(
+   234      9999       5942.0      0.6      0.0              U=U,
+   235      9999       5375.0      0.5      0.0              delta_t=delta_t,
+   236      9999       5224.0      0.5      0.0              it=it,
+   237      9999       5359.0      0.5      0.0              drops_count=drops_count,
+   238      9999       5463.0      0.5      0.0              drop_its_iterator=drop_its_iterator,
+   239      9999   15035493.0   1503.7     86.8              next_drop_it=next_drop_it
+   240                                                   )
+   241                                           
+   242      9999       9347.0      0.9      0.1          if conf.WRITE_DAT:
+   243                                                       dat_writer.write_dat(
+   244                                                           U[0, conf.Ng: conf.Ny + conf.Ng, conf.Ng: conf.Nx + conf.Ng],
+   245                                                           time, it
+   246                                                       )
+   247                                                       mattflow_post.plot_from_dat(time, it)
+   248      9999       7051.0      0.7      0.0          elif not conf.WRITE_DAT:
+   249                                                       # Append current frame to the list, to be animated at
+   250                                                       # post-processing.
+   251      9999      10007.0      1.0      0.1              if it % conf.FRAME_SAVE_FREQ == 0:
+   252                                                           # Zero the counter, when a perfect division occurs.
+   253      3333       2092.0      0.6      0.0                  consecutive_frames_counter = 0
+   254      9999       7272.0      0.7      0.0              if consecutive_frames_counter < conf.FRAMES_PER_PERIOD:
+   255      3333       2606.0      0.8      0.0                  saving_frame_idx += 1
+   256                                                           h_hist[saving_frame_idx] = \
+   257      3333      44856.0     13.5      0.3                      U[0, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
+   258                                                           # time * 10 is insertd, because space is scaled about x10.
+   259      3333       7607.0      2.3      0.0                  t_hist[saving_frame_idx] = time * 10
+   260      3333       2431.0      0.7      0.0                  consecutive_frames_counter += 1
+   261      9999       7333.0      0.7      0.0              if conf.SAVE_DS_FOR_ML:
+   262                                                           U_ds[it] = U[:, conf.Ng: -conf.Ng, conf.Ng: -conf.Ng]
+   263                                                   else:
+   264                                                       logger.log("Configure WRITE_DAT | Options: True, False")
+   265                                           
+   266      9999      19974.0      2.0      0.1          logger.log_timestep(it, time)
+   267                                           
+   268                                               # Clean-up the memmap
+   269         1          2.0      2.0      0.0      if conf.DUMP_MEMMAP and conf.WORKERS > 1:
+   270                                                   utils.delete_memmap()
+   271                                           
+   272         1          1.0      1.0      0.0      return h_hist, t_hist, U_ds
+
+Total time: 173.035 s
+File: mattflow/__main__.py
+Function: main at line 21
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    21                                           @time_this
+    22                                           @profile
+    23                                           def main():
+    24                                               # Uncomment this to delete previous log, dat and png files (for debugging).
+    25                                               # utils.delete_prev_runs_data()
+    26                                           
+    27                                               # Pre-processing (mesh construction)
+    28         1          2.0      2.0      0.0      utils.preprocessing(Nx=90, Ny=90, Ng=1,
+    29         1          1.0      1.0      0.0                          max_x=0.7, min_x=-0.7,
+    30         1         49.0     49.0      0.0                          max_y=0.7, min_y=-0.7)
+    31                                           
+    32                                               # Solution
+    33         1   17460524.0 17460524.0     10.1      h_hist, t_hist, U_ds = mattflow_solver.simulate()
+    34                                           
+    35                                               # Post-processing
+    36         1  155574418.0 155574418.0     89.9      mattflow_post.animate(h_hist, t_hist)
+
