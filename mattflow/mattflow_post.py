@@ -246,9 +246,10 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, t_hist, ani_title):
     )
 
     # Frame title
-    if t_hist is not None:
-        ani_title = \
-            f"time: {t_hist[frame_number]: >{6}.3f}    iter: {it: >{4}d}"
+    if t_hist is None:
+        ani_title = f"iter: {it:>{4}d}"
+    else:
+        ani_title = f"time: {t_hist[frame_number]:>{6}.3f}    iter: {it:>{4}d}"
     plt.title(ani_title, y=0.8, fontsize=18)
     sub.title.set_position([0.51, 0.80])
 
@@ -288,9 +289,9 @@ def animate(h_hist, t_hist=None):
     fig.gca().set_zlim([-0.5, 4])
     plt.axis('off')
     if t_hist is None:
-        ani_title = f"mesh: {conf.Nx}x{conf.Ny}    solver: {conf.SOLVER_TYPE}"
+        ani_title = f"iter: {0:>{5}d}"
     else:
-        ani_title = f"time: {t_hist[0]: >{6}.3f}    iter: {0: >{5}d}"
+        ani_title = f"time: {t_hist[0]:>{6}.3f}    iter: {0:>{5}d}"
     plt.title(ani_title, y=0.8, fontsize=18)
     sub.title.set_position([0.51, 0.80])
     plt.rcParams.update({'font.size': 20})
