@@ -37,7 +37,8 @@ def cell_centers():
 
 
 def delete_prev_runs_data():
-    """Deletes previous log, dat and png files (for debugging)."""
+    """Deletes all the output files (log, dat, png etc) from previous runs."""
+    input("Deleting data from previous runs. Press ENTER to continue...")
     working_dir = os.getcwd()
     directories = [os.path.join(working_dir, "data_files/"),
                    os.path.join(working_dir, "session/")]
