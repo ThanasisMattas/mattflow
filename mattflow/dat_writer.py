@@ -22,7 +22,7 @@ def write_dat(h_hist, time, it):
         time (float)   : current time
         it (int)       : current iteration
     """
-    utils.create_child_dir("data_files")
+    utils.child_dir("data_files")
     try:
         zeros_left = (4 - len(str(it))) * '0'
         file_name = './data_files/solution' + zeros_left + str(it) + '.dat'

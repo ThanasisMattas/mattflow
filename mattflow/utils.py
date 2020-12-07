@@ -79,7 +79,7 @@ def print_duration(start, end, process):
     print(f"{prefix:-<30}{duration}"[:40])
 
 
-def create_child_dir(dirname):
+def child_dir(dirname):
     """Create a directory under the current working directory."""
     try:
         if os.path.isdir(os.path.join(os.getcwd(), dirname)):

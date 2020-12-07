@@ -80,7 +80,7 @@ def plot_from_dat(time, it):
         it (int)     : current itereration
     """
     # Create ./session directory for saving the results.
-    utils.create_child_dir("session")
+    utils.child_dir("session")
 
     # Extract data from dat.
     X, Y, Z, Nx, Ny = _data_from_dat(it)
