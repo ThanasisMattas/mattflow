@@ -93,11 +93,10 @@ def plot_from_dat(time, it):
 
     if conf.PLOTTING_STYLE == 'water':
         if conf.ROTATION:
-            # Rotate the domain horizontally every 8 frames and vetically
-            # every 20 frames.
-            horizontal_rotate = 45 + it / 8
-            vertical_rotate = 55 - it / 20
-            sub.view_init(vertical_rotate, horizontal_rotate)
+            # Azimuthal rotate every 8 frames and vetical every 20 frames
+            azimuth = 45 + it / 8
+            elevation = 55 - it / 20
+            sub.view_init(elevation, azimuth)
         else:
             sub.view_init(45, 55)
         sub.plot_surface(X, Y, Z,
@@ -109,11 +108,10 @@ def plot_from_dat(time, it):
         sub.contour3D(X, Y, Z, 140, cmap='plasma', vmin=0.6, vmax=1.4)
     elif conf.PLOTTING_STYLE == 'wireframe':
         if conf.ROTATION:
-            # Rotate the domain horizontally every 3 frames and vetically
-            # every 4 frames.
-            horizontal_rotate = 45 + it / 3
-            vertical_rotate = 55 - it / 4
-            sub.view_init(vertical_rotate, horizontal_rotate)
+            # Azimuthal rotate every 3 frames and vetical every 4 frames
+            azimuth = 45 + it / 3
+            elevation = 55 - it / 4
+            sub.view_init(elevation, azimuth)
         else:
             sub.view_init(45, 55)
         sub.plot_wireframe(X, Y, Z, rstride=2, cstride=2, linewidth=1,)
@@ -206,11 +204,10 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, t_hist, ani_title):
     if conf.PLOTTING_STYLE == 'water':
         plot[0].remove()
         if conf.ROTATION:
-            # Rotate the domain horizontally every 2 frames and vetically
-            # every 4 frames.
-            horizontal_rotate = 45 + frame_number / 2
-            vertical_rotate = 55 - frame_number / 4
-            sub.view_init(vertical_rotate, horizontal_rotate)
+            # Azimuthal rotate every 2 frames and vetical every 4 frames
+            azimuth = 45 + frame_number / 2
+            elevation = 55 - frame_number / 4
+            sub.view_init(elevation, azimuth)
         plot[0] = sub.plot_surface(X, Y, Z[frame_number],
                                    rstride=1, cstride=1, linewidth=0,
                                    color=(0.251, 0.643, 0.875, 0.95),
@@ -230,11 +227,10 @@ def _update_plot(frame_number, X, Y, Z, plot, fig, sub, t_hist, ani_title):
     elif conf.PLOTTING_STYLE == 'wireframe':
         plot[0].remove()
         if conf.ROTATION:
-            # Rotate the domain horizontally every 3 frames and vetically
-            # every 2 frames.
-            horizontal_rotate = 45 + frame_number / 2
-            vertical_rotate = 55 - frame_number / 4
-            sub.view_init(vertical_rotate, horizontal_rotate)
+            # Azimuthal rotate every 2 frames and vetical every 4 frames
+            azimuth = 45 + frame_number / 2
+            elevation = 55 - frame_number / 4
+            sub.view_init(elevation, azimuth)
         plot[0] = sub.plot_wireframe(X, Y, Z[frame_number],
                                      rstride=2, cstride=2, linewidth=1)
 
