@@ -280,7 +280,10 @@ def animate(h_hist, t_hist=None):
     # Plot configuration
     fig = plt.figure(figsize=figsize, dpi=dpi)
     sub = fig.add_subplot(111, projection="3d")
-    sub.view_init(45, 55)
+    if conf.ROTATION:
+        sub.view_init(45, 55)
+    else:
+        sub.view_init(30, 20)
     plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0, hspace=0)
     fig.gca().set_zlim([-0.5, 4])
     plt.axis('off')
