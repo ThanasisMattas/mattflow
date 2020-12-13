@@ -209,7 +209,11 @@ def simulate():
         # Drop the 0th drop
         drop_its_iterator = iter(drop_its[1:])
         # The iteration at which the next drop will fall
-        next_drop_it = next(drop_its_iterator)
+        try:
+            next_drop_it = next(drop_its_iterator)
+        except StopIteration:
+            drop_its_iterator = None
+            next_drop_it = None
     else:
         drop_its_iterator = None
         next_drop_it = None
