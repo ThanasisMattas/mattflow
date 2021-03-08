@@ -57,5 +57,6 @@ def write_dat(h_hist, time, it):
                     #     else ' ' + "{0:.15f}".format(U[2, j, i]))
                     + '\n'
                 )
+        fw.close()
     except OSError:
         print("Unable to create data file")
