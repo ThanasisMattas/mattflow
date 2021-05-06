@@ -99,7 +99,7 @@ MEMMAP_DIR = os.path.join(os.getcwd(), "flux_memmap")
 #     takes to travel for dx.
 #   - dt_sim is the time that the simulation covers dx
 #
-# More on mattflow_solver.dt() documentation.
+# More on mattflow_solver._dt() documentation.
 COURANT = None
 
 # Surface level

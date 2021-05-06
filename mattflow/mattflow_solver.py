@@ -53,8 +53,8 @@ def _solve(U,
     """
     # Retrieve the mesh
     Ng = conf.Ng
-    cx = conf.CX
-    cy = conf.CY
+    # cx = conf.CX
+    # cy = conf.CY
     cellArea = conf.dx * conf.dy
 
     # Simulation mode
@@ -102,8 +102,7 @@ def _solve(U,
         U[:, Ng: -Ng, Ng: -Ng] = \
             0.5 * (U[:, Ng: -Ng, Ng: -Ng]
                    + U_pred[:, Ng: -Ng, Ng: -Ng]
-                   + delta_t / cellArea * flux.flux(U_pred)
-                   )
+                   + delta_t / cellArea * flux.flux(U_pred))
     else:
         solver_types = ['Lax-Friedrichs Riemann', '2-stage Runge-Kutta']
         logger.log(f"Configure SOLVER_TYPE | Options: {solver_types}")
@@ -122,7 +121,7 @@ def _solve(U,
                               - flux.G(U[:, Ng: -Ng, Ng: -Ng]))
 
         U_pred = bcmanager.updateGhostCells(U_pred)
-        delta_t = dt(U_pred, dx, dy)
+        delta_t = _dt(U_pred, dx, dy)
 
         # 2nd step: correction (BTBS)
         U[:, Ng: -Ng, Ng: -Ng] \
@@ -134,36 +133,36 @@ def _solve(U,
     '''
 
 
-def dt(U, epsilon=1e-4):
+def _dt(U, epsilon=1e-4):
     """Evaluates the time discretization step of the current iteration.
 
-    The stability condition of the numerical simulation (Known as
-    Courant–Friedrichs–Lewy or CFL condition) describes that the solution
-    velocity (dx/dt) has to be greater than the wave velocity. Namely, the
-    simulation has to run faster than the information, in order to evaluate
-    it. The wave velocity used is the greatest velocity of the waves that
-    contribute to the fluid, which is the greatest eagenvalue of the Jacobian
-    matrix df(U)/dU, along the x axis, and dG(U)/dU, along the y axis,
-    |u| + c and |v| + c respectively.
+    The stability condition of the numerical simulation (Known as Courant-
+    Friedrichs-Lewy or CFL condition) describes that the solution velocity
+    (dx/dt) has to be greater than the wave velocity. Namely, the simulation
+    has to run faster than the information, in order to evaluate it. The wave
+    velocity used is the greatest velocity of the waves that contribute to the
+    fluid, which is the greatest eagenvalue of the Jacobian matrix df(U)/dU,
+    along the x axis, and dG(U)/dU, along the y axis, |u| + c and |v| + c,
+    respectively.
 
     We equate
 
                       dx/dt = wave_vel => dt = dx / wave_vel
 
-    and the magnitude that the solution velocity is greater than the wave
-    velocity is handled by the Courant number (<= 1). Namely,
+    and the magnitude that the solution velocity is greater than the wave velo-
+    city is handled by the Courant number (<= 1):
 
-                             dt_final = dt * Courant.
+                             dt_final = dt * Courant
 
     The velocity varies at each point of the grid, constituting the velocity
-    field. So, dt is evaluated at every cell, as the mean of the dt's at x
-    and y directions. Finally, the minimum dt of all cells is returned, as
-    the time-step of the current iteration, ensuring that the CFL condition
-    is met at all cells.
+    field. So, dt is evaluated at every cell as the mean of the dt's at x and y
+    directions. Finally, the minimum dt of all cells is returned as the time-
+    step of the current iteration, ensuring that the CFL condition is met at
+    all the cells.
 
-    The velocity field is step-wisely changing and, thus, the calculation
-    of dt is repeated at each iteration, preserving consistency with the
-    CFL condition.
+    The velocity field is step-wisely changing and, thus, the calculation of dt
+    is repeated at each iteration, preserving consistency with the CFL conditi-
+    on.
 
     If the CFL condition is not met even at one cell, the simulation will not
     evaluate correctly the state variables there, resulting to discontinuities
@@ -221,7 +220,7 @@ def simulate():
     for it in range(1, conf.MAX_ITERS):
 
         # Time discretization step (CFL condition)
-        delta_t = dt(U)
+        delta_t = _dt(U)
 
         # Update current time
         time += delta_t
