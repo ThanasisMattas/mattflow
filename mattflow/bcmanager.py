@@ -61,30 +61,34 @@ def update_ghost_cells(U):
     Returns:
         U
     """
+    Nx = conf.Nx
+    Ny = conf.Ny
+    Ng = conf.Ng
+
     if conf.BOUNDARY_CONDITIONS == 'reflective':
         # left wall (0 <= x < Ng)
-        U[0, :, :conf.Ng] = np.flip(U[0, :, conf.Ng: 2 * conf.Ng], 1)
-        U[1, :, :conf.Ng] = - np.flip(U[1, :, conf.Ng: 2 * conf.Ng], 1)
-        U[2, :, :conf.Ng] = np.flip(U[2, :, conf.Ng: 2 * conf.Ng], 1)
+        U[0, :, :Ng] = np.flip(U[0, :, Ng: 2 * Ng], 1)
+        U[1, :, :Ng] = - np.flip(U[1, :, Ng: 2 * Ng], 1)
+        U[2, :, :Ng] = np.flip(U[2, :, Ng: 2 * Ng], 1)
 
         # right wall (Nx + Ng <= x < Nx + 2Ng)
-        U[0, :, conf.Nx + conf.Ng: conf.Nx + 2 * conf.Ng] \
-            = np.flip(U[0, :, conf.Nx: conf.Nx + conf.Ng], 1)
-        U[1, :, conf.Nx + conf.Ng: conf.Nx + 2 * conf.Ng] \
-            = - np.flip(U[1, :, conf.Nx: conf.Nx + conf.Ng], 1)
-        U[2, :, conf.Nx + conf.Ng: conf.Nx + 2 * conf.Ng] \
-            = np.flip(U[2, :, conf.Nx: conf.Nx + conf.Ng], 1)
+        U[0, :, Nx + Ng: Nx + 2 * Ng] \
+            = np.flip(U[0, :, Nx: Nx + Ng], 1)
+        U[1, :, Nx + Ng: Nx + 2 * Ng] \
+            = - np.flip(U[1, :, Nx: Nx + Ng], 1)
+        U[2, :, Nx + Ng: Nx + 2 * Ng] \
+            = np.flip(U[2, :, Nx: Nx + Ng], 1)
 
         # top wall (0 <= y < Ng)
-        U[0, :conf.Ng, :] = np.flip(U[0, conf.Ng: 2 * conf.Ng, :], 0)
-        U[1, :conf.Ng, :] = np.flip(U[1, conf.Ng: 2 * conf.Ng, :], 0)
-        U[2, :conf.Ng, :] = - np.flip(U[2, conf.Ng: 2 * conf.Ng, :], 0)
+        U[0, :Ng, :] = np.flip(U[0, Ng: 2 * Ng, :], 0)
+        U[1, :Ng, :] = np.flip(U[1, Ng: 2 * Ng, :], 0)
+        U[2, :Ng, :] = - np.flip(U[2, Ng: 2 * Ng, :], 0)
 
         # bottom wall (Ny + Ng <= y < Ny + 2Ng)
-        U[0, conf.Ny + conf.Ng: conf.Ny + 2 * conf.Ng, :] \
-            = np.flip(U[0, conf.Ny: conf.Ny + conf.Ng, :], 0)
-        U[1, conf.Ny + conf.Ng: conf.Ny + 2 * conf.Ng, :] \
-            = np.flip(U[1, conf.Ny: conf.Ny + conf.Ng, :], 0)
-        U[2, conf.Ny + conf.Ng: conf.Ny + 2 * conf.Ng, :] \
-            = - np.flip(U[2, conf.Ny: conf.Ny + conf.Ng, :], 0)
+        U[0, Ny + Ng: Ny + 2 * Ng, :] \
+            = np.flip(U[0, Ny: Ny + Ng, :], 0)
+        U[1, Ny + Ng: Ny + 2 * Ng, :] \
+            = np.flip(U[1, Ny: Ny + Ng, :], 0)
+        U[2, Ny + Ng: Ny + 2 * Ng, :] \
+            = - np.flip(U[2, Ny: Ny + Ng, :], 0)
     return U

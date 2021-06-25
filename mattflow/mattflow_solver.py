@@ -170,12 +170,12 @@ def _dt(U, epsilon=1e-4):
     cells and, eventually the simulation (literally) blows up.
 
     Args:
-        U (3D array)   :  the state variables, populating a x,y grid
-        epsilon (float):  small number added to the denominator, to avoid
+        U (3D array)    : the state variables, populating a x,y grid
+        epsilon (float) : small number added to the denominator, to avoid
                           dividing by zero (default: 1e-6)
 
     Returns:
-        dt (float)   :  time discretization step
+        dt (float)      : time discretization step
     """
     h = U[0]
     u = U[1] / (h + epsilon)

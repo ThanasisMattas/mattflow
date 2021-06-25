@@ -41,7 +41,7 @@ def _variance():
     for a better representation of a drop.
     """
     variance = {
-        "single drop": randint(5, 8) / 10000,
+        "drop": randint(5, 8) / 10000,
         "drops": randint(5, 8) / 10000,
         "rain": 0.0002
     }
@@ -53,12 +53,12 @@ def _drop_heights_multiplier():
     # multiply with 4 / 3 for a small stone droping
     #          with 1 / 4 for a water drop with a considerable momentum build
     #          with 1 / 6 for a soft water drop
-    if conf.MODE == 'single drop' or conf.MODE == 'drops':
+    if conf.MODE == 'drop' or conf.MODE == 'drops':
         factor = randint(6, 12) / 10
     elif conf.MODE == 'rain':
         factor = 1 / 6
     else:
-        print("Configure MODE | options: 'single drop', 'drops', 'rain'")
+        print("Configure MODE | options: 'drop', 'drops', 'rain'")
     return factor
 
 

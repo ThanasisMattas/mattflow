@@ -108,9 +108,9 @@ SURFACE_LEVEL = 1
 # Simulation modes (initialization types)
 # ---------------------------------------
 # Supported:
-# 1. 'single drop': modeled via a gaussian distribution
-# 1. 'drops'      : configure N_DROPS and ITERS_FOR_NEXT_DROP
-# 1. 'rain'       : random drops
+# 1. 'drop'  : modeled via a gaussian distribution
+# 1. 'drops' : configure N_DROPS and ITERS_FOR_NEXT_DROP
+# 1. 'rain'  : random drops
 MODE = 'drops'
 
 # Default max number of drops
