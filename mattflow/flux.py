@@ -168,7 +168,7 @@ def _vertical_flux(U, Ny, Ng, dx, maxVerticalSpeed, parallel=True):
     return v_flux
 
 
-def _flux_batch(U, window=None, slicing_obj=None,
+def _flux_batch(U, window=None, slicing_obj=None, domain_dims=None,
                 flux_out=None, idx=None, parallel=True):
     """Evaluates the total flux that enters or leaves a cell, using the \
     Lax-Friedrichs scheme.
@@ -191,20 +191,22 @@ def _flux_batch(U, window=None, slicing_obj=None,
     Returns:
         total_flux (3D array)
     """
-    Nx = conf.Nx
-    Ny = conf.Ny
-    Ng = conf.Ng
-    dx = conf.dx
-    dy = conf.dy
+    Nx = domain_dims["Nx"]
+    Ny = domain_dims["Ny"]
+    Ng = domain_dims["Ng"]
+    dx = domain_dims["dx"]
+    dy = domain_dims["dy"]
 
     if parallel:
         x_limit = 1
         U_batch = U[:, :, slicing_obj]
-        total_flux = np.zeros(((3, Ny + 2 * Ng, window + 2)), dtype=conf.DTYPE)
+        total_flux = np.zeros(((3, Ny + 2 * Ng, window + 2)),
+                              dtype=conf.DTYPE)
     else:
         x_limit = Ng
         U_batch = U
-        total_flux = np.zeros(((3, Ny + 2 * Ng, Nx + 2 * Ng)), dtype=conf.DTYPE)
+        total_flux = np.zeros(((3, Ny + 2 * Ng, Nx + 2 * Ng)),
+                              dtype=conf.DTYPE)
 
     # Vertical interfaces - Horizontal flux {
     #
@@ -272,11 +274,17 @@ def flux(U):
     Ny = conf.Ny
     Ng = conf.Ng
     workers = conf.WORKERS
+    domain_dims = {}
+    domain_dims["Nx"] = conf.Nx
+    domain_dims["Ny"] = conf.Ny
+    domain_dims["Ng"] = conf.Ng
+    domain_dims["dx"] = conf.dx
+    domain_dims["dy"] = conf.dy
 
     # Although joblib.Parallel can work single-processing, passing the whole
     # state-matrix directly to _flux_batch() is much faster.
     if workers == 1:
-        return _flux_batch(U, parallel=False)
+        return _flux_batch(U, parallel=False, domain_dims=domain_dims)
 
     # Slice the column dimention, x, to the number of workers.
     # (divide-ceil)
@@ -309,7 +317,10 @@ def flux(U):
         flux_out = np.zeros([len(slices), 3, Ny, window])
 
         flux_out = Parallel(n_jobs=workers)(
-            delayed(_flux_batch)(U, window, slicing_obj)
+            delayed(_flux_batch)(U,
+                                 window,
+                                 slicing_obj,
+                                 domain_dims=domain_dims)
             for slicing_obj in slices
         )
 
