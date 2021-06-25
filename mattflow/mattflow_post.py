@@ -333,7 +333,7 @@ def animate(h_hist, t_hist=None):
             # In case of jupyter notebook, don't run plt.show(), to prevent
             # displaying a static figure. Instead, return the Funcanimation
             # object.
-            get_ipython()
+            get_ipython()  # type: ignore
             return ani
         except NameError:
             plt.show()
