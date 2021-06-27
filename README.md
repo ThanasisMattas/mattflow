@@ -77,7 +77,6 @@ _g_ : gravity acceleration
 ## Structure
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ThanasisMattas/mattflow/blob/master/notebooks/mattflow_notebook.ipynb)
 
-0. configuration of the simulation via a config file
 1. pre-process<br />
 structured/cartesian mesh
 2. solution<br />
@@ -103,8 +102,6 @@ structured/cartesian mesh
 - multiprocessing
 - plotting style
 - animation options
-
-Currently, the simulation can be configured at the ```config.py``` module.
 
 ## TODO
 
