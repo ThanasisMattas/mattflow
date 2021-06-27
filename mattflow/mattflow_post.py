@@ -137,54 +137,49 @@ def plot_from_dat(time, it):
     # }
 
 
-def _save_ani(ani, fps, dpi):
+def _save_ani(ani):
     """Saves the animation in .mp4 and .gif formats.
 
     Args:
         ani (obj) : animation.FuncAnimation() object
-        fps (int) : frames per second
-        dpi (int) : dots per inch
     """
-    if conf.SAVE_ANIMATION is True:
-        # file name
-        date_n_time = str(datetime.now())[:19]
-        # Replace ':' with '-' for compatibility with windows file formating.
-        date_n_time = date_n_time.replace(':', '-').replace(' ', '_')
-        file_name = conf.MODE + '_animation_' + date_n_time
+    dpi = conf.DPI
+    fps = conf.FPS
+    # file name
+    date_n_time = str(datetime.now())[:19]
+    # Replace ':' with '-' for compatibility with windows file formating.
+    date_n_time = date_n_time.replace(':', '-').replace(' ', '_')
+    file_name = conf.MODE + '_animation_' + date_n_time
 
-        # Configure the writer
-        plt.rcParams['animation.ffmpeg_path'] = conf.PATH_TO_FFMPEG
-        FFwriter = animation.FFMpegWriter(
-            fps=fps, bitrate=-1,
-            extra_args=['-r', str(fps), '-pix_fmt', 'yuv420p', '-vcodec',
-                        'libx264', '-qscale:v', '1']
-        )
+    # Configure the writer
+    plt.rcParams['animation.ffmpeg_path'] = conf.PATH_TO_FFMPEG
+    FFwriter = animation.FFMpegWriter(
+        fps=fps, bitrate=-1,
+        extra_args=['-r', str(fps), '-pix_fmt', 'yuv420p', '-vcodec',
+                    'libx264', '-qscale:v', '1']
+    )
 
-        # Save
-        try:
-            ani.save(file_name + '.' + conf.VID_FORMAT,
-                     writer=FFwriter, dpi=dpi)
+    # Save
+    try:
+        ani.save(os.path.join(conf.SAVE_DIR, f"{file_name}.{conf.VID_FORMAT}"),
+                 writer=FFwriter,
+                 dpi=dpi)
 
-            # log only if a log file is already initialzed
-            if isinstance(logger.find_open_log(), str):
-                logger.log('Animation saved as: ' + file_name + '.'
-                           + conf.VID_FORMAT + ' | fps: ' + str(fps))
+        # log only if a log file is already initialzed
+        if isinstance(logger.find_open_log(), str):
+            logger.log(f'Animation saved as: {file_name}.'
+                       f'{conf.VID_FORMAT} | fps: {fps}')
 
-            # convert to a lighter gif
-            cmd = 'ffmpeg -i ' + file_name + '.' + conf.VID_FORMAT + ' -vf '   \
-                  '"fps=' + str(fps) + ',scale=240:-1:flags=lanczos,split'     \
-                  '[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -hide_banner' \
-                  ' -loglevel panic -loop 0 ' + file_name + '.gif'
-            os.system(cmd)
-            if isinstance(logger.find_open_log(), str):
-                logger.log('Animation saved as: ' + file_name + '.gif'
-                           + ' | fps: ' + str(fps))
-        except FileNotFoundError:
-            logger.log('Configure PATH_TO_FFMPEG')
-    elif conf.SAVE_ANIMATION is False:
-        pass
-    else:
-        logger.log("Configure SAVE_ANIMATION | Options: True, False")
+        # convert to a lighter gif
+        cmd = (f'ffmpeg -i {file_name}.{conf.VID_FORMAT} -vf '
+               f'"fps={fps},scale=240:-1:flags=lanczos,split'
+               '[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -hide_banner'
+               f' -loglevel panic -loop 0 {file_name}.gif')
+        os.system(cmd)
+        if isinstance(logger.find_open_log(), str):
+            logger.log(f'Animation saved as: {file_name}.gif | fps: {fps}')
+    except FileNotFoundError:
+        logger.log('Configure PATH_TO_FFMPEG')
 
 
 def _update_plot(frame_number, X, Y, Z, plot, fig, sub, t_hist, ani_title):
@@ -324,7 +319,8 @@ def animate(h_hist, t_hist=None):
     )
 
     # Save the animation.
-    _save_ani(ani, fps, dpi)
+    if conf.SAVE_ANIMATION:
+        _save_ani(ani)
 
     # Play the animation.
     if conf.SHOW_ANIMATION is True:

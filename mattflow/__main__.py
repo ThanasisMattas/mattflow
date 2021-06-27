@@ -11,6 +11,8 @@
 # ======================================================================
 """Executes pre-processing, solution and post-processing."""
 
+import os
+
 import click
 
 from mattflow import (config as conf,
@@ -34,6 +36,12 @@ def _configure(**kwargs):
     conf.FPS = kwargs.get("fps", 18)
     conf.DPI = kwargs.get("dpi", 75)
     conf.FIG_HEIGHT = kwargs.get("fig_height", 18)
+
+    if conf.SAVE_ANIMATION:
+        save_dir = input("save directory: ")
+    while not os.path.isdir(save_dir):
+        save_dir = input("Director don't exist.\nsave directory: ")
+    conf.SAVE_DIR = save_dir
 
 
 @click.command()

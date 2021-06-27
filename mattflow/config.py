@@ -186,6 +186,7 @@ SHOW_ANIMATION = True
 
 # Save the animation.
 SAVE_ANIMATION = False
+SAVE_DIR = None
 
 # Path to ffmpeg
 PATH_TO_FFMPEG = '/usr/bin/ffmpeg'
