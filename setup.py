@@ -4,6 +4,7 @@ import os
 
 
 REQUIRED = ['click>=7.0',
+            'numba>=0.51.2',
             'numpy>=1.18.5',
             'matplotlib>=3.3.1',
             'joblib>=0.13.2']
