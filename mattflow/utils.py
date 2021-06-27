@@ -118,12 +118,19 @@ def time_this(f):
     return wrap
 
 
-def preprocessing(Nx, Ny, Ng, max_x, min_x, max_y, min_y):
+def preprocessing(mode):
     """constructs the mesh.
 
     - dx, dy: Spatial discretization steps (structured/Cartesian mesh)
     - cy, cy: Cell centers on x and y dimensions
     """
+    if mode in ["drop", "drops"]:
+        Nx, Ny, Ng = 100, 100, 1
+        min_x, max_x = min_y, max_y = -0.7, 0.7
+    elif mode == "rain":
+        Nx, Ny, Ng = 200, 200, 1
+        min_x, max_x = min_y, max_y = -1.5, 1.5
+
     conf.Nx = Nx
     conf.Ny = Ny
     conf.Ng = Ng
@@ -157,11 +164,11 @@ def drop_iters_list():
         logger.log("Configure ITERS_BETWEEN_DROPS_MODE | options:"
                    " 'fixed', 'custom', 'random'")
 
-    # Remove drop iterations that fall after MAX_ITERS.
-    last_drop_idx = np.searchsorted(drop_iters, conf.MAX_ITERS)
-    drop_iters = drop_iters[:last_drop_idx]
-    # Overwrite max number of drops.
-    conf.MAX_N_DROPS = len(drop_iters)
+    # # Remove drop iterations that fall after MAX_ITERS.
+    # last_drop_idx = np.searchsorted(drop_iters, conf.MAX_ITERS)
+    # drop_iters = drop_iters[:last_drop_idx]
+    # # Overwrite max number of drops.
+    # conf.MAX_N_DROPS = len(drop_iters)
 
     if conf.SAVE_DS_FOR_ML:
         # It is needed to retrieve the new drop frames, because these frames

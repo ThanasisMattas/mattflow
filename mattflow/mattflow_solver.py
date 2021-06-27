@@ -66,17 +66,17 @@ def _solve(U,
     # 'drops': specified number of drops are generated at specified frequency
     elif conf.MODE == 'drops':
         if conf.ITERS_BETWEEN_DROPS_MODE == "fixed":
-            drop_condition = (it % conf.FIXED_ITERS_BETWEEN_DROPS == 0
-                              and drops_count < conf.MAX_N_DROPS)
+            drop_condition = ((it % conf.FIXED_ITERS_BETWEEN_DROPS == 0)
+                              and (drops_count < conf.MAX_N_DROPS))
         else:  # conf.ITERS_TO_NEXT_DROP_MODE in ["custom", "random"]
-            drop_condition = (it == next_drop_it
-                              and drops_count < conf.MAX_N_DROPS)
+            drop_condition = ((it == next_drop_it)
+                              and (drops_count < conf.MAX_N_DROPS))
 
         if drop_condition:
             U[0, :, :] = initializer.drop(U[0, :, :], drops_count + 1)
             drops_count += 1
-            if (conf.ITERS_BETWEEN_DROPS_MODE in ["custom", "random"]
-                    and drops_count < conf.MAX_N_DROPS):
+            if ((conf.ITERS_BETWEEN_DROPS_MODE in ["custom", "random"])
+                    and (drops_count < conf.MAX_N_DROPS)):
                 next_drop_it = next(drop_its_iterator)
 
     # 'rain': random number of drops are generated at random frequency

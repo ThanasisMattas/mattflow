@@ -67,7 +67,7 @@ CY = None
 #
 # Ending conditions of the simulation
 STOPPING_TIME = 30000
-MAX_ITERS = 650
+MAX_ITERS = None
 
 # Saving <FRAMES_PER_PERIOD> frames every <FRAME_SAVE_FREQ> iters.
 # - resulting to a lighter animation (less fps)
@@ -115,7 +115,7 @@ MODE = 'drops'
 
 # Default max number of drops
 # (It will be overwritten if ITERS_BETWEEN_DROPS_MODE in ["random", "custom"].)
-MAX_N_DROPS = 5
+MAX_N_DROPS = None
 
 # Number of iterations between drops
 # ----------------------------------
@@ -159,16 +159,16 @@ SAVE_DS_FOR_ML = False
 #
 # Plotting style
 # Options: water, contour, wireframe
-PLOTTING_STYLE = 'wireframe'
+PLOTTING_STYLE = None
 
 # frames per sec
-FPS = 18
+FPS = None
 # dots per inch
-DPI = 75
+DPI = None
 # figure size in inches
-# golden ratio: 1.618
-FIGSIZE = (10 * 1.618, 10)
+FIG_HEIGHT = None
 
+# FIGSIZE = (FIG_HEIGHT * 1.618, FIG_HEIGHT)
 # resolution = figsize * dpi
 # --------------------------
 # example:

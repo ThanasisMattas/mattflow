@@ -268,7 +268,7 @@ def animate(h_hist, t_hist=None):
     # resolution: 1920x1080 (1920/200=9.6)
     fps = conf.FPS
     dpi = conf.DPI
-    figsize = conf.FIGSIZE
+    figsize = (conf.FIG_HEIGHT * 1.618, conf.FIG_HEIGHT)
 
     # total frames
     frames = len(h_hist)
