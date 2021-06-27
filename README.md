@@ -13,19 +13,47 @@ ___
 | requirements         | os        |
 | -------------------- | --------- |
 | python3              | GNU/Linux |
-| numpy >= 1.18.5      | Windows   |
-| matplotlib >= 3.3.1  | OSX       |
+| click >= 7.0         | Windows   |
+| joblib >= 0.13.2     | OSX       |
+| matplotlib >= 3.3.1  |           |
 | numba >= 0.51.2      |           |
-| joblib >= 0.13.2     |           |
+| numpy >= 1.18.5      |           |
 | ffmpeg (optional)    |           |
 
-## Install & Run
+## Install
 
 ```bash
 $ conda create --name mattflow -y
 $ conda activate mattflow
 $ conda install -c mattasa mattflow
-$ mattflow
+```
+
+```bash
+$ pip install mattflow
+```
+
+## Usage
+
+```bash
+$ mattflow [OPTIONS]
+```
+
+```text
+Options:
+  -m, --mode [drop|drops|rain]    [default: drops]
+  -d, --drops INTEGER             number of drops to generate  [default: 5]
+  -s, --style [water|contour|wireframe]
+                                  [default: wireframe]
+  --rotation / --no-rotation      rotate the domain  [default: True]
+  -b, --basin                     render the fluid basin
+  --show / --no-show              [default: True]
+  --save
+  --format [mp4|gif]              [default: mp4]
+  --fps INTEGER                   [default: 18]
+  --dpi INTEGER                   [default: 75]
+  --fig-height INTEGER            figure height (width is 1.618 * height)
+                                  [default: 18]
+  --help                          Show this message and exit.
 ```
 
 ## Swallow Water Equations
@@ -81,7 +109,7 @@ Currently, the simulation can be configured at the ```config.py``` module.
 ## TODO
 
 1. CI
-2. API (TUI-GUI)
+2. GUI
 3. Consider Cythonizing or moving to C++
 4. Higher order schemes
 5. Include source terms
