@@ -39,9 +39,9 @@ def _configure(**kwargs):
 
     if conf.SAVE_ANIMATION:
         save_dir = input("save directory: ")
-    while not os.path.isdir(save_dir):
-        save_dir = input("Director don't exist.\nsave directory: ")
-    conf.SAVE_DIR = save_dir
+        while not os.path.isdir(save_dir):
+            save_dir = input("Director don't exist.\nsave directory: ")
+        conf.SAVE_DIR = save_dir
 
 
 @click.command()
