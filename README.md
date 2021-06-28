@@ -56,7 +56,7 @@ Options:
   --help                          Show this message and exit.
 ```
 
-## Swallow Water Equations
+## Shallow Water Equations
 
 SWE is a simpified CFD problem which models the surface of the water, with the assumption<br />
 that the horizontal length scale is much greater than the vertical length scale.
