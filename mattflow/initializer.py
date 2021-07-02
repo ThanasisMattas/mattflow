@@ -95,7 +95,7 @@ def _gaussian(variance, drops_count):
     return gaussian_distribution
 
 
-def _drop_heights_correction(drop_heights):
+def _drop_heights_correction(drop_heights, divisor=2):
     """Subtracts the fluid volume that the drop adds to the domain.
 
     For a few thousands of iterations the fluid level rises quite subtly, but
@@ -103,6 +103,8 @@ def _drop_heights_correction(drop_heights):
 
     Args:
         drop_heights (2D array) : the gaussian distribution modeling the drop
+        divisor (int)           : divides the correction, resulting to smoother
+                                  correction steps
 
     Returns:
         drop_correction (2D array) : the extra fluid volume of the drop,
@@ -110,10 +112,12 @@ def _drop_heights_correction(drop_heights):
                                      by a divisor for a smoother transition
                                      to the next time_step
     """
-    divisor = 2
-    drop_correction = np.empty_like(drop_heights, dtype=conf.DTYPE)
     drop_heights_sum = drop_heights.sum()
-    drop_correction.fill(drop_heights_sum / drop_heights.size / divisor)
+    drop_correction = np.full_like(
+        drop_heights,
+        drop_heights_sum / drop_heights.size / divisor,
+        dtype=conf.DTYPE
+    )
     return drop_correction
 
 

@@ -58,12 +58,12 @@ Options:
 
 ## Shallow Water Equations
 
-SWE is a simpified CFD problem which models the surface of the water, with the assumption<br />
+SWE is a simplified CFD problem which models the surface of the water, with the assumption<br />
 that the horizontal length scale is much greater than the vertical length scale.
 
 SWE is a coupled system of 3 hyperbolic partial differential equations, that derive from the<br />
 conservation of mass and the conservation of linear momentum (Navier-Stokes) equations, in<br />
-case of a horizontal stream bed, with no Coriolis, frictional or viscours forces ([wiki]).
+case of a horizontal stream bed, with no Coriolis, frictional or viscous forces ([wiki]).
 
 <img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/9b9d481407c0c835525291740de8d1c446265ce2" class="mwe-math-fallback-image-inline" aria-hidden="true" style="vertical-align: -18ex; width:46ex; height:19ex;" alt="{\displaystyle {\begin{aligned}{\frac {\partial (\rho \eta )}{\partial t}}&amp;+{\frac {\partial (\rho \eta u)}{\partial x}}+{\frac {\partial (\rho \eta v)}{\partial y}}=0,\\[3pt]{\frac {\partial (\rho \eta u)}{\partial t}}&amp;+{\frac {\partial }{\partial x}}\left(\rho \eta u^{2}+{\frac {1}{2}}\rho g\eta ^{2}\right)+{\frac {\partial (\rho \eta uv)}{\partial y}}=0,\\[3pt]{\frac {\partial (\rho \eta v)}{\partial t}}&amp;+{\frac {\partial (\rho \eta uv)}{\partial x}}+{\frac {\partial }{\partial y}}\left(\rho \eta v^{2}+{\frac {1}{2}}\rho g\eta ^{2}\right)=0.\end{aligned}}}">
 
