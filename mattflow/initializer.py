@@ -107,18 +107,12 @@ def _drop_heights_correction(drop_heights, divisor=2):
                                   correction steps
 
     Returns:
-        drop_correction (2D array) : the extra fluid volume of the drop,
-                                     distributed to the whole domain, divided
-                                     by a divisor for a smoother transition
-                                     to the next time_step
+        drop_correction (float) : the extra fluid volume of the drop,
+                                  distributed to the whole domain, divided
+                                  by a divisor for a smoother transition
+                                  to the next time_step
     """
-    drop_heights_sum = drop_heights.sum()
-    drop_correction = np.full_like(
-        drop_heights,
-        drop_heights_sum / drop_heights.size / divisor,
-        dtype=conf.DTYPE
-    )
-    return drop_correction
+    return drop_heights.sum() / drop_heights.size / divisor
 
 
 def drop(h_hist, drops_count=None):
