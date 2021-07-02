@@ -62,7 +62,7 @@ def _drop_heights_multiplier():
     return factor
 
 
-def _gaussian(variance, drops_count):
+def _gaussian(variance, drops_count=None):
     '''Populates the mesh with a bivariate gaussian distribution of a certain
     variance.
 
