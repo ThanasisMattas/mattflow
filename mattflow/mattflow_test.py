@@ -23,24 +23,25 @@ np.set_printoptions(suppress=True, formatter={"float": "{: 0.6f}".format})
 
 
 @pytest.mark.parametrize("mode, factor",
-                         [("single drop", 3 / 2), ("rain", 1 / 8)])
+                         [("drop", 1.), ("rain", 1 / 6)])
 @mock.patch("mattflow.initializer._variance", return_value=0.1)
 @mock.patch("mattflow.initializer.uniform", return_value=0)
+@mock.patch("mattflow.initializer.randint", return_value=10)
 class TestInitializer:
   """initializer.py tests"""
 
   def setup_method(self):
-    self.N = 11
+    conf.Nx = conf.Ny = 9
+    conf.Ng = 1
+    self.N = conf.Nx + 2 * conf.Ng
     self.old_mode = conf.MODE
     self.old_nx = conf.Nx
     self.old_ny = conf.Ny
     self.old_ng = conf.Ng
-    conf.Nx = 9
-    conf.Ny = 9
-    conf.Ng = 1
+    self.h_history = np.ones((self.N, self.N))
 
-    self.cx = np.linspace(-1, 1, self.N)
-    self.cy = np.linspace(-1, 1, self.N)
+    conf.CX = np.linspace(-1, 1, self.N)
+    conf.CY = np.linspace(-1, 1, self.N)
 
     # 11 x 11, variance = 0.1, center = (0, 0), {: 0.8f}
     self.gaussian = np.array(
@@ -72,19 +73,34 @@ class TestInitializer:
     conf.Nx = self.old_nx
     conf.Ny = self.old_ny
     conf.Ng = self.old_ng
+    del self.h_history
     del self.cx
     del self.cy
     del self.gaussian
 
-  def test_drop(self, mock_uniform, mock_variance, mode, factor):
+  def test_drop(self,
+                mock_randint, mock_uniform, mock_variance,
+                mode, factor):
     conf.MODE = mode
-    drop_ = initializer.drop(np.zeros((11, 11)), self.cx, self.cy)
-    drop_expected = factor * self.gaussian
-    assert_array_almost_equal(drop_, drop_expected, decimal=8)
 
-  def test_initialize(self, mock_uniform, mock_variance, mode, factor):
+    drop_heights_expected = factor * self.gaussian
+    drop_correction_expected = \
+        drop_heights_expected.sum() / drop_heights_expected.size / 2
+    drop_expected = \
+        self.h_history + drop_heights_expected - drop_correction_expected
+    drop_ = initializer.drop(self.h_history)
+    assert_array_almost_equal(drop_, drop_expected, decimal=6)
+
+  def test_initialize(self,
+                      mock_randint, mock_uniform, mock_variance,
+                      mode, factor):
     conf.MODE = mode
-    init = initializer.initialize(self.cx, self.cy)
-    init_expected = np.zeros((3, self.N, self.N))
-    init_expected[0, :, :] = conf.SURFACE_LEVEL + factor * self.gaussian
-    assert_array_almost_equal(init, init_expected, decimal=8)
+    U_ = initializer._init_U()
+    drop_heights_expected = factor * self.gaussian
+    drop_correction_expected = \
+        drop_heights_expected.sum() / drop_heights_expected.size / 2
+
+    U_expected = np.zeros((3, self.N, self.N), dtype=conf.DTYPE)
+    U_expected[0, :, :] = \
+        conf.SURFACE_LEVEL + drop_heights_expected - drop_correction_expected
+    assert_array_almost_equal(U_, U_expected, decimal=6)
