@@ -121,6 +121,10 @@ def time_this(f):
 def preprocessing(mode, **kwargs):
     """constructs the mesh.
 
+    Args:
+        mode (str)    : one of ["drop", "drops", "rain"]
+        kwargs (dict) : domain dimensions
+
     - dx, dy: Spatial discretization steps (structured/Cartesian mesh)
     - cy, cy: Cell centers on x and y dimensions
     """
