@@ -17,7 +17,7 @@ import numpy as np
 from numpy.testing import assert_array_almost_equal
 import pytest
 
-from mattflow import config as conf, initializer
+from mattflow import config as conf, initializer, utils
 
 np.set_printoptions(suppress=True, formatter={"float": "{: 0.6f}".format})
 
@@ -70,7 +70,9 @@ class TestInitializer:
        [0.00034649, 0.00209616, 0.00850037, 0.02310639, 0.04210259, 0.05142422,
         0.04210259, 0.02310639, 0.00850037, 0.00209616, 0.00034649],
        [0.00005728, 0.00034649, 0.00140510, 0.00381946, 0.00695951, 0.00850037,
-        0.00695951, 0.00381946, 0.00140510, 0.00034649, 0.00005728]])
+        0.00695951, 0.00381946, 0.00140510, 0.00034649, 0.00005728]],
+      dtype=np.dtype("float32")
+    )
 
   def tear_down_method(self):
     conf.MODE = self.old_mode
@@ -121,3 +123,32 @@ class TestInitializer:
     assert_array_almost_equal(U, U_expected, decimal=6)
     assert_array_almost_equal(h_hist, h_hist_expected, decimal=6)
     assert_array_almost_equal(t_hist, t_hist_expected, decimal=6)
+
+
+class TestUtils():
+  """utils.py tests"""
+
+  def setup_method(self):
+    max_len = 1
+    conf.MAX_X = max_len
+    conf.MIN_X = -max_len
+    conf.MAX_Y = max_len
+    conf.MIN_Y = -max_len
+    conf.Nx = conf.Ny = 9
+    conf.Ng = 1
+    conf.dx = conf.dy = 2 * max_len / conf.Nx
+
+  def tear_down_method(self):
+    pass
+
+  def test_cell_centers(self):
+    cx_expected = cy_expected = np.array(
+      [-1.1111112, -0.8888889, -0.66666663, -0.44444436,
+       -0.22222209, 2.3841858e-07, 0.22222245, 0.44444466,
+       0.66666698, 0.88888931, 1.1111116],
+      dtype=np.dtype("float32")
+    )
+
+    cx, cy = utils.cell_centers()
+    assert_array_almost_equal(cx, cx_expected)
+    assert_array_almost_equal(cy, cy_expected)
