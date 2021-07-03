@@ -118,18 +118,25 @@ def time_this(f):
     return wrap
 
 
-def preprocessing(mode):
+def preprocessing(mode, **kwargs):
     """constructs the mesh.
 
     - dx, dy: Spatial discretization steps (structured/Cartesian mesh)
     - cy, cy: Cell centers on x and y dimensions
     """
     if mode in ["drop", "drops"]:
-        Nx, Ny, Ng = 100, 100, 1
-        min_x, max_x = min_y, max_y = -0.7, 0.7
+        N = 100
+        max_len = 0.7
     elif mode == "rain":
-        Nx, Ny, Ng = 200, 200, 1
-        min_x, max_x = min_y, max_y = -1.5, 1.5
+        N = 200
+        max_len = 1.5
+    Ny = kwargs.pop("Ny", N)
+    Nx = kwargs.pop("Nx", N)
+    Ng = kwargs.pop("Ng", 1)
+    max_x = kwargs.pop("max_x", max_len)
+    min_x = kwargs.pop("min_x", -max_len)
+    max_y = kwargs.pop("max_y", max_len)
+    min_y = kwargs.pop("min_y", -max_len)
 
     conf.Nx = Nx
     conf.Ny = Ny
