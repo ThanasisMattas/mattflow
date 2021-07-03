@@ -76,7 +76,7 @@ class TestInitializer:
         0.04210259, 0.02310639, 0.00850037, 0.00209616, 0.00034649],
        [0.00005728, 0.00034649, 0.00140510, 0.00381946, 0.00695951, 0.00850037,
         0.00695951, 0.00381946, 0.00140510, 0.00034649, 0.00005728]],
-      dtype=np.dtype("float32")
+      dtype=conf.DTYPE
     )
 
   def teardown_method(self):
@@ -121,9 +121,8 @@ class TestInitializer:
 
     # t_hist
     t_hist_expected = np.zeros(len(h_hist_expected), dtype=conf.DTYPE)
-
-    U, h_hist, t_hist, _ = initializer.initialize()
-    assert_array_almost_equal(U, U_expected, decimal=6)
+    U_, h_hist, t_hist, _ = initializer.initialize()
+    assert_array_almost_equal(U_, U_expected, decimal=6)
     assert_array_almost_equal(h_hist, h_hist_expected, decimal=6)
     assert_array_almost_equal(t_hist, t_hist_expected, decimal=6)
 
@@ -143,7 +142,7 @@ class TestUtils():
       [-0.1111111, -0.088889, -0.0666667, -0.0444444,
        -0.0222222, 2.3841858e-07, 0.0222222, 0.04444447,
        0.06666670, 0.08888893, .1111112],
-      dtype=np.dtype("float32")
+      dtype=conf.DTYPE
     )
 
     cx, cy = utils.cell_centers()
@@ -224,7 +223,7 @@ class TestBcmanager():
          0.7953553, 0.78840643, 0.73449546],
         [-0.7792303, -0.77923036, -0.77177703, -0.75726956,
          -0.7452003, -0.73449546, -0.73449546]]],
-      dtype=np.dtype("float32")
+      dtype=conf.DTYPE
     )
 
   def teardown_method(self):
@@ -276,7 +275,7 @@ class TestBcmanager():
          0.7953553, 0.78840643, 0.78840643],
         [-0.8336257, -0.8336257, -0.8219294, -0.8069412,
          -0.7953553, -0.78840643, -0.78840643]]],
-      dtype=np.dtype("float32")
+      dtype=conf.DTYPE
     )
     U_ = bcmanager.update_ghost_cells(self.U_)
     assert_array_almost_equal(U_, U_expected)
@@ -333,7 +332,7 @@ class TestMattflowSolver():
          0.79535530, 0.78840643, 0.73449546],
         [-0.77923036, -0.77923036, -0.77177703, -0.75726956,
          -0.74520030, -0.73449546, -0.73449546]]],
-      dtype=np.dtype("float32")
+      dtype=conf.DTYPE
     )
 
   def teardown_method(self):
@@ -403,20 +402,22 @@ class TestMattflowSolver():
          0.873324, 0.864135, 0.734495],
         [-0.779230, -0.779230, -0.771777, -0.757270,
          -0.745200, -0.734495, -0.734495]]],
-      dtype=np.dtype("float32")
+      dtype=conf.DTYPE
     )
     assert_array_almost_equal(U_, U_expected)
     assert drops_count == dc
     assert dii == drop_its_iterator
     assert ndi == next_drop_it
 
+  @pytest.mark.parametrize("drop_iters_mode", ["fixed", "custom"])
   @mock.patch("mattflow.initializer._variance", return_value=0.1)
   @mock.patch("mattflow.initializer.uniform", return_value=0)
   @mock.patch("mattflow.initializer.randint", return_value=10)
-  def test_simulate(self, mock_randint, mock_uniform, mock_variance):
+  def test_simulate(self, mock_randint, mock_uniform, mock_variance, drop_iters_mode):
     """Can also be regarded as integration test."""
     conf.RANDOM_DROP_CENTERS = False
-    h_hist, t_hist, U_ds = mattflow_solver.simulate()
+    conf.ITERS_BETWEEN_DROPS_MODE = drop_iters_mode
+    h_hist, t_hist, _ = mattflow_solver.simulate()
     h_hist_expected = np.array(
       [[[1.608689, 1.610595, 1.593548, 1.558355, 1.506661],
         [1.649861, 1.651833, 1.634196, 1.597786, 1.544305],
