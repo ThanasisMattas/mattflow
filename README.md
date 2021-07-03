@@ -1,6 +1,6 @@
 # MattFlow
 
-![Conda] ![Lincense]
+![Conda] ![Build_Status] ![Lincense]
 
 A CFD python package for the Shallow Water Equations
 
@@ -134,11 +134,10 @@ Special thanks to [Marios Mitalidis] for the valuable feedback.
 >(C) 2019, Athanasios Mattas<br />
 >thanasismatt@gmail.com
 
-
 [//]: # "links"
 
-
 [Conda]: <https://img.shields.io/conda/v/mattasa/mattflow>
+[Build_Status]: <https://travis-ci.com/ThanasisMattas/mattflow.svg?branch=master>
 [Lincense]: <https://img.shields.io/github/license/ThanasisMattas/mattflow>
 [wiki]: <https://en.wikipedia.org/wiki/Shallow_water_equations>
 [Lax-Friedrichs]: <https://en.wikipedia.org/wiki/Lax%E2%80%93Friedrichs_method>
