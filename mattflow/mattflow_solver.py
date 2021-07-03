@@ -59,8 +59,8 @@ def _solve(U,
 
     # Simulation mode
     # ---------------
-    # 'single drop': handled at the initialization
-    if conf.MODE == 'single drop':
+    # 'drop': handled at the initialization
+    if conf.MODE == 'drop':
         pass
 
     # 'drops': specified number of drops are generated at specified frequency
@@ -86,7 +86,7 @@ def _solve(U,
             for _ in simultaneous_drops:
                 U[0, :, :] = initializer.drop(U[0, :, :])
     else:
-        modes = ['single drop', 'drops', 'rain']
+        modes = ['drop', 'drops', 'rain']
         logger.log(f"Configure MODE | options: {modes}")
 
     # Numerical scheme
