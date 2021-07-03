@@ -79,14 +79,12 @@ class TestInitializer:
       dtype=np.dtype("float32")
     )
 
-  def tear_down_method(self):
+  def teardown_method(self):
     conf.MODE = self.old_mode
     conf.Nx = self.old_nx
     conf.Ny = self.old_ny
     conf.Ng = self.old_ng
     del self.h_history
-    del self.cx
-    del self.cy
     del self.gaussian
 
   def test_drop(self,
@@ -144,7 +142,7 @@ class TestUtils():
     conf.Ng = 1
     conf.dx = conf.dy = 2 * self.max_len / conf.Nx
 
-  def tear_down_method(self):
+  def teardown_method(self):
     pass
 
   def test_cell_centers(self):
@@ -244,8 +242,8 @@ class TestBcmanager():
       dtype=np.dtype("float32")
     )
 
-  def tear_down_method(self):
-    del self.U_[:]
+  def teardown_method(self):
+    del self.U_
 
   def test_update_ghost_cells(self):
     U_expected = np.array(
@@ -361,8 +359,8 @@ class TestMattflowSolver():
       dtype=np.dtype("float32")
     )
 
-  def tear_down_method(self):
-    del self.U_[:]
+  def teardown_method(self):
+    del self.U_
 
   def test_dt(self, epsilon=1e-4):
     dt_expected = 0.001477
