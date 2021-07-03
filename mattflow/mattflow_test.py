@@ -130,6 +130,7 @@ class TestUtils():
   """utils.py tests"""
 
   def setup_method(self):
+    conf.MAX_ITERS = 550
     max_len = 1
     conf.MAX_X = max_len
     conf.MIN_X = -max_len
@@ -164,3 +165,16 @@ class TestUtils():
     captured = capsys.readouterr()
     expected_out = "Sleep_for duration------------0:00:00.10\n"
     assert captured.out == expected_out
+
+  @pytest.mark.parametrize(
+    "drop_iters_mode, drop_iters_expected",
+    [("custom", [0, 120, 270, 410, 540, 750]),
+     ("random", np.arange(0, 650, 100)),
+     ("fixed", np.arange(0, 650, conf.FIXED_ITERS_BETWEEN_DROPS))]
+  )
+  @mock.patch("mattflow.utils.random.randint", return_value=100)
+  def test_drop_iters_list(self, mock_randint, drop_iters_mode, drop_iters_expected):
+    conf.ITERS_BETWEEN_DROPS_MODE = drop_iters_mode
+    drop_iters = utils.drop_iters_list()
+    print(drop_iters)
+    assert_array_almost_equal(drop_iters, drop_iters_expected)
