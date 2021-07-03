@@ -125,10 +125,10 @@ def preprocessing(mode, **kwargs):
     - cy, cy: Cell centers on x and y dimensions
     """
     if mode in ["drop", "drops"]:
-        N = 100
+        N = kwargs.pop("N", 100)
         max_len = kwargs.pop("max_len", 0.7)
     elif mode == "rain":
-        N = 200
+        N = kwargs.pop("N", 200)
         max_len = kwargs.pop("max_len", 1.5)
     Ny = kwargs.pop("Ny", N)
     Nx = kwargs.pop("Nx", N)
