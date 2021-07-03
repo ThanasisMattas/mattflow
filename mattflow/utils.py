@@ -160,6 +160,10 @@ def drop_iters_list():
         while iters_cumsum <= conf.MAX_ITERS:
             iters_cumsum += random.randint(60, 120)
             drop_iters.append(iters_cumsum)
+    elif conf.ITERS_BETWEEN_DROPS_MODE == "fixed":
+        while iters_cumsum <= conf.MAX_ITERS:
+            iters_cumsum += conf.FIXED_ITERS_BETWEEN_DROPS
+            drop_iters.append(iters_cumsum)
     else:
         logger.log("Configure ITERS_BETWEEN_DROPS_MODE | options:"
                    " 'fixed', 'custom', 'random'")
