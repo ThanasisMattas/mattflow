@@ -344,10 +344,13 @@ class TestMattflowSolver():
     dt = round(dt * 1e6) / 1e6
     assert dt == dt_expected
 
-  def test_solve(self):
+  @pytest.mark.parametrize("workers", [1, 3])
+  def test_solve(self, workers):
     conf.RANDOM_DROP_CENTERS = False
+    conf.WORKERS = workers
     dt = 0.001783
     it = 100
+
     drops_count = 1
     drop_its_iterator = iter([50, 100, 150])
     next_drop_it = 105
