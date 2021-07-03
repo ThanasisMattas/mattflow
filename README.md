@@ -1,6 +1,8 @@
 # MattFlow
 
-![Conda] ![Build_Status] ![codecov] ![Lincense]
+![Conda] ![Build_Status] ![codecov]
+
+<br />
 
 A CFD python package for the Shallow Water Equations
 
