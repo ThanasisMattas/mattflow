@@ -36,7 +36,7 @@ def cell_centers():
     return cx, cy
 
 
-def delete_prev_runs_data():
+def delete_prev_runs_data():  # pragma: no cover
     """Deletes all the output files (log, dat, png etc) from previous runs."""
     input("Deleting data from previous runs. Press ENTER to continue...")
     working_dir = os.getcwd()
@@ -55,11 +55,11 @@ def U_shape():
     return (3, conf.Nx + 2 * conf.Ng, conf.Ny + 2 * conf.Ng)
 
 
-def ds_shape():
+def ds_shape():  # pragma: no cover
     return (conf.MAX_ITERS, 3, conf.Nx, conf.Ny)
 
 
-def delete_memmap():
+def delete_memmap():  # pragma: no cover
     try:
         shutil.rmtree(conf.MEMMAP_DIR)
     except FileNotFoundError:
@@ -80,7 +80,7 @@ def print_duration(start, end, process):
     print(f"{prefix:-<30}{duration}"[:40])
 
 
-def child_dir(dirname):
+def child_dir(dirname):  # pragma: no cover
     """Create a directory under the current working directory."""
     try:
         if os.path.isdir(os.path.join(os.getcwd(), dirname)):

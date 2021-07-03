@@ -11,6 +11,7 @@
 # ======================================================================
 """Houses all the tests"""
 
+import time
 from unittest import mock
 
 import numpy as np
@@ -152,3 +153,14 @@ class TestUtils():
     cx, cy = utils.cell_centers()
     assert_array_almost_equal(cx, cx_expected)
     assert_array_almost_equal(cy, cy_expected)
+
+  def test_time_this(self, capsys):
+
+    @utils.time_this
+    def sleep_for(secs: float):
+        time.sleep(secs)
+
+    sleep_for(0.1)
+    captured = capsys.readouterr()
+    expected_out = "Sleep_for duration------------0:00:00.10\n"
+    assert captured.out == expected_out
