@@ -133,14 +133,7 @@ class TestUtils():
 
   def setup_method(self):
     conf.MAX_ITERS = 550
-    self.max_len = 0.1
-    conf.MAX_X = self.max_len
-    conf.MIN_X = -self.max_len
-    conf.MAX_Y = self.max_len
-    conf.MIN_Y = -self.max_len
-    conf.Nx = conf.Ny = 9
-    conf.Ng = 1
-    conf.dx = conf.dy = 2 * self.max_len / conf.Nx
+    utils.preprocessing(mode="drops", max_len=0.1, N=9)
 
   def teardown_method(self):
     pass
@@ -185,15 +178,7 @@ class TestBcmanager():
   """bcmanager.py tests"""
 
   def setup_method(self):
-    conf.MAX_ITERS = 550
-    self.max_len = 0.1
-    conf.MAX_X = self.max_len
-    conf.MIN_X = -self.max_len
-    conf.MAX_Y = self.max_len
-    conf.MIN_Y = -self.max_len
-    conf.Nx = conf.Ny = 5
-    conf.Ng = 1
-    conf.dx = conf.dy = 2 * self.max_len / conf.Nx
+    utils.preprocessing(mode="drops", max_len=0.1, N=5)
     self.U_ = np.array(
       [[[2.2657156, 2.2657156, 2.253398, 2.2343802,
          2.21266, 2.1988487, 2.1988487],
@@ -301,16 +286,8 @@ class TestMattflowSolver():
   """mattflow_solver.py tests"""
 
   def setup_method(self):
-    conf.MAX_ITERS = 550
-    self.max_len = 0.1
-    conf.MAX_X = self.max_len
-    conf.MIN_X = -self.max_len
-    conf.MAX_Y = self.max_len
-    conf.MIN_Y = -self.max_len
-    conf.Nx = conf.Ny = 5
-    conf.Ng = 1
-    conf.dx = conf.dy = 2 * self.max_len / conf.Nx
-    conf.COURANT = min(0.9, 0.015 / min(conf.dx, conf.dy))
+    conf.MAX_ITERS = 5
+    utils.preprocessing(mode="drops", max_len=0.1, N=5)
     self.U_ = np.array(
       [[[2.2657156, 2.2657156, 2.2533980, 2.2343802,
          2.2126600, 2.1988487, 2.1988487],
