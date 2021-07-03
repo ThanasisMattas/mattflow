@@ -126,10 +126,10 @@ def preprocessing(mode, **kwargs):
     """
     if mode in ["drop", "drops"]:
         N = 100
-        max_len = 0.7
+        max_len = kwargs.pop("max_len", 0.7)
     elif mode == "rain":
         N = 200
-        max_len = 1.5
+        max_len = kwargs.pop("max_len", 1.5)
     Ny = kwargs.pop("Ny", N)
     Nx = kwargs.pop("Nx", N)
     Ng = kwargs.pop("Ng", 1)
