@@ -43,6 +43,10 @@ class TestInitializer:
     conf.CX = np.linspace(-1, 1, self.N)
     conf.CY = np.linspace(-1, 1, self.N)
 
+    conf.MAX_ITERS = 500
+    conf.FRAME_SAVE_FREQ = 3
+    conf.FRAMES_PER_PERIOD = 1
+
     # 11 x 11, variance = 0.1, center = (0, 0), {: 0.8f}
     self.gaussian = np.array(
       [[0.00005728, 0.00034649, 0.00140510, 0.00381946, 0.00695951, 0.00850037,
@@ -95,12 +99,25 @@ class TestInitializer:
                       mock_randint, mock_uniform, mock_variance,
                       mode, factor):
     conf.MODE = mode
-    U_ = initializer._init_U()
+
+    # U
     drop_heights_expected = factor * self.gaussian
     drop_correction_expected = \
         drop_heights_expected.sum() / drop_heights_expected.size / 2
-
     U_expected = np.zeros((3, self.N, self.N), dtype=conf.DTYPE)
     U_expected[0, :, :] = \
         conf.SURFACE_LEVEL + drop_heights_expected - drop_correction_expected
-    assert_array_almost_equal(U_, U_expected, decimal=6)
+
+    # h_hist
+    num_states = 167
+    h_hist_expected = np.zeros((num_states, conf.Nx, conf.Ny),
+                               dtype=conf.DTYPE)
+    h_hist_expected[0] = U_expected[0, conf.Ng: - conf.Ng, conf.Ng: -conf.Ng]
+
+    # t_hist
+    t_hist_expected = np.zeros(len(h_hist_expected), dtype=conf.DTYPE)
+
+    U, h_hist, t_hist, _ = initializer.initialize()
+    assert_array_almost_equal(U, U_expected, decimal=6)
+    assert_array_almost_equal(h_hist, h_hist_expected, decimal=6)
+    assert_array_almost_equal(t_hist, t_hist_expected, decimal=6)

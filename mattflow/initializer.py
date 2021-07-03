@@ -208,7 +208,7 @@ def initialize():
 
     U = _init_U()
     h_hist = _init_h_hist(U)
-    t_hist = t_hist = np.zeros(len(h_hist), dtype=conf.DTYPE)
+    t_hist = np.zeros(len(h_hist), dtype=conf.DTYPE)
     if conf.SAVE_DS_FOR_ML:
         U_ds = _init_U_ds(U)
     else:
