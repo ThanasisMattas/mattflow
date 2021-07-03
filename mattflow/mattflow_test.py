@@ -131,7 +131,7 @@ class TestUtils():
 
   def setup_method(self):
     conf.MAX_ITERS = 550
-    max_len = 1
+    max_len = 0.1
     conf.MAX_X = max_len
     conf.MIN_X = -max_len
     conf.MAX_Y = max_len
@@ -145,9 +145,9 @@ class TestUtils():
 
   def test_cell_centers(self):
     cx_expected = cy_expected = np.array(
-      [-1.1111112, -0.8888889, -0.66666663, -0.44444436,
-       -0.22222209, 2.3841858e-07, 0.22222245, 0.44444466,
-       0.66666698, 0.88888931, 1.1111116],
+      [-0.1111111, -0.088889, -0.0666667, -0.0444444,
+       -0.0222222, 2.3841858e-07, 0.0222222, 0.04444447,
+       0.06666670, 0.08888893, .1111112],
       dtype=np.dtype("float32")
     )
 
