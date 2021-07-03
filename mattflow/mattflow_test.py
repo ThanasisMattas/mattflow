@@ -409,3 +409,27 @@ class TestMattflowSolver():
     assert drops_count == dc
     assert dii == drop_its_iterator
     assert ndi == next_drop_it
+
+  @mock.patch("mattflow.initializer._variance", return_value=0.1)
+  @mock.patch("mattflow.initializer.uniform", return_value=0)
+  @mock.patch("mattflow.initializer.randint", return_value=10)
+  def test_simulate(self, mock_randint, mock_uniform, mock_variance):
+    """Can also be regarded as integration test."""
+    conf.RANDOM_DROP_CENTERS = False
+    h_hist, t_hist, U_ds = mattflow_solver.simulate()
+    h_hist_expected = np.array(
+      [[[1.608689, 1.610595, 1.593548, 1.558355, 1.506661],
+        [1.649861, 1.651833, 1.634196, 1.597786, 1.544305],
+        [1.672231, 1.674239, 1.656282, 1.619211, 1.564758],
+        [1.674742, 1.676754, 1.658760, 1.621615, 1.567053],
+        [1.657273, 1.659257, 1.641514, 1.604885, 1.551082]],
+       [[1.624658, 1.619051, 1.601293, 1.573089, 1.545764],
+        [1.642868, 1.636539, 1.618507, 1.590551, 1.564204],
+        [1.658777, 1.652079, 1.633820, 1.605770, 1.579657],
+        [1.664113, 1.657498, 1.639163, 1.610902, 1.584465],
+        [1.661089, 1.654912, 1.636628, 1.607942, 1.580575]]],
+      dtype=conf.DTYPE
+    )
+    t_hist_expected = np.array([0.000000, 0.055501])
+    assert_array_almost_equal(h_hist, h_hist_expected)
+    assert_array_almost_equal(t_hist, t_hist_expected)
