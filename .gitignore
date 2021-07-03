@@ -43,3 +43,4 @@
 **/*.egg
 **/extras/*
 .hidden
+.coverage

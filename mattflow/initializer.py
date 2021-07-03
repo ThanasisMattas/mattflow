@@ -175,7 +175,7 @@ def _init_h_hist(U):
     return h_hist
 
 
-def _init_U_ds(U):
+def _init_U_ds(U):  # pragma: no cover
     """Creates and initializes U_ds, which holds stepwise data for ML."""
     dss = utils.ds_shape()
     ds_name = f"mattflow_data_{dss[0]}x{dss[1]}x{dss[2]}x{dss[3]}.npy"
