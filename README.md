@@ -107,21 +107,20 @@ structured/cartesian mesh
 
 ## TODO
 
-1. CI
-2. GUI
-3. Consider Cythonizing or moving to C++
-4. Higher order schemes
-5. Include source terms
-6. Include viscous models
-7. Algorithm that converts every computational second to a real-time second,
+1. GUI
+2. Cython/C++
+3. Higher order schemes
+4. Source terms
+5. Viscous models
+6. Algorithm that converts every computational second to a real-time second,
    modifying the fps at<br />the post-processing animation, because each
    iteration uses different time-step (CFL condition).
-8. Moving objects inside the domain
-9. Unstructured mesh
-10. 3D CFD
+7. Moving objects inside the domain
+8. 3D
 
 
 ## License
+
 [GNU General Public License v3.0]
 <br />
 <br />
