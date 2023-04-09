@@ -2,6 +2,6 @@ click==7.0
 numba==0.51.2
 numpy==1.18.5
 matplotlib==3.3.3
-joblib==0.13.2
+joblib==1.2.0
 pytest==6.2.4
 pytest-cov==2.12.1
