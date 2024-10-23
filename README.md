@@ -114,7 +114,7 @@ structured/cartesian mesh
 5. Viscous models
 6. Algorithm that converts every computational second to a real-time second,
    modifying the fps at<br />the post-processing animation, because each
-   iteration uses different time-step (CFL condition).
+   iteration uses a different time-step (CFL condition).
 7. Moving objects inside the domain
 8. 3D
 
